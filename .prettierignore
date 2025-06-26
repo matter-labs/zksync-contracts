@@ -1,0 +1,6 @@
+artifacts
+cache
+out
+coverage
+node_modules
+lib/*

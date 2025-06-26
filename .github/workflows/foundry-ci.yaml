@@ -1,0 +1,12 @@
+name: Foundry CI
+on: [workflow_call]
+jobs:
+  build:
+    name: Build contracts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: foundry-rs/foundry-toolchain@v1
+      - run: forge build

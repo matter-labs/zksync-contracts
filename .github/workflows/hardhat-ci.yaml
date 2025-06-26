@@ -1,0 +1,14 @@
+name: Hardhat CI
+on: [workflow_call]
+jobs:
+  build:
+    name: Build contracts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: yarn
+      - run: yarn
+      - run: HARDHAT_CONTRACTS_PATH=contracts/l1-contracts yarn hardhat compile
