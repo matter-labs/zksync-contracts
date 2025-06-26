@@ -1,17 +1,20 @@
 [profile.default]
-auto_detect_solc          = true
-evm_version               = 'cancun'
-optimizer                 = true
-optimizer-runs            = 9999999
-src                       = 'contracts'
-out                       = 'out'
-cache_path                = 'cache_forge'
-libs                      = ["lib"]
-remappings                = ["@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/"]
+auto_detect_solc = true
+evm_version = 'cancun'
+optimizer = true
+optimizer-runs = 9999999
+src = 'contracts'
+out = 'out'
+cache_path = 'cache_forge'
+libs = ["lib"]
+remappings = [
+    "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+    "@openzeppelin/contracts-v4=lib/openzeppelin-contracts-v4/contracts/",
+]
 
 [fmt]
-line_length               = 80
-tab_width                 = 2
-bracket_spacing           = true
-quote_style               = "double"
-sort_imports              = true
+line_length = 80
+tab_width = 2
+bracket_spacing = true
+quote_style = "double"
+sort_imports = true
