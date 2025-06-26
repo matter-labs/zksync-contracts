@@ -1,6 +1,5 @@
-
-
 # Contents
+
 - [interfaces](/contracts/l1-contracts/common/interfaces)
 - [libraries](/contracts/l1-contracts/common/libraries)
 - [PriorityTreeCommitment](Config.sol/struct.PriorityTreeCommitment.md)

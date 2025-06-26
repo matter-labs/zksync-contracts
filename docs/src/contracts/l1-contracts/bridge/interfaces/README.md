@@ -1,6 +1,5 @@
-
-
 # Contents
+
 - [AssetHandlerModifiers](AssetHandlerModifiers.sol/abstract.AssetHandlerModifiers.md)
 - [IAssetHandler](IAssetHandler.sol/interface.IAssetHandler.md)
 - [IBridgedStandardToken](IBridgedStandardToken.sol/interface.IBridgedStandardToken.md)

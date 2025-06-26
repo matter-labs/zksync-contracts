@@ -1,6 +1,5 @@
-
-
 # Contents
+
 - [IAccount](IAccount.sol/interface.IAccount.md)
 - [IAccount constants](IAccount.sol/constants.IAccount.md)
 - [IAccountCodeStorage](IAccountCodeStorage.sol/interface.IAccountCodeStorage.md)

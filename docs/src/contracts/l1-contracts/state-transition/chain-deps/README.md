@@ -1,6 +1,5 @@
-
-
 # Contents
+
 - [UpgradeState](ZKChainStorage.sol/enum.UpgradeState.md)
 - [UpgradeStorage](ZKChainStorage.sol/struct.UpgradeStorage.md)
 - [PubdataPricingMode](ZKChainStorage.sol/enum.PubdataPricingMode.md)

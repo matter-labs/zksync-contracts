@@ -1,6 +1,5 @@
-
-
 # Contents
+
 - [chain-deps](/contracts/l1-contracts/state-transition/chain-deps)
 - [chain-interfaces](/contracts/l1-contracts/state-transition/chain-interfaces)
 - [l2-deps](/contracts/l1-contracts/state-transition/l2-deps)

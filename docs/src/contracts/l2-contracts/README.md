@@ -1,6 +1,5 @@
-
-
 # Contents
+
 - [data-availability](/contracts/l2-contracts/data-availability)
 - [errors](/contracts/l2-contracts/errors)
 - [interfaces](/contracts/l2-contracts/interfaces)

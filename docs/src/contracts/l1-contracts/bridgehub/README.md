@@ -1,6 +1,5 @@
-
-
 # Contents
+
 - [L2TransactionRequestDirect](IBridgehub.sol/struct.L2TransactionRequestDirect.md)
 - [L2TransactionRequestTwoBridgesOuter](IBridgehub.sol/struct.L2TransactionRequestTwoBridgesOuter.md)
 - [L2TransactionRequestTwoBridgesInner](IBridgehub.sol/struct.L2TransactionRequestTwoBridgesInner.md)

@@ -1,6 +1,5 @@
-
-
 # Contents
+
 - [restriction](/contracts/l1-contracts/governance/restriction)
 - [Call](Common.sol/struct.Call.md)
 - [IAccessControlRestriction](IAccessControlRestriction.sol/interface.IAccessControlRestriction.md)

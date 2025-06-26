@@ -1,6 +1,5 @@
-
-
 # Contents
+
 - [IComplexUpgrader](IComplexUpgrader.sol/interface.IComplexUpgrader.md)
 - [IL2GatewayUpgrade](IL2GatewayUpgrade.sol/interface.IL2GatewayUpgrade.md)
 - [ForceDeployment](IL2GenesisUpgrade.sol/struct.ForceDeployment.md)

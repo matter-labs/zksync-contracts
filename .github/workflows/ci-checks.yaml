@@ -30,6 +30,11 @@ jobs:
       - name: Install deps
         run: bun install --frozen-lockfile
 
+      - name: Set up Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+
       - name: Prettier format check
         run: bun run fmt:check
 
@@ -50,9 +55,6 @@ jobs:
         uses: foundry-rs/foundry-toolchain@v1
         with:
           version: stable
-
-      - name: Solidity format check
-        run: forge fmt --check
 
       - name: Build
         run: forge build --sizes

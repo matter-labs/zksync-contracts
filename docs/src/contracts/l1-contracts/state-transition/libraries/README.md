@@ -1,6 +1,5 @@
-
-
 # Contents
+
 - [Diamond](Diamond.sol/library.Diamond.md)
 - [PriorityOperation](PriorityQueue.sol/struct.PriorityOperation.md)
 - [PriorityQueue](PriorityQueue.sol/library.PriorityQueue.md)

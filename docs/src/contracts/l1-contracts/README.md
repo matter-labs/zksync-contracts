@@ -1,6 +1,5 @@
-
-
 # Contents
+
 - [bridge](/contracts/l1-contracts/bridge)
 - [bridgehub](/contracts/l1-contracts/bridgehub)
 - [common](/contracts/l1-contracts/common)

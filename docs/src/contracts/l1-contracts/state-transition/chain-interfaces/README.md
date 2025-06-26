@@ -1,6 +1,5 @@
-
-
 # Contents
+
 - [IAdmin](IAdmin.sol/interface.IAdmin.md)
 - [InitializeData](IDiamondInit.sol/struct.InitializeData.md)
 - [InitializeDataNewChain](IDiamondInit.sol/struct.InitializeDataNewChain.md)

@@ -1,6 +1,5 @@
-
-
 # Contents
+
 - [IConsensusRegistry](IConsensusRegistry.sol/interface.IConsensusRegistry.md)
 - [IL2DAValidator](IL2DAValidator.sol/interface.IL2DAValidator.md)
 - [ExecutionResult](IPaymaster.sol/enum.ExecutionResult.md)
