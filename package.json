@@ -1,0 +1,39 @@
+{
+  "name": "@matterlabs/zksync-contracts",
+  "version": "1.0.0-beta.4",
+  "description": "ZKsync Smart Contracts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/matter-labs/v2-testnet-contracts.git"
+  },
+  "homepage": "https://zksync.io",
+  "author": "Matter Labs",
+  "license": "MIT",
+  "scripts": {
+    "fmt:sol": "forge fmt",
+    "fmt:js": "bunx prettier --write \"**/*.{js,ts,md,json}\"",
+    "fmt": "bun run fmt:sol && bun run fmt:js",
+    "fmt:check": "forge fmt --check && bunx prettier --check \"**/*.{js,ts,md,json}\"",
+    "lint": "bunx eslint . --ext .js,.ts",
+    "lint:fix": "bunx eslint . --ext .js,.ts --fix",
+    "hh:compile": "bunx hardhat compile"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.29.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^24.0.4",
+    "@typescript-eslint/eslint-plugin": "^8.35.0",
+    "@typescript-eslint/parser": "^8.35.0",
+    "eslint": "^9.29.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.5.1",
+    "globals": "^16.2.0",
+    "hardhat": "=2.22.18",
+    "prettier": "^3.6.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "=5.2.0"
+  }
+}
