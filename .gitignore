@@ -8,3 +8,4 @@ node_modules
 /out
 /cache_forge
 lib/*
+zkout/

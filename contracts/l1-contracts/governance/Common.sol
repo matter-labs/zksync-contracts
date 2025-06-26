@@ -7,7 +7,7 @@ pragma solidity ^0.8.0;
 /// @param value The amount of Ether (in wei) to be sent along with the call.
 /// @param data The calldata to be executed on the `target` address.
 struct Call {
-    address target;
-    uint256 value;
-    bytes data;
+  address target;
+  uint256 value;
+  bytes data;
 }

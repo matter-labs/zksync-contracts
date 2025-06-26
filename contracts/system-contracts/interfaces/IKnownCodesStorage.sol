@@ -9,17 +9,14 @@ pragma solidity ^0.8.0;
  * for storing the hashes of the bytecodes that have been published to the network.
  */
 interface IKnownCodesStorage {
-    event MarkedAsKnown(
-        bytes32 indexed bytecodeHash,
-        bool indexed sendBytecodeToL1
-    );
+  event MarkedAsKnown(
+    bytes32 indexed bytecodeHash, bool indexed sendBytecodeToL1
+  );
 
-    function markFactoryDeps(
-        bool _shouldSendToL1,
-        bytes32[] calldata _hashes
-    ) external;
+  function markFactoryDeps(bool _shouldSendToL1, bytes32[] calldata _hashes)
+    external;
 
-    function markBytecodeAsPublished(bytes32 _bytecodeHash) external;
+  function markBytecodeAsPublished(bytes32 _bytecodeHash) external;
 
-    function getMarker(bytes32 _hash) external view returns (uint256);
+  function getMarker(bytes32 _hash) external view returns (uint256);
 }

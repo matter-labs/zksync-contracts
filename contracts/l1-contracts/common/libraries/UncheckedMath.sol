@@ -8,18 +8,19 @@ pragma solidity ^0.8.0;
  * @notice The library for unchecked math.
  */
 library UncheckedMath {
-    function uncheckedInc(uint256 _number) internal pure returns (uint256) {
-        unchecked {
-            return _number + 1;
-        }
+  function uncheckedInc(uint256 _number) internal pure returns (uint256) {
+    unchecked {
+      return _number + 1;
     }
+  }
 
-    function uncheckedAdd(
-        uint256 _lhs,
-        uint256 _rhs
-    ) internal pure returns (uint256) {
-        unchecked {
-            return _lhs + _rhs;
-        }
+  function uncheckedAdd(uint256 _lhs, uint256 _rhs)
+    internal
+    pure
+    returns (uint256)
+  {
+    unchecked {
+      return _lhs + _rhs;
     }
+  }
 }

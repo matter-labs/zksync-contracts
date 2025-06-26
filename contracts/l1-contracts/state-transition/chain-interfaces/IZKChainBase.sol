@@ -6,6 +6,6 @@ pragma solidity ^0.8.0;
 /// @author Matter Labs
 /// @custom:security-contact security@matterlabs.dev
 interface IZKChainBase {
-    /// @return Returns facet name.
-    function getName() external view returns (string memory);
+  /// @return Returns facet name.
+  function getName() external view returns (string memory);
 }

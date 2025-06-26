@@ -26,11 +26,12 @@ error WithdrawFailed();
 error MalformedBytecode(BytecodeError);
 
 enum BytecodeError {
-    Version,
-    NumberOfWords,
-    Length,
-    WordsMustBeOdd,
-    DictionaryLength
+  Version,
+  NumberOfWords,
+  Length,
+  WordsMustBeOdd,
+  DictionaryLength
 }
 // 0xd92e233d
+
 error ZeroAddress();

@@ -6,8 +6,8 @@ pragma solidity ^0.8.0;
 /// @param Failure The transaction execution failed
 /// @param Success The transaction execution succeeded
 enum TxStatus {
-    Failure,
-    Success
+  Failure,
+  Success
 }
 
 /// @dev The log passed from L2
@@ -21,12 +21,12 @@ enum TxStatus {
 /// @param value The 32 bytes of information that was sent in the log
 // Both `key` and `value` are arbitrary 32-bytes selected by the log sender
 struct L2Log {
-    uint8 l2ShardId;
-    bool isService;
-    uint16 txNumberInBatch;
-    address sender;
-    bytes32 key;
-    bytes32 value;
+  uint8 l2ShardId;
+  bool isService;
+  uint16 txNumberInBatch;
+  address sender;
+  bytes32 key;
+  bytes32 value;
 }
 
 /// @dev An arbitrary length message passed from L2
@@ -35,9 +35,9 @@ struct L2Log {
 /// @param sender The address of the L2 account from which the message was passed
 /// @param data An arbitrary length message
 struct L2Message {
-    uint16 txNumberInBatch;
-    address sender;
-    bytes data;
+  uint16 txNumberInBatch;
+  address sender;
+  bytes data;
 }
 
 /// @dev Internal structure that contains the parameters for the writePriorityOp
@@ -47,10 +47,10 @@ struct L2Message {
 /// @param expirationTimestamp The timestamp by which the priority operation must be processed by the operator.
 /// @param request The external calldata request for the priority operation.
 struct WritePriorityOpParams {
-    uint256 txId;
-    uint256 l2GasPrice;
-    uint64 expirationTimestamp;
-    BridgehubL2TransactionRequest request;
+  uint256 txId;
+  uint256 l2GasPrice;
+  uint64 expirationTimestamp;
+  BridgehubL2TransactionRequest request;
 }
 
 /// @dev Structure that includes all fields of the L2 transaction
@@ -84,32 +84,32 @@ struct WritePriorityOpParams {
 /// @param paymasterInput The arbitrary-length data that is used as a calldata to the paymaster pre-call
 /// @param reservedDynamic The arbitrary-length field for usage in a future extension of transaction formats
 struct L2CanonicalTransaction {
-    uint256 txType;
-    uint256 from;
-    uint256 to;
-    uint256 gasLimit;
-    uint256 gasPerPubdataByteLimit;
-    uint256 maxFeePerGas;
-    uint256 maxPriorityFeePerGas;
-    uint256 paymaster;
-    uint256 nonce;
-    uint256 value;
-    // In the future, we might want to add some
-    // new fields to the struct. The `txData` struct
-    // is to be passed to account and any changes to its structure
-    // would mean a breaking change to these accounts. To prevent this,
-    // we should keep some fields as "reserved"
-    // It is also recommended that their length is fixed, since
-    // it would allow easier proof integration (in case we will need
-    // some special circuit for preprocessing transactions)
-    uint256[4] reserved;
-    bytes data;
-    bytes signature;
-    uint256[] factoryDeps;
-    bytes paymasterInput;
-    // Reserved dynamic type for the future use-case. Using it should be avoided,
-    // But it is still here, just in case we want to enable some additional functionality
-    bytes reservedDynamic;
+  uint256 txType;
+  uint256 from;
+  uint256 to;
+  uint256 gasLimit;
+  uint256 gasPerPubdataByteLimit;
+  uint256 maxFeePerGas;
+  uint256 maxPriorityFeePerGas;
+  uint256 paymaster;
+  uint256 nonce;
+  uint256 value;
+  // In the future, we might want to add some
+  // new fields to the struct. The `txData` struct
+  // is to be passed to account and any changes to its structure
+  // would mean a breaking change to these accounts. To prevent this,
+  // we should keep some fields as "reserved"
+  // It is also recommended that their length is fixed, since
+  // it would allow easier proof integration (in case we will need
+  // some special circuit for preprocessing transactions)
+  uint256[4] reserved;
+  bytes data;
+  bytes signature;
+  uint256[] factoryDeps;
+  bytes paymasterInput;
+  // Reserved dynamic type for the future use-case. Using it should be avoided,
+  // But it is still here, just in case we want to enable some additional functionality
+  bytes reservedDynamic;
 }
 
 /// @param sender The sender's address.
@@ -124,13 +124,13 @@ struct L2CanonicalTransaction {
 /// this address will receive the `l2Value`.
 // solhint-disable-next-line gas-struct-packing
 struct BridgehubL2TransactionRequest {
-    address sender;
-    address contractL2;
-    uint256 mintValue;
-    uint256 l2Value;
-    bytes l2Calldata;
-    uint256 l2GasLimit;
-    uint256 l2GasPerPubdataByteLimit;
-    bytes[] factoryDeps;
-    address refundRecipient;
+  address sender;
+  address contractL2;
+  uint256 mintValue;
+  uint256 l2Value;
+  bytes l2Calldata;
+  uint256 l2GasLimit;
+  uint256 l2GasPerPubdataByteLimit;
+  bytes[] factoryDeps;
+  address refundRecipient;
 }

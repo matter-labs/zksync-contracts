@@ -6,5 +6,5 @@ pragma solidity ^0.8.0;
 /// @author Matter Labs
 /// @custom:security-contact security@matterlabs.dev
 interface IL1SharedBridgeLegacy {
-    function l2BridgeAddress(uint256 _chainId) external view returns (address);
+  function l2BridgeAddress(uint256 _chainId) external view returns (address);
 }

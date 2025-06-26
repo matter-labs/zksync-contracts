@@ -3,28 +3,25 @@
 pragma solidity ^0.8.0;
 
 interface IBridgedStandardToken {
-    event BridgeInitialize(
-        address indexed l1Token,
-        string name,
-        string symbol,
-        uint8 decimals
-    );
+  event BridgeInitialize(
+    address indexed l1Token, string name, string symbol, uint8 decimals
+  );
 
-    event BridgeMint(address indexed account, uint256 amount);
+  event BridgeMint(address indexed account, uint256 amount);
 
-    event BridgeBurn(address indexed account, uint256 amount);
+  event BridgeBurn(address indexed account, uint256 amount);
 
-    function bridgeMint(address _account, uint256 _amount) external;
+  function bridgeMint(address _account, uint256 _amount) external;
 
-    function bridgeBurn(address _account, uint256 _amount) external;
+  function bridgeBurn(address _account, uint256 _amount) external;
 
-    function l1Address() external view returns (address);
+  function l1Address() external view returns (address);
 
-    function originToken() external view returns (address);
+  function originToken() external view returns (address);
 
-    function l2Bridge() external view returns (address);
+  function l2Bridge() external view returns (address);
 
-    function assetId() external view returns (bytes32);
+  function assetId() external view returns (bytes32);
 
-    function nativeTokenVault() external view returns (address);
+  function nativeTokenVault() external view returns (address);
 }

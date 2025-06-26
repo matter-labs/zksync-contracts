@@ -7,7 +7,6 @@
 
 This package contains lightweight subset of ZKsync L1, L2 and system contracts that we consider to be publicly facing. For more details see [era-contracts](https://github.com/matter-labs/era-contracts).
 
-
 > [!IMPORTANT]
 > Current contract snapshot was made for protocol version 26 as taken from commit [6badcb8a9b6114c6dd10d3b172a96812250604b0](https://github.com/matter-labs/era-contracts/commit/6badcb8a9b6114c6dd10d3b172a96812250604b0)
 
@@ -16,19 +15,19 @@ This package contains lightweight subset of ZKsync L1, L2 and system contracts t
 ### Hardhat
 
 ```bash
-yarn add @matterlabs/zksync-contracts@beta
+bun install @matterlabs/zksync-contracts
 ```
 
 ### Foundry
 
 ```bash
-forge install matter-labs/v2-testnet-contracts@beta
+forge install matter-labs/zksync-contracts
 ```
 
 Add the following to the `remappings.txt` file of your project:
 
 ```txt
-@matterlabs/zksync-contracts/=lib/v2-testnet-contracts/
+@matterlabs/zksync-contracts/=lib/zksync-contracts/
 ```
 
 ## Usage
@@ -37,10 +36,10 @@ Add the following to the `remappings.txt` file of your project:
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import {IPaymaster} from "@matterlabs/zksync-contracts/contracts/system-contracts/interfaces/IPaymaster.sol";
+import { IPaymaster } from '@matterlabs/zksync-contracts/contracts/system-contracts/interfaces/IPaymaster.sol';
 
 contract MyPaymaster is IPaymaster {
-     // IMPLEMENTATION
+  // IMPLEMENTATION
 }
 ```
 

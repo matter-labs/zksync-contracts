@@ -1,0 +1,89 @@
+name: ci-run
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  # ------------------------------------------------------------------
+  general-checks:
+    name: general-checks 🧹
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: "latest"
+
+      - name: Restore Bun cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lockb') }}
+
+      - name: Install deps
+        run: bun install --frozen-lockfile
+
+      - name: Prettier format check
+        run: bun run fmt:check
+
+      - name: ESLint + type-check
+        run: |
+          bun run lint
+          bun run tsc --noEmit
+
+  # ------------------------------------------------------------------
+  foundry-checks:
+    name: foundry-checks 🛠️
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+
+      - name: Solidity format check
+        run: forge fmt --check
+
+      - name: Build
+        run: forge build --sizes
+
+      - name: Set up Foundry-ZKsync
+        uses: dutterbutter/foundry-zksync-toolchain@v1
+
+      - name: Build
+        run: forge build --sizes --zksync
+
+  # ------------------------------------------------------------------
+  hardhat-checks:
+    name: hardhat-checks 🏗️
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: "latest"
+
+      - name: Restore Bun cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lockb') }}
+
+      - name: Install deps
+        run: bun install --frozen-lockfile
+
+      - name: Compile
+        run: bun run hh:compile

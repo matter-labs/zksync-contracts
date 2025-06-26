@@ -3,27 +3,20 @@
 pragma solidity ^0.8.0;
 
 interface IAccountCodeStorage {
-    function storeAccountConstructingCodeHash(
-        address _address,
-        bytes32 _hash
-    ) external;
+  function storeAccountConstructingCodeHash(address _address, bytes32 _hash)
+    external;
 
-    function storeAccountConstructedCodeHash(
-        address _address,
-        bytes32 _hash
-    ) external;
+  function storeAccountConstructedCodeHash(address _address, bytes32 _hash)
+    external;
 
-    function markAccountCodeHashAsConstructed(address _address) external;
+  function markAccountCodeHashAsConstructed(address _address) external;
 
-    function getRawCodeHash(
-        address _address
-    ) external view returns (bytes32 codeHash);
+  function getRawCodeHash(address _address)
+    external
+    view
+    returns (bytes32 codeHash);
 
-    function getCodeHash(
-        uint256 _input
-    ) external view returns (bytes32 codeHash);
+  function getCodeHash(uint256 _input) external view returns (bytes32 codeHash);
 
-    function getCodeSize(
-        uint256 _input
-    ) external view returns (uint256 codeSize);
+  function getCodeSize(uint256 _input) external view returns (uint256 codeSize);
 }

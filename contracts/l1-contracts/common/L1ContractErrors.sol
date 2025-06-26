@@ -45,8 +45,7 @@ error BatchHashMismatch(bytes32 expected, bytes32 actual);
 error BatchNotExecuted(uint256 batchNumber);
 // 0xbd4455ff
 error BatchNumberMismatch(
-    uint256 expectedBatchNumber,
-    uint256 providedBatchNumber
+  uint256 expectedBatchNumber, uint256 providedBatchNumber
 );
 // 0x6cf12312
 error BridgeHubAlreadyRegistered();
@@ -124,9 +123,7 @@ error InvalidDelay();
 error InvalidLogSender(address sender, uint256 logKey);
 // 0xd8e9405c
 error InvalidNumberOfBlobs(
-    uint256 expected,
-    uint256 numCommitments,
-    uint256 numHashes
+  uint256 expected, uint256 numCommitments, uint256 numHashes
 );
 // 0x09bde339
 error InvalidProof();
@@ -146,8 +143,7 @@ error InvalidUpgradeTxn(UpgradeTxVerifyParam);
 error L2TimestampTooBig();
 // 0xd2c011d6
 error L2UpgradeNonceNotEqualToNewProtocolVersion(
-    uint256 nonce,
-    uint256 protocolVersion
+  uint256 nonce, uint256 protocolVersion
 );
 // 0x97e1359e
 error L2WithdrawalMessageWrongLength(uint256 messageLen);
@@ -225,8 +221,7 @@ error PriorityOperationsRollingHashMismatch();
 error PriorityTxPubdataExceedsMaxPubDataPerBatch();
 // 0xa461f651
 error ProtocolIdMismatch(
-    uint256 expectedProtocolVersion,
-    uint256 providedProtocolId
+  uint256 expectedProtocolVersion, uint256 providedProtocolId
 );
 // 0x64f94ec2
 error ProtocolIdNotGreater();
@@ -318,10 +313,10 @@ error UnsupportedProofBatchEncoding(uint8 version);
 error UnsupportedExecuteBatchEncoding(uint8 version);
 // 0xd7d93e1f
 error IncorrectBatchBounds(
-    uint256 processFromExpected,
-    uint256 processToExpected,
-    uint256 processFromProvided,
-    uint256 processToProvided
+  uint256 processFromExpected,
+  uint256 processToExpected,
+  uint256 processFromProvided,
+  uint256 processToProvided
 );
 // 0x64107968
 error AssetHandlerNotRegistered(bytes32 assetId);
@@ -406,31 +401,31 @@ error LegacyBridgeNotSet();
 error LegacyMethodForNonL1Token();
 
 enum SharedBridgeKey {
-    PostUpgradeFirstBatch,
-    LegacyBridgeFirstBatch,
-    LegacyBridgeLastDepositBatch,
-    LegacyBridgeLastDepositTxn
+  PostUpgradeFirstBatch,
+  LegacyBridgeFirstBatch,
+  LegacyBridgeLastDepositBatch,
+  LegacyBridgeLastDepositTxn
 }
 
 enum BytecodeError {
-    Version,
-    NumberOfWords,
-    Length,
-    WordsMustBeOdd
+  Version,
+  NumberOfWords,
+  Length,
+  WordsMustBeOdd
 }
 
 enum UpgradeTxVerifyParam {
-    From,
-    To,
-    Paymaster,
-    Value,
-    MaxFeePerGas,
-    MaxPriorityFeePerGas,
-    Reserved0,
-    Reserved1,
-    Reserved2,
-    Reserved3,
-    Signature,
-    PaymasterInput,
-    ReservedDynamic
+  From,
+  To,
+  Paymaster,
+  Value,
+  MaxFeePerGas,
+  MaxPriorityFeePerGas,
+  Reserved0,
+  Reserved1,
+  Reserved2,
+  Reserved3,
+  Signature,
+  PaymasterInput,
+  ReservedDynamic
 }

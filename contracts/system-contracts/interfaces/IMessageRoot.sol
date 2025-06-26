@@ -8,7 +8,7 @@ pragma solidity ^0.8.0;
  * @custom:security-contact security@matterlabs.dev
  */
 interface IMessageRoot {
-    /// @notice The aggregated root of the batches from different chains.
-    /// @return aggregatedRoot of the batches from different chains.
-    function getAggregatedRoot() external view returns (bytes32 aggregatedRoot);
+  /// @notice The aggregated root of the batches from different chains.
+  /// @return aggregatedRoot of the batches from different chains.
+  function getAggregatedRoot() external view returns (bytes32 aggregatedRoot);
 }

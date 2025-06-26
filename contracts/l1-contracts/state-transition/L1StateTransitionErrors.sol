@@ -16,20 +16,17 @@ error NotChainAdmin(address prevMsgSender, address admin);
 
 // 0xc59d372c
 error ProtocolVersionNotUpToDate(
-    uint256 currentProtocolVersion,
-    uint256 protocolVersion
+  uint256 currentProtocolVersion, uint256 protocolVersion
 );
 
 // 0xedae13f3
 error ExecutedIsNotConsistentWithVerified(
-    uint256 batchesExecuted,
-    uint256 batchesVerified
+  uint256 batchesExecuted, uint256 batchesVerified
 );
 
 // 0x712d02d2
 error VerifiedIsNotConsistentWithCommitted(
-    uint256 batchesVerified,
-    uint256 batchesCommitted
+  uint256 batchesVerified, uint256 batchesCommitted
 );
 
 // 0xfb1a3b59
@@ -58,14 +55,12 @@ error MismatchL2DAValidator();
 
 // 0x2c01a4af
 error MismatchNumberOfLayer1Txs(
-    uint256 numberOfLayer1Txs,
-    uint256 expectedLength
+  uint256 numberOfLayer1Txs, uint256 expectedLength
 );
 
 // 0xfbd630b8
 error InvalidBatchesDataLength(
-    uint256 batchesDataLength,
-    uint256 priorityOpsDataLength
+  uint256 batchesDataLength, uint256 priorityOpsDataLength
 );
 
 // 0x55008233
@@ -79,8 +74,7 @@ error PriorityOpsDataItemHashesLengthIsNotZero();
 
 // 0x885ae069
 error OperatorDAInputTooSmall(
-    uint256 operatorDAInputLength,
-    uint256 minAllowedLength
+  uint256 operatorDAInputLength, uint256 minAllowedLength
 );
 
 // 0xbeb96791
@@ -94,8 +88,7 @@ error OnlyOneBlobWithCalldataAllowed();
 
 // 0x2dc9747d
 error PubdataInputTooSmall(
-    uint256 pubdataInputLength,
-    uint256 totalBlobsCommitmentSize
+  uint256 pubdataInputLength, uint256 totalBlobsCommitmentSize
 );
 
 // 0x9044dff9
@@ -118,8 +111,7 @@ error InvalidCommitment();
 
 // 0xc866ff2c
 error InitialForceDeploymentMismatch(
-    bytes32 forceDeploymentHash,
-    bytes32 initialForceDeploymentHash
+  bytes32 forceDeploymentHash, bytes32 initialForceDeploymentHash
 );
 
 // 0xb325f767
@@ -127,8 +119,7 @@ error AdminZero();
 
 // 0x681150be
 error OutdatedProtocolVersion(
-    uint256 protocolVersion,
-    uint256 currentProtocolVersion
+  uint256 protocolVersion, uint256 currentProtocolVersion
 );
 
 // 0x87470e36
@@ -139,14 +130,12 @@ error InvalidStartIndex(uint256 treeStartIndex, uint256 commitmentStartIndex);
 
 // 0x0f67bc0a
 error InvalidUnprocessedIndex(
-    uint256 treeUnprocessedIndex,
-    uint256 commitmentUnprocessedIndex
+  uint256 treeUnprocessedIndex, uint256 commitmentUnprocessedIndex
 );
 
 // 0x30043900
 error InvalidNextLeafIndex(
-    uint256 treeNextLeafIndex,
-    uint256 commitmentNextLeafIndex
+  uint256 treeNextLeafIndex, uint256 commitmentNextLeafIndex
 );
 
 // 0xf9ba09d6

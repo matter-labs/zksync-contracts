@@ -58,10 +58,10 @@ address constant L2_ASSET_ROUTER_ADDR = address(0x10003);
  * it requires that the preimage of `value` be provided.
  */
 interface IL2Messenger {
-    /// @notice Sends an arbitrary length message to L1.
-    /// @param _message The variable length message to be sent to L1.
-    /// @return Returns the keccak256 hashed value of the message.
-    function sendToL1(bytes calldata _message) external returns (bytes32);
+  /// @notice Sends an arbitrary length message to L1.
+  /// @param _message The variable length message to be sent to L1.
+  /// @return Returns the keccak256 hashed value of the message.
+  function sendToL1(bytes calldata _message) external returns (bytes32);
 }
 
 /// @dev An l2 system contract address, used in the assetId calculation for native assets.
@@ -76,11 +76,9 @@ address constant L2_MESSAGE_ROOT_ADDR = address(0x10005);
 uint160 constant SYSTEM_CONTRACTS_OFFSET = 0x8000; // 2^15
 
 /// @dev the address of the l2 messenger system contract
-IL2Messenger constant L2_MESSENGER = IL2Messenger(
-    address(SYSTEM_CONTRACTS_OFFSET + 0x08)
-);
+IL2Messenger constant L2_MESSENGER =
+  IL2Messenger(address(SYSTEM_CONTRACTS_OFFSET + 0x08));
 
 /// @dev the address of the msg value system contract
-address constant MSG_VALUE_SYSTEM_CONTRACT = address(
-    SYSTEM_CONTRACTS_OFFSET + 0x09
-);
+address constant MSG_VALUE_SYSTEM_CONTRACT =
+  address(SYSTEM_CONTRACTS_OFFSET + 0x09);
