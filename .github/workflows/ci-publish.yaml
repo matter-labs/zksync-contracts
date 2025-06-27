@@ -42,7 +42,7 @@ jobs:
       - name: Push to Soldeer (dry-run)
         id: soldeer-dry-run
         run: |
-          VERSION="$(echo "${{ github.event.release.tag_name }}" | sed -E 's/^v//')"
+          VERSION="$(echo "v28.0.0" | sed -E 's/^v//')"
           NAME="${SOLDEER_PROJECT_NAME##*/}"
           forge soldeer push "${NAME}~${VERSION}" --dry-run --skip-warnings
         shell: bash
