@@ -1,0 +1,404 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>BatchDecoder - ZKSync Contracts</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../../../favicon.png">
+        <link rel="stylesheet" href="../../../../../css/variables.css">
+        <link rel="stylesheet" href="../../../../../css/general.css">
+        <link rel="stylesheet" href="../../../../../css/chrome.css">
+        <link rel="stylesheet" href="../../../../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../../../book.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../../../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">ZKSync Contracts</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/matter-labs/zksync-contracts" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="batchdecoder"><a class="header" href="#batchdecoder">BatchDecoder</a></h1>
+<p><a href="https://github.com/matter-labs/zksync-contracts/blob/513d0c84489054451b8c50ddfbb2337334d9151b/contracts/l1-contracts/state-transition/libraries/BatchDecoder.sol">Git Source</a></p>
+<p><strong>Author:</strong>
+Matter Labs</p>
+<p>Utility library for decoding and validating batch data.</p>
+<p><em>This library decodes commit, proof, and execution batch data and verifies batch number bounds.
+It reverts with custom errors when the data is invalid or unsupported encoding is used.</em></p>
+<p><strong>Note:</strong>
+security-contact: security@matterlabs.dev</p>
+<h2 id="state-variables"><a class="header" href="#state-variables">State Variables</a></h2>
+<h3 id="supported_encoding_version"><a class="header" href="#supported_encoding_version">SUPPORTED_ENCODING_VERSION</a></h3>
+<p>The currently supported encoding version.</p>
+<pre><code class="language-solidity">uint8 internal constant SUPPORTED_ENCODING_VERSION = 1;
+</code></pre>
+<h2 id="functions"><a class="header" href="#functions">Functions</a></h2>
+<h3 id="_decodecommitdata"><a class="header" href="#_decodecommitdata">_decodeCommitData</a></h3>
+<p>Decodes commit data from a calldata bytes into the last committed batch data and an array of new batch data.</p>
+<pre><code class="language-solidity">function _decodeCommitData(bytes calldata _commitData)
+  private
+  pure
+  returns (
+    IExecutor.StoredBatchInfo memory lastCommittedBatchData,
+    IExecutor.CommitBatchInfo[] memory newBatchesData
+  );
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_commitData</code></td><td><code>bytes</code></td><td>The calldata byte array containing the data for committing batches.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>lastCommittedBatchData</code></td><td><code>IExecutor.StoredBatchInfo</code></td><td>The data for the batch before newly committed batches.</td></tr>
+<tr><td><code>newBatchesData</code></td><td><code>IExecutor.CommitBatchInfo[]</code></td><td>An array containing the newly committed batches.</td></tr>
+</tbody></table>
+</div>
+<h3 id="decodeandcheckprecommitdata"><a class="header" href="#decodeandcheckprecommitdata">decodeAndCheckPrecommitData</a></h3>
+<p>Decodes and validates precommit data for a batch, ensuring the encoding version is supported.</p>
+<p><em>The first byte of <code>_precommitData</code> is interpreted as the encoding version and must equal <code>SUPPORTED_ENCODING_VERSION</code>.
+If it does, the remainder of the data is decoded into an <code>IExecutor.PrecommitInfo</code> struct. Otherwise, this call reverts.</em></p>
+<pre><code class="language-solidity">function decodeAndCheckPrecommitData(bytes calldata _precommitData)
+  internal
+  pure
+  returns (IExecutor.PrecommitInfo memory precommitInfo);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_precommitData</code></td><td><code>bytes</code></td><td>ABI-encoded bytes where the first byte is the encoding version, followed by the encoded <code>PrecommitInfo</code>.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>precommitInfo</code></td><td><code>IExecutor.PrecommitInfo</code></td><td>The decoded <code>PrecommitInfo</code> containing transaction status commitments.</td></tr>
+</tbody></table>
+</div>
+<h3 id="decodeandcheckcommitdata"><a class="header" href="#decodeandcheckcommitdata">decodeAndCheckCommitData</a></h3>
+<p>Decodes the commit data and checks that the provided batch bounds are correct.</p>
+<p><em>Note that it only checks that the last and the first batches in the array correspond to the provided bounds.
+The fact that the batches inside the array are provided in the correct order should be checked by the caller.</em></p>
+<pre><code class="language-solidity">function decodeAndCheckCommitData(
+  bytes calldata _commitData,
+  uint256 _processBatchFrom,
+  uint256 _processBatchTo
+)
+  internal
+  pure
+  returns (
+    IExecutor.StoredBatchInfo memory lastCommittedBatchData,
+    IExecutor.CommitBatchInfo[] memory newBatchesData
+  );
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_commitData</code></td><td><code>bytes</code></td><td>The calldata byte array containing the data for committing batches.</td></tr>
+<tr><td><code>_processBatchFrom</code></td><td><code>uint256</code></td><td>The expected batch number of the first commit batch in the array.</td></tr>
+<tr><td><code>_processBatchTo</code></td><td><code>uint256</code></td><td>The expected batch number of the last commit batch in the array.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>lastCommittedBatchData</code></td><td><code>IExecutor.StoredBatchInfo</code></td><td>The data for the batch before newly committed batches.</td></tr>
+<tr><td><code>newBatchesData</code></td><td><code>IExecutor.CommitBatchInfo[]</code></td><td>An array containing the newly committed batches.</td></tr>
+</tbody></table>
+</div>
+<h3 id="_decodeproofdata"><a class="header" href="#_decodeproofdata">_decodeProofData</a></h3>
+<p>Decodes proof data from a calldata byte array into the previous batch, an array of proved batches, and a proof array.</p>
+<pre><code class="language-solidity">function _decodeProofData(bytes calldata _proofData)
+  private
+  pure
+  returns (
+    IExecutor.StoredBatchInfo memory prevBatch,
+    IExecutor.StoredBatchInfo[] memory provedBatches,
+    uint256[] memory proof
+  );
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_proofData</code></td><td><code>bytes</code></td><td>The calldata byte array containing the data for proving batches.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>prevBatch</code></td><td><code>IExecutor.StoredBatchInfo</code></td><td>The batch information before the batches to be verified.</td></tr>
+<tr><td><code>provedBatches</code></td><td><code>IExecutor.StoredBatchInfo[]</code></td><td>An array containing the the batches to be verified.</td></tr>
+<tr><td><code>proof</code></td><td><code>uint256[]</code></td><td>An array containing the proof for the verifier.</td></tr>
+</tbody></table>
+</div>
+<h3 id="decodeandcheckproofdata"><a class="header" href="#decodeandcheckproofdata">decodeAndCheckProofData</a></h3>
+<p>Decodes the commit data and checks that the provided batch bounds are correct.</p>
+<p><em>Note that it only checks that the last and the first batches in the array correspond to the provided bounds.
+The fact that the batches inside the array are provided in the correct order should be checked by the caller.</em></p>
+<pre><code class="language-solidity">function decodeAndCheckProofData(
+  bytes calldata _proofData,
+  uint256 _processBatchFrom,
+  uint256 _processBatchTo
+)
+  internal
+  pure
+  returns (
+    IExecutor.StoredBatchInfo memory prevBatch,
+    IExecutor.StoredBatchInfo[] memory provedBatches,
+    uint256[] memory proof
+  );
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_proofData</code></td><td><code>bytes</code></td><td>The commit data to decode.</td></tr>
+<tr><td><code>_processBatchFrom</code></td><td><code>uint256</code></td><td>The expected batch number of the first batch in the array.</td></tr>
+<tr><td><code>_processBatchTo</code></td><td><code>uint256</code></td><td>The expected batch number of the last batch in the array.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>prevBatch</code></td><td><code>IExecutor.StoredBatchInfo</code></td><td>The batch information before the batches to be verified.</td></tr>
+<tr><td><code>provedBatches</code></td><td><code>IExecutor.StoredBatchInfo[]</code></td><td>An array containing the the batches to be verified.</td></tr>
+<tr><td><code>proof</code></td><td><code>uint256[]</code></td><td>An array containing the proof for the verifier.</td></tr>
+</tbody></table>
+</div>
+<h3 id="_decodeexecutedata"><a class="header" href="#_decodeexecutedata">_decodeExecuteData</a></h3>
+<p>Decodes execution data from a calldata byte array into an array of stored batch information.</p>
+<pre><code class="language-solidity">function _decodeExecuteData(bytes calldata _executeData)
+  private
+  pure
+  returns (
+    IExecutor.StoredBatchInfo[] memory executeData,
+    PriorityOpsBatchInfo[] memory priorityOpsData,
+    InteropRoot[][] memory dependencyRoots
+  );
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_executeData</code></td><td><code>bytes</code></td><td>The calldata byte array containing the execution data to decode.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>executeData</code></td><td><code>IExecutor.StoredBatchInfo[]</code></td><td>An array containing the stored batch information for execution.</td></tr>
+<tr><td><code>priorityOpsData</code></td><td><code>PriorityOpsBatchInfo[]</code></td><td>Merkle proofs of the priority operations for each batch.</td></tr>
+<tr><td><code>dependencyRoots</code></td><td><code>InteropRoot[][]</code></td><td></td></tr>
+</tbody></table>
+</div>
+<h3 id="decodeandcheckexecutedata"><a class="header" href="#decodeandcheckexecutedata">decodeAndCheckExecuteData</a></h3>
+<p>Decodes the execute data and checks that the provided batch bounds are correct.</p>
+<p><em>Note that it only checks that the last and the first batches in the array correspond to the provided bounds.
+The fact that the batches inside the array are provided in the correct order should be checked by the caller.</em></p>
+<pre><code class="language-solidity">function decodeAndCheckExecuteData(
+  bytes calldata _executeData,
+  uint256 _processBatchFrom,
+  uint256 _processBatchTo
+)
+  internal
+  pure
+  returns (
+    IExecutor.StoredBatchInfo[] memory executeData,
+    PriorityOpsBatchInfo[] memory priorityOpsData,
+    InteropRoot[][] memory dependencyRoots
+  );
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_executeData</code></td><td><code>bytes</code></td><td>The calldata byte array containing the execution data to decode.</td></tr>
+<tr><td><code>_processBatchFrom</code></td><td><code>uint256</code></td><td>The expected batch number of the first batch in the array.</td></tr>
+<tr><td><code>_processBatchTo</code></td><td><code>uint256</code></td><td>The expected batch number of the last batch in the array.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>executeData</code></td><td><code>IExecutor.StoredBatchInfo[]</code></td><td>An array containing the stored batch information for execution.</td></tr>
+<tr><td><code>priorityOpsData</code></td><td><code>PriorityOpsBatchInfo[]</code></td><td>Merkle proofs of the priority operations for each batch.</td></tr>
+<tr><td><code>dependencyRoots</code></td><td><code>InteropRoot[][]</code></td><td></td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../../../contracts/l1-contracts/state-transition/libraries/PriorityTree.sol/library.PriorityTree.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../../../contracts/l1-contracts/state-transition/libraries/TransactionValidator.sol/library.TransactionValidator.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../../../contracts/l1-contracts/state-transition/libraries/PriorityTree.sol/library.PriorityTree.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../../../contracts/l1-contracts/state-transition/libraries/TransactionValidator.sol/library.TransactionValidator.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../../../elasticlunr.min.js"></script>
+        <script src="../../../../../mark.min.js"></script>
+        <script src="../../../../../searcher.js"></script>
+
+        <script src="../../../../../clipboard.min.js"></script>
+        <script src="../../../../../highlight.js"></script>
+        <script src="../../../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../../../solidity.min.js"></script>
+
+
+    </div>
+    </body>
+</html>

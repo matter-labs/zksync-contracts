@@ -1,0 +1,374 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>SystemContractsCaller - ZKSync Contracts</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../../favicon.png">
+        <link rel="stylesheet" href="../../../../css/variables.css">
+        <link rel="stylesheet" href="../../../../css/general.css">
+        <link rel="stylesheet" href="../../../../css/chrome.css">
+        <link rel="stylesheet" href="../../../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../../book.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">ZKSync Contracts</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/matter-labs/zksync-contracts" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="systemcontractscaller"><a class="header" href="#systemcontractscaller">SystemContractsCaller</a></h1>
+<p><a href="https://github.com/matter-labs/zksync-contracts/blob/ca798fe194dec167b6e6c6de3717d99bdb5de1d6/contracts/system-contracts/libraries/SystemContractsCaller.sol">Git Source</a></p>
+<p><strong>Author:</strong>
+Matter Labs</p>
+<p>A library that allows calling contracts with the <code>isSystem</code> flag.</p>
+<p><em>It is needed to call ContractDeployer and NonceHolder.</em></p>
+<p><strong>Note:</strong>
+security-contact: security@matterlabs.dev</p>
+<h2 id="functions"><a class="header" href="#functions">Functions</a></h2>
+<h3 id="systemcall"><a class="header" href="#systemcall">systemCall</a></h3>
+<p>Makes a call with the <code>isSystem</code> flag.</p>
+<p><em>Note, that the <code>isSystem</code> flag can only be set when calling system contracts.</em></p>
+<pre><code class="language-solidity">function systemCall(
+  uint32 gasLimit,
+  address to,
+  uint256 value,
+  bytes memory data
+) internal returns (bool success);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>gasLimit</code></td><td><code>uint32</code></td><td>The gas limit for the call.</td></tr>
+<tr><td><code>to</code></td><td><code>address</code></td><td>The address to call.</td></tr>
+<tr><td><code>value</code></td><td><code>uint256</code></td><td>The value to pass with the transaction.</td></tr>
+<tr><td><code>data</code></td><td><code>bytes</code></td><td>The calldata.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>success</code></td><td><code>bool</code></td><td>Whether the transaction has been successful.</td></tr>
+</tbody></table>
+</div>
+<h3 id="systemcallwithreturndata"><a class="header" href="#systemcallwithreturndata">systemCallWithReturndata</a></h3>
+<p>Makes a call with the <code>isSystem</code> flag.</p>
+<p><em>Note, that the <code>isSystem</code> flag can only be set when calling system contracts.</em></p>
+<pre><code class="language-solidity">function systemCallWithReturndata(
+  uint32 gasLimit,
+  address to,
+  uint128 value,
+  bytes memory data
+) internal returns (bool success, bytes memory returnData);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>gasLimit</code></td><td><code>uint32</code></td><td>The gas limit for the call.</td></tr>
+<tr><td><code>to</code></td><td><code>address</code></td><td>The address to call.</td></tr>
+<tr><td><code>value</code></td><td><code>uint128</code></td><td>The value to pass with the transaction.</td></tr>
+<tr><td><code>data</code></td><td><code>bytes</code></td><td>The calldata.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>success</code></td><td><code>bool</code></td><td>Whether the transaction has been successful.</td></tr>
+<tr><td><code>returnData</code></td><td><code>bytes</code></td><td>The returndata of the transaction (revert reason in case the transaction has failed).</td></tr>
+</tbody></table>
+</div>
+<h3 id="systemcallwithpropagatedrevert"><a class="header" href="#systemcallwithpropagatedrevert">systemCallWithPropagatedRevert</a></h3>
+<p>Makes a call with the <code>isSystem</code> flag.</p>
+<p><em>Note, that the <code>isSystem</code> flag can only be set when calling system contracts.</em></p>
+<pre><code class="language-solidity">function systemCallWithPropagatedRevert(
+  uint32 gasLimit,
+  address to,
+  uint128 value,
+  bytes memory data
+) internal returns (bytes memory returnData);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>gasLimit</code></td><td><code>uint32</code></td><td>The gas limit for the call.</td></tr>
+<tr><td><code>to</code></td><td><code>address</code></td><td>The address to call.</td></tr>
+<tr><td><code>value</code></td><td><code>uint128</code></td><td>The value to pass with the transaction.</td></tr>
+<tr><td><code>data</code></td><td><code>bytes</code></td><td>The calldata.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>returnData</code></td><td><code>bytes</code></td><td>The returndata of the transaction. In case the transaction reverts, the error bubbles up to the parent frame.</td></tr>
+</tbody></table>
+</div>
+<h3 id="getfarcallabi"><a class="header" href="#getfarcallabi">getFarCallABI</a></h3>
+<p>Calculates the packed representation of the FarCallABI.</p>
+<p><em>The <code>FarCallABI</code> has the following structure:
+pub struct FarCallABI {
+pub memory_quasi_fat_pointer: FatPointer,
+pub gas_passed: u32,
+pub shard_id: u8,
+pub forwarding_mode: FarCallForwardPageType,
+pub constructor_call: bool,
+pub to_system: bool,
+}
+The FatPointer struct:
+pub struct FatPointer {
+pub offset: u32, // offset relative to <code>start</code>
+pub memory_page: u32, // memory page where slice is located
+pub start: u32, // absolute start of the slice
+pub length: u32, // length of the slice
+}</em></p>
+<p><em>Note, that the actual layout is the following:
+[0..32) bits -- the calldata offset
+[32..64) bits -- the memory page to use. Can be left blank in most of the cases.
+[64..96) bits -- the absolute start of the slice
+[96..128) bits -- the length of the slice.
+[128..192) bits -- empty bits.
+[192..224) bits -- gasPassed.
+[224..232) bits -- forwarding_mode
+[232..240) bits -- shard id.
+[240..248) bits -- constructor call flag
+[248..256] bits -- system call flag</em></p>
+<pre><code class="language-solidity">function getFarCallABI(
+  uint32 dataOffset,
+  uint32 memoryPage,
+  uint32 dataStart,
+  uint32 dataLength,
+  uint32 gasPassed,
+  uint8 shardId,
+  CalldataForwardingMode forwardingMode,
+  bool isConstructorCall,
+  bool isSystemCall
+) internal pure returns (uint256 farCallAbi);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>dataOffset</code></td><td><code>uint32</code></td><td>Calldata offset in memory. Provide 0 unless using custom pointer.</td></tr>
+<tr><td><code>memoryPage</code></td><td><code>uint32</code></td><td>Memory page to use. Provide 0 unless using custom pointer.</td></tr>
+<tr><td><code>dataStart</code></td><td><code>uint32</code></td><td>The start of the calldata slice. Provide the offset in memory if not using custom pointer.</td></tr>
+<tr><td><code>dataLength</code></td><td><code>uint32</code></td><td>The calldata length. Provide the length of the calldata in bytes unless using custom pointer.</td></tr>
+<tr><td><code>gasPassed</code></td><td><code>uint32</code></td><td>The gas to pass with the call.</td></tr>
+<tr><td><code>shardId</code></td><td><code>uint8</code></td><td>Of the account to call. Currently only 0 is supported.</td></tr>
+<tr><td><code>forwardingMode</code></td><td><code>CalldataForwardingMode</code></td><td>The forwarding mode to use: - provide CalldataForwardingMode.UseHeap when using your current memory - provide CalldataForwardingMode.ForwardFatPointer when using custom pointer.</td></tr>
+<tr><td><code>isConstructorCall</code></td><td><code>bool</code></td><td>Whether the call will be a call to the constructor (ignored when the caller is not a system contract).</td></tr>
+<tr><td><code>isSystemCall</code></td><td><code>bool</code></td><td>Whether the call will have the <code>isSystem</code> flag.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>farCallAbi</code></td><td><code>uint256</code></td><td>The far call ABI.</td></tr>
+</tbody></table>
+</div>
+<h3 id="getfarcallabiwithemptyfatpointer"><a class="header" href="#getfarcallabiwithemptyfatpointer">getFarCallABIWithEmptyFatPointer</a></h3>
+<p>Calculates the packed representation of the FarCallABI with zero fat pointer fields.</p>
+<pre><code class="language-solidity">function getFarCallABIWithEmptyFatPointer(
+  uint32 gasPassed,
+  uint8 shardId,
+  CalldataForwardingMode forwardingMode,
+  bool isConstructorCall,
+  bool isSystemCall
+) internal pure returns (uint256 farCallAbiWithEmptyFatPtr);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>gasPassed</code></td><td><code>uint32</code></td><td>The gas to pass with the call.</td></tr>
+<tr><td><code>shardId</code></td><td><code>uint8</code></td><td>Of the account to call. Currently only 0 is supported.</td></tr>
+<tr><td><code>forwardingMode</code></td><td><code>CalldataForwardingMode</code></td><td>The forwarding mode to use: - provide CalldataForwardingMode.UseHeap when using your current memory - provide CalldataForwardingMode.ForwardFatPointer when using custom pointer.</td></tr>
+<tr><td><code>isConstructorCall</code></td><td><code>bool</code></td><td>Whether the call will be a call to the constructor (ignored when the caller is not a system contract).</td></tr>
+<tr><td><code>isSystemCall</code></td><td><code>bool</code></td><td>Whether the call will have the <code>isSystem</code> flag.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>farCallAbiWithEmptyFatPtr</code></td><td><code>uint256</code></td><td>The far call ABI with zero fat pointer fields.</td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../../contracts/system-contracts/libraries/SystemContractHelper.sol/enum.Global.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../../contracts/system-contracts/libraries/SystemContractsCaller.sol/constants.SystemContractsCaller.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../../contracts/system-contracts/libraries/SystemContractHelper.sol/enum.Global.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../../contracts/system-contracts/libraries/SystemContractsCaller.sol/constants.SystemContractsCaller.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../../elasticlunr.min.js"></script>
+        <script src="../../../../mark.min.js"></script>
+        <script src="../../../../searcher.js"></script>
+
+        <script src="../../../../clipboard.min.js"></script>
+        <script src="../../../../highlight.js"></script>
+        <script src="../../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../../solidity.min.js"></script>
+
+
+    </div>
+    </body>
+</html>

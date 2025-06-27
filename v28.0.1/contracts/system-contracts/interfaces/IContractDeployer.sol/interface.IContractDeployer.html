@@ -1,0 +1,576 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>IContractDeployer - ZKSync Contracts</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../../favicon.png">
+        <link rel="stylesheet" href="../../../../css/variables.css">
+        <link rel="stylesheet" href="../../../../css/general.css">
+        <link rel="stylesheet" href="../../../../css/chrome.css">
+        <link rel="stylesheet" href="../../../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../../book.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">ZKSync Contracts</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/matter-labs/zksync-contracts" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="icontractdeployer"><a class="header" href="#icontractdeployer">IContractDeployer</a></h1>
+<p><a href="https://github.com/matter-labs/zksync-contracts/blob/df3e167e528433a1b7073cb33b1253ee4f052445/contracts/system-contracts/interfaces/IContractDeployer.sol">Git Source</a></p>
+<p><strong>Author:</strong>
+Matter Labs</p>
+<p>Interface of the contract deployer contract -- a system contract responsible for deploying other contracts.</p>
+<p><strong>Note:</strong>
+security-contact: security@matterlabs.dev</p>
+<h2 id="functions"><a class="header" href="#functions">Functions</a></h2>
+<h3 id="allowedbytecodetypestodeploy"><a class="header" href="#allowedbytecodetypestodeploy">allowedBytecodeTypesToDeploy</a></h3>
+<p>Returns what types of bytecode are allowed to be deployed on this chain.</p>
+<pre><code class="language-solidity">function allowedBytecodeTypesToDeploy()
+  external
+  view
+  returns (AllowedBytecodeTypes mode);
+</code></pre>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>mode</code></td><td><code>AllowedBytecodeTypes</code></td><td>The allowed bytecode types mode.</td></tr>
+</tbody></table>
+</div>
+<h3 id="getnewaddresscreate2"><a class="header" href="#getnewaddresscreate2">getNewAddressCreate2</a></h3>
+<p>Calculates the address of a deployed contract via create2</p>
+<pre><code class="language-solidity">function getNewAddressCreate2(
+  address _sender,
+  bytes32 _bytecodeHash,
+  bytes32 _salt,
+  bytes calldata _input
+) external view returns (address newAddress);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_sender</code></td><td><code>address</code></td><td>The account that deploys the contract.</td></tr>
+<tr><td><code>_bytecodeHash</code></td><td><code>bytes32</code></td><td>The correctly formatted hash of the bytecode.</td></tr>
+<tr><td><code>_salt</code></td><td><code>bytes32</code></td><td>The create2 salt.</td></tr>
+<tr><td><code>_input</code></td><td><code>bytes</code></td><td>The constructor data.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>newAddress</code></td><td><code>address</code></td><td>The derived address of the account.</td></tr>
+</tbody></table>
+</div>
+<h3 id="getnewaddresscreate"><a class="header" href="#getnewaddresscreate">getNewAddressCreate</a></h3>
+<p>Calculates the address of a deployed contract via create</p>
+<pre><code class="language-solidity">function getNewAddressCreate(address _sender, uint256 _senderNonce)
+  external
+  pure
+  returns (address newAddress);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_sender</code></td><td><code>address</code></td><td>The account that deploys the contract.</td></tr>
+<tr><td><code>_senderNonce</code></td><td><code>uint256</code></td><td>The deploy nonce of the sender's account.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>newAddress</code></td><td><code>address</code></td><td>The derived address of the contract.</td></tr>
+</tbody></table>
+</div>
+<h3 id="create2"><a class="header" href="#create2">create2</a></h3>
+<p>Deploys a contract with similar address derivation rules to the EVM's <code>CREATE2</code> opcode.</p>
+<pre><code class="language-solidity">function create2(bytes32 _salt, bytes32 _bytecodeHash, bytes calldata _input)
+  external
+  payable
+  returns (address newAddress);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_salt</code></td><td><code>bytes32</code></td><td>The CREATE2 salt</td></tr>
+<tr><td><code>_bytecodeHash</code></td><td><code>bytes32</code></td><td>The correctly formatted hash of the bytecode.</td></tr>
+<tr><td><code>_input</code></td><td><code>bytes</code></td><td>The constructor calldata</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>newAddress</code></td><td><code>address</code></td><td>The derived address of the contract.</td></tr>
+</tbody></table>
+</div>
+<h3 id="create2account"><a class="header" href="#create2account">create2Account</a></h3>
+<p>Deploys a contract account with similar address derivation rules to the EVM's <code>CREATE2</code> opcode.</p>
+<p><em>this method may be callable only in system mode,
+that is checked in the <code>createAccount</code> by <code>onlySystemCall</code> modifier.</em></p>
+<pre><code class="language-solidity">function create2Account(
+  bytes32 _salt,
+  bytes32 _bytecodeHash,
+  bytes calldata _input,
+  AccountAbstractionVersion _aaVersion
+) external payable returns (address newAddress);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_salt</code></td><td><code>bytes32</code></td><td>The CREATE2 salt</td></tr>
+<tr><td><code>_bytecodeHash</code></td><td><code>bytes32</code></td><td>The correctly formatted hash of the bytecode.</td></tr>
+<tr><td><code>_input</code></td><td><code>bytes</code></td><td>The constructor calldata.</td></tr>
+<tr><td><code>_aaVersion</code></td><td><code>AccountAbstractionVersion</code></td><td>The account abstraction version to use.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>newAddress</code></td><td><code>address</code></td><td>The derived address of the contract.</td></tr>
+</tbody></table>
+</div>
+<h3 id="create"><a class="header" href="#create">create</a></h3>
+<p>Deploys a contract with similar address derivation rules to the EVM's <code>CREATE</code> opcode.</p>
+<p><em>Although this method accepts salt as one of its parameters.
+It is not used anywhere and is needed simply for the consistency for the compiler
+Note: this method may be callable only in system mode,
+that is checked in the <code>createAccount</code> by <code>onlySystemCall</code> modifier.</em></p>
+<pre><code class="language-solidity">function create(bytes32 _salt, bytes32 _bytecodeHash, bytes calldata _input)
+  external
+  payable
+  returns (address newAddress);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_salt</code></td><td><code>bytes32</code></td><td>A 32-byte salt.</td></tr>
+<tr><td><code>_bytecodeHash</code></td><td><code>bytes32</code></td><td>The correctly formatted hash of the bytecode.</td></tr>
+<tr><td><code>_input</code></td><td><code>bytes</code></td><td>The constructor calldata</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>newAddress</code></td><td><code>address</code></td><td>The derived address of the contract.</td></tr>
+</tbody></table>
+</div>
+<h3 id="createaccount"><a class="header" href="#createaccount">createAccount</a></h3>
+<p>Deploys a contract account with similar address derivation rules to the EVM's <code>CREATE</code> opcode.</p>
+<p><em>This method also accepts salt as one of its parameters.
+It is not used anywhere and it needed simply for the consistency for the compiler</em></p>
+<pre><code class="language-solidity">function createAccount(
+  bytes32,
+  bytes32 _bytecodeHash,
+  bytes calldata _input,
+  AccountAbstractionVersion _aaVersion
+) external payable returns (address newAddress);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>&lt;none&gt;</code></td><td><code>bytes32</code></td><td></td></tr>
+<tr><td><code>_bytecodeHash</code></td><td><code>bytes32</code></td><td>The correctly formatted hash of the bytecode.</td></tr>
+<tr><td><code>_input</code></td><td><code>bytes</code></td><td>The constructor calldata.</td></tr>
+<tr><td><code>_aaVersion</code></td><td><code>AccountAbstractionVersion</code></td><td>The account abstraction version to use.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>newAddress</code></td><td><code>address</code></td><td>The derived address of the contract.</td></tr>
+</tbody></table>
+</div>
+<h3 id="getaccountinfo"><a class="header" href="#getaccountinfo">getAccountInfo</a></h3>
+<p>Returns information about a certain account.</p>
+<pre><code class="language-solidity">function getAccountInfo(address _address)
+  external
+  view
+  returns (AccountInfo memory info);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_address</code></td><td><code>address</code></td><td>The address of the account.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>info</code></td><td><code>AccountInfo</code></td><td>The information about the account (AA version and nonce ordering).</td></tr>
+</tbody></table>
+</div>
+<h3 id="extendedaccountversion"><a class="header" href="#extendedaccountversion">extendedAccountVersion</a></h3>
+<p>Returns the account abstraction version if <code>_address</code> is a deployed contract.
+Returns the latest supported account abstraction version if <code>_address</code> is an EOA.</p>
+<pre><code class="language-solidity">function extendedAccountVersion(address _address)
+  external
+  view
+  returns (AccountAbstractionVersion);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_address</code></td><td><code>address</code></td><td>The address of the account.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>&lt;none&gt;</code></td><td><code>AccountAbstractionVersion</code></td><td>The account abstraction version of the account. In particular, <code>Version1</code> for EOAs, <code>None</code> for non-account contracts. .</td></tr>
+</tbody></table>
+</div>
+<h3 id="updateaccountversion"><a class="header" href="#updateaccountversion">updateAccountVersion</a></h3>
+<p>Update the used version of the account.</p>
+<p><em>Note that it allows changes from account to non-account and vice versa.</em></p>
+<pre><code class="language-solidity">function updateAccountVersion(AccountAbstractionVersion _version) external;
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_version</code></td><td><code>AccountAbstractionVersion</code></td><td>The new version of the AA protocol to use.</td></tr>
+</tbody></table>
+</div>
+<h3 id="updatenonceordering"><a class="header" href="#updatenonceordering">updateNonceOrdering</a></h3>
+<p>Updates the nonce ordering of the account. Since only <code>KeyedSequential</code> ordering
+is supported, currently this method always reverts.</p>
+<pre><code class="language-solidity">function updateNonceOrdering(AccountNonceOrdering) external;
+</code></pre>
+<h3 id="forcedeployonaddresses"><a class="header" href="#forcedeployonaddresses">forceDeployOnAddresses</a></h3>
+<p>This method is to be used only during an upgrade to set bytecodes on specific addresses.</p>
+<p><em>We do not require <code>onlySystemCall</code> here, since the method is accessible only
+by <code>FORCE_DEPLOYER</code>.</em></p>
+<pre><code class="language-solidity">function forceDeployOnAddresses(ForceDeployment[] calldata _deployments)
+  external
+  payable;
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_deployments</code></td><td><code>ForceDeployment[]</code></td><td>The list of forced deployments to be done.</td></tr>
+</tbody></table>
+</div>
+<h3 id="createevm"><a class="header" href="#createevm">createEVM</a></h3>
+<p>Deploys an EVM contract using address derivation of EVM's <code>CREATE</code> opcode.</p>
+<p><em>Note: this method may be callable only in system mode.</em></p>
+<pre><code class="language-solidity">function createEVM(bytes calldata _initCode)
+  external
+  payable
+  returns (uint256 evmGasUsed, address newAddress);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_initCode</code></td><td><code>bytes</code></td><td>The init code for the contract.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>evmGasUsed</code></td><td><code>uint256</code></td><td>The amount of EVM gas used.</td></tr>
+<tr><td><code>newAddress</code></td><td><code>address</code></td><td>The address of created contract.</td></tr>
+</tbody></table>
+</div>
+<h3 id="create2evm"><a class="header" href="#create2evm">create2EVM</a></h3>
+<p>Deploys an EVM contract using address derivation of EVM's <code>CREATE2</code> opcode.</p>
+<p><em>Note: this method may be callable only in system mode.</em></p>
+<pre><code class="language-solidity">function create2EVM(bytes32 _salt, bytes calldata _initCode)
+  external
+  payable
+  returns (uint256 evmGasUsed, address newAddress);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_salt</code></td><td><code>bytes32</code></td><td>The CREATE2 salt.</td></tr>
+<tr><td><code>_initCode</code></td><td><code>bytes</code></td><td>The init code for the contract.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>evmGasUsed</code></td><td><code>uint256</code></td><td>The amount of EVM gas used.</td></tr>
+<tr><td><code>newAddress</code></td><td><code>address</code></td><td>The address of created contract.</td></tr>
+</tbody></table>
+</div>
+<h3 id="setallowedbytecodetypestodeploy"><a class="header" href="#setallowedbytecodetypestodeploy">setAllowedBytecodeTypesToDeploy</a></h3>
+<p>Changes what types of bytecodes are allowed to be deployed on the chain.</p>
+<pre><code class="language-solidity">function setAllowedBytecodeTypesToDeploy(
+  AllowedBytecodeTypes newAllowedBytecodeTypes
+) external;
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>newAllowedBytecodeTypes</code></td><td><code>AllowedBytecodeTypes</code></td><td>The new allowed bytecode types mode.</td></tr>
+</tbody></table>
+</div>
+<h2 id="events"><a class="header" href="#events">Events</a></h2>
+<h3 id="contractdeployed"><a class="header" href="#contractdeployed">ContractDeployed</a></h3>
+<p>Emitted when a contract is deployed.</p>
+<pre><code class="language-solidity">event ContractDeployed(
+  address indexed deployerAddress,
+  bytes32 indexed bytecodeHash,
+  address indexed contractAddress
+);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>deployerAddress</code></td><td><code>address</code></td><td>The address of the deployer.</td></tr>
+<tr><td><code>bytecodeHash</code></td><td><code>bytes32</code></td><td>The formatted hash of the bytecode that was deployed.</td></tr>
+<tr><td><code>contractAddress</code></td><td><code>address</code></td><td>The address of the newly deployed contract.</td></tr>
+</tbody></table>
+</div>
+<h3 id="accountnonceorderingupdated"><a class="header" href="#accountnonceorderingupdated">AccountNonceOrderingUpdated</a></h3>
+<p>Emitted when account's nonce ordering is updated.
+Since currently only <code>KeyedSequential</code> ordering is supported and updating is not possible,
+the event is not emitted and is reserved for future use when updating becomes possible.</p>
+<pre><code class="language-solidity">event AccountNonceOrderingUpdated(
+  address indexed accountAddress, AccountNonceOrdering nonceOrdering
+);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>accountAddress</code></td><td><code>address</code></td><td>The address of the account.</td></tr>
+<tr><td><code>nonceOrdering</code></td><td><code>AccountNonceOrdering</code></td><td>The new nonce ordering of the account.</td></tr>
+</tbody></table>
+</div>
+<h3 id="accountversionupdated"><a class="header" href="#accountversionupdated">AccountVersionUpdated</a></h3>
+<p>Emitted when account's AA version is updated.</p>
+<pre><code class="language-solidity">event AccountVersionUpdated(
+  address indexed accountAddress, AccountAbstractionVersion aaVersion
+);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>accountAddress</code></td><td><code>address</code></td><td>The address of the contract.</td></tr>
+<tr><td><code>aaVersion</code></td><td><code>AccountAbstractionVersion</code></td><td>The new AA version of the contract.</td></tr>
+</tbody></table>
+</div>
+<h3 id="allowedbytecodetypesmodeupdated"><a class="header" href="#allowedbytecodetypesmodeupdated">AllowedBytecodeTypesModeUpdated</a></h3>
+<p>Emitted when the allowed bytecode types mode is updated (e.g. from <code>EraVm</code> to <code>EraVmAndEVM</code>).</p>
+<pre><code class="language-solidity">event AllowedBytecodeTypesModeUpdated(AllowedBytecodeTypes mode);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>mode</code></td><td><code>AllowedBytecodeTypes</code></td><td>The new allowed bytecode types mode.</td></tr>
+</tbody></table>
+</div>
+<h2 id="structs"><a class="header" href="#structs">Structs</a></h2>
+<h3 id="accountinfo"><a class="header" href="#accountinfo">AccountInfo</a></h3>
+<p>Information about an account contract.</p>
+<p><em>For EOA and simple contracts (i.e. not accounts) this has default value,
+which corresponds to <code>AccountAbstractionVersion.None</code>.and <code>AccountNonceOrdering.KeyedSequential</code>.</em></p>
+<pre><code class="language-solidity">struct AccountInfo {
+  AccountAbstractionVersion supportedAAVersion;
+  AccountNonceOrdering nonceOrdering;
+}
+</code></pre>
+<h2 id="enums"><a class="header" href="#enums">Enums</a></h2>
+<h3 id="accountabstractionversion"><a class="header" href="#accountabstractionversion">AccountAbstractionVersion</a></h3>
+<p>Defines the version of the account abstraction protocol
+that a contract claims to follow.</p>
+<ul>
+<li><code>None</code> means that the account is just a contract and it should never be interacted
+with as a custom account</li>
+<li><code>Version1</code> means that the account follows the first version of the account abstraction protocol</li>
+</ul>
+<pre><code class="language-solidity">enum AccountAbstractionVersion {
+  None,
+  Version1
+}
+</code></pre>
+<h3 id="accountnonceordering"><a class="header" href="#accountnonceordering">AccountNonceOrdering</a></h3>
+<p>Defines the nonce ordering used by the account</p>
+<ul>
+<li><code>KeyedSequential</code> means that it is expected that the nonces are monotonic and increment by 1
+at a time for each key (nonces are split 192:64 bits into nonceKey:nonceValue parts, as proposed by EIP-4337).</li>
+<li><code>Arbitrary</code> ordering is deprecated.</li>
+</ul>
+<p><em>This ordering is more of a suggestion to the operator on how the AA expects its transactions
+to be processed and is not considered as a system invariant.</em></p>
+<pre><code class="language-solidity">enum AccountNonceOrdering {
+  KeyedSequential,
+  __DEPRECATED_Arbitrary
+}
+</code></pre>
+<h3 id="allowedbytecodetypes"><a class="header" href="#allowedbytecodetypes">AllowedBytecodeTypes</a></h3>
+<p>Defines what types of bytecode are allowed to be deployed on this chain</p>
+<ul>
+<li><code>EraVm</code> means that only native contracts can be deployed</li>
+<li><code>EraVmAndEVM</code> means that native contracts and EVM contracts can be deployed</li>
+</ul>
+<pre><code class="language-solidity">enum AllowedBytecodeTypes {
+  EraVm,
+  EraVmAndEVM
+}
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../../contracts/system-contracts/interfaces/ICompressor.sol/constants.ICompressor.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../../contracts/system-contracts/interfaces/ICreate2Factory.sol/interface.ICreate2Factory.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../../contracts/system-contracts/interfaces/ICompressor.sol/constants.ICompressor.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../../contracts/system-contracts/interfaces/ICreate2Factory.sol/interface.ICreate2Factory.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../../elasticlunr.min.js"></script>
+        <script src="../../../../mark.min.js"></script>
+        <script src="../../../../searcher.js"></script>
+
+        <script src="../../../../clipboard.min.js"></script>
+        <script src="../../../../highlight.js"></script>
+        <script src="../../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../../solidity.min.js"></script>
+
+
+    </div>
+    </body>
+</html>

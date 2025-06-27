@@ -1,0 +1,454 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>IChainTypeManager - ZKSync Contracts</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../../favicon.png">
+        <link rel="stylesheet" href="../../../../css/variables.css">
+        <link rel="stylesheet" href="../../../../css/general.css">
+        <link rel="stylesheet" href="../../../../css/chrome.css">
+        <link rel="stylesheet" href="../../../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../../book.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">ZKSync Contracts</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/matter-labs/zksync-contracts" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="ichaintypemanager"><a class="header" href="#ichaintypemanager">IChainTypeManager</a></h1>
+<p><a href="https://github.com/matter-labs/zksync-contracts/blob/b5917be5e3e10da8710466f2c120aebadc92ff69/contracts/l1-contracts/state-transition/IChainTypeManager.sol">Git Source</a></p>
+<h2 id="functions"><a class="header" href="#functions">Functions</a></h2>
+<h3 id="bridge_hub"><a class="header" href="#bridge_hub">BRIDGE_HUB</a></h3>
+<pre><code class="language-solidity">function BRIDGE_HUB() external view returns (address);
+</code></pre>
+<h3 id="setpendingadmin"><a class="header" href="#setpendingadmin">setPendingAdmin</a></h3>
+<pre><code class="language-solidity">function setPendingAdmin(address _newPendingAdmin) external;
+</code></pre>
+<h3 id="acceptadmin"><a class="header" href="#acceptadmin">acceptAdmin</a></h3>
+<pre><code class="language-solidity">function acceptAdmin() external;
+</code></pre>
+<h3 id="getzkchain"><a class="header" href="#getzkchain">getZKChain</a></h3>
+<pre><code class="language-solidity">function getZKChain(uint256 _chainId) external view returns (address);
+</code></pre>
+<h3 id="gethyperchain"><a class="header" href="#gethyperchain">getHyperchain</a></h3>
+<pre><code class="language-solidity">function getHyperchain(uint256 _chainId) external view returns (address);
+</code></pre>
+<h3 id="getzkchainlegacy"><a class="header" href="#getzkchainlegacy">getZKChainLegacy</a></h3>
+<pre><code class="language-solidity">function getZKChainLegacy(uint256 _chainId) external view returns (address);
+</code></pre>
+<h3 id="storedbatchzero"><a class="header" href="#storedbatchzero">storedBatchZero</a></h3>
+<pre><code class="language-solidity">function storedBatchZero() external view returns (bytes32);
+</code></pre>
+<h3 id="initialcuthash"><a class="header" href="#initialcuthash">initialCutHash</a></h3>
+<pre><code class="language-solidity">function initialCutHash() external view returns (bytes32);
+</code></pre>
+<h3 id="l1genesisupgrade"><a class="header" href="#l1genesisupgrade">l1GenesisUpgrade</a></h3>
+<pre><code class="language-solidity">function l1GenesisUpgrade() external view returns (address);
+</code></pre>
+<h3 id="upgradecuthash"><a class="header" href="#upgradecuthash">upgradeCutHash</a></h3>
+<pre><code class="language-solidity">function upgradeCutHash(uint256 _protocolVersion)
+  external
+  view
+  returns (bytes32);
+</code></pre>
+<h3 id="protocolversion"><a class="header" href="#protocolversion">protocolVersion</a></h3>
+<pre><code class="language-solidity">function protocolVersion() external view returns (uint256);
+</code></pre>
+<h3 id="protocolversiondeadline"><a class="header" href="#protocolversiondeadline">protocolVersionDeadline</a></h3>
+<pre><code class="language-solidity">function protocolVersionDeadline(uint256 _protocolVersion)
+  external
+  view
+  returns (uint256);
+</code></pre>
+<h3 id="protocolversionisactive"><a class="header" href="#protocolversionisactive">protocolVersionIsActive</a></h3>
+<pre><code class="language-solidity">function protocolVersionIsActive(uint256 _protocolVersion)
+  external
+  view
+  returns (bool);
+</code></pre>
+<h3 id="getprotocolversion"><a class="header" href="#getprotocolversion">getProtocolVersion</a></h3>
+<pre><code class="language-solidity">function getProtocolVersion(uint256 _chainId) external view returns (uint256);
+</code></pre>
+<h3 id="initialize"><a class="header" href="#initialize">initialize</a></h3>
+<pre><code class="language-solidity">function initialize(ChainTypeManagerInitializeData calldata _initializeData)
+  external;
+</code></pre>
+<h3 id="setlegacyvalidatortimelock"><a class="header" href="#setlegacyvalidatortimelock">setLegacyValidatorTimelock</a></h3>
+<pre><code class="language-solidity">function setLegacyValidatorTimelock(address _validatorTimelock) external;
+</code></pre>
+<h3 id="setvalidatortimelockpostv29"><a class="header" href="#setvalidatortimelockpostv29">setValidatorTimelockPostV29</a></h3>
+<pre><code class="language-solidity">function setValidatorTimelockPostV29(address _validatorTimelockPostV29)
+  external;
+</code></pre>
+<h3 id="setchaincreationparams"><a class="header" href="#setchaincreationparams">setChainCreationParams</a></h3>
+<pre><code class="language-solidity">function setChainCreationParams(ChainCreationParams calldata _chainCreationParams)
+  external;
+</code></pre>
+<h3 id="getchainadmin"><a class="header" href="#getchainadmin">getChainAdmin</a></h3>
+<pre><code class="language-solidity">function getChainAdmin(uint256 _chainId) external view returns (address);
+</code></pre>
+<h3 id="createnewchain"><a class="header" href="#createnewchain">createNewChain</a></h3>
+<pre><code class="language-solidity">function createNewChain(
+  uint256 _chainId,
+  bytes32 _baseTokenAssetId,
+  address _admin,
+  bytes calldata _initData,
+  bytes[] calldata _factoryDeps
+) external returns (address);
+</code></pre>
+<h3 id="setnewversionupgrade"><a class="header" href="#setnewversionupgrade">setNewVersionUpgrade</a></h3>
+<pre><code class="language-solidity">function setNewVersionUpgrade(
+  Diamond.DiamondCutData calldata _cutData,
+  uint256 _oldProtocolVersion,
+  uint256 _oldProtocolVersionDeadline,
+  uint256 _newProtocolVersion
+) external;
+</code></pre>
+<h3 id="setupgradediamondcut"><a class="header" href="#setupgradediamondcut">setUpgradeDiamondCut</a></h3>
+<pre><code class="language-solidity">function setUpgradeDiamondCut(
+  Diamond.DiamondCutData calldata _cutData,
+  uint256 _oldProtocolVersion
+) external;
+</code></pre>
+<h3 id="executeupgrade"><a class="header" href="#executeupgrade">executeUpgrade</a></h3>
+<pre><code class="language-solidity">function executeUpgrade(
+  uint256 _chainId,
+  Diamond.DiamondCutData calldata _diamondCut
+) external;
+</code></pre>
+<h3 id="setprioritytxmaxgaslimit"><a class="header" href="#setprioritytxmaxgaslimit">setPriorityTxMaxGasLimit</a></h3>
+<pre><code class="language-solidity">function setPriorityTxMaxGasLimit(uint256 _chainId, uint256 _maxGasLimit)
+  external;
+</code></pre>
+<h3 id="freezechain"><a class="header" href="#freezechain">freezeChain</a></h3>
+<pre><code class="language-solidity">function freezeChain(uint256 _chainId) external;
+</code></pre>
+<h3 id="unfreezechain"><a class="header" href="#unfreezechain">unfreezeChain</a></h3>
+<pre><code class="language-solidity">function unfreezeChain(uint256 _chainId) external;
+</code></pre>
+<h3 id="settokenmultiplier"><a class="header" href="#settokenmultiplier">setTokenMultiplier</a></h3>
+<pre><code class="language-solidity">function setTokenMultiplier(
+  uint256 _chainId,
+  uint128 _nominator,
+  uint128 _denominator
+) external;
+</code></pre>
+<h3 id="changefeeparams"><a class="header" href="#changefeeparams">changeFeeParams</a></h3>
+<pre><code class="language-solidity">function changeFeeParams(uint256 _chainId, FeeParams calldata _newFeeParams)
+  external;
+</code></pre>
+<h3 id="setvalidator"><a class="header" href="#setvalidator">setValidator</a></h3>
+<pre><code class="language-solidity">function setValidator(uint256 _chainId, address _validator, bool _active)
+  external;
+</code></pre>
+<h3 id="setporteravailability"><a class="header" href="#setporteravailability">setPorterAvailability</a></h3>
+<pre><code class="language-solidity">function setPorterAvailability(uint256 _chainId, bool _zkPorterIsAvailable)
+  external;
+</code></pre>
+<h3 id="upgradechainfromversion"><a class="header" href="#upgradechainfromversion">upgradeChainFromVersion</a></h3>
+<pre><code class="language-solidity">function upgradeChainFromVersion(
+  uint256 _chainId,
+  uint256 _oldProtocolVersion,
+  Diamond.DiamondCutData calldata _diamondCut
+) external;
+</code></pre>
+<h3 id="getsemverprotocolversion"><a class="header" href="#getsemverprotocolversion">getSemverProtocolVersion</a></h3>
+<pre><code class="language-solidity">function getSemverProtocolVersion()
+  external
+  view
+  returns (uint32, uint32, uint32);
+</code></pre>
+<h3 id="forwardedbridgeburn"><a class="header" href="#forwardedbridgeburn">forwardedBridgeBurn</a></h3>
+<pre><code class="language-solidity">function forwardedBridgeBurn(uint256 _chainId, bytes calldata _data)
+  external
+  returns (bytes memory _bridgeMintData);
+</code></pre>
+<h3 id="forwardedbridgemint"><a class="header" href="#forwardedbridgemint">forwardedBridgeMint</a></h3>
+<pre><code class="language-solidity">function forwardedBridgeMint(uint256 _chainId, bytes calldata _data)
+  external
+  returns (address);
+</code></pre>
+<h3 id="forwardedbridgerecoverfailedtransfer"><a class="header" href="#forwardedbridgerecoverfailedtransfer">forwardedBridgeRecoverFailedTransfer</a></h3>
+<pre><code class="language-solidity">function forwardedBridgeRecoverFailedTransfer(
+  uint256 _chainId,
+  bytes32 _assetInfo,
+  address _depositSender,
+  bytes calldata _ctmData
+) external;
+</code></pre>
+<h2 id="events"><a class="header" href="#events">Events</a></h2>
+<h3 id="newzkchain"><a class="header" href="#newzkchain">NewZKChain</a></h3>
+<p>Emitted when a new ZKChain is added</p>
+<pre><code class="language-solidity">event NewZKChain(uint256 indexed _chainId, address indexed _zkChainContract);
+</code></pre>
+<h3 id="genesisupgrade"><a class="header" href="#genesisupgrade">GenesisUpgrade</a></h3>
+<p>emitted when an chain registers and a GenesisUpgrade happens</p>
+<pre><code class="language-solidity">event GenesisUpgrade(
+  address indexed _zkChain,
+  L2CanonicalTransaction _l2Transaction,
+  uint256 indexed _protocolVersion
+);
+</code></pre>
+<h3 id="newpendingadmin"><a class="header" href="#newpendingadmin">NewPendingAdmin</a></h3>
+<p>pendingAdmin is changed</p>
+<p>Also emitted when new admin is accepted and in this case, <code>newPendingAdmin</code> would be zero address</p>
+<pre><code class="language-solidity">event NewPendingAdmin(
+  address indexed oldPendingAdmin, address indexed newPendingAdmin
+);
+</code></pre>
+<h3 id="newadmin"><a class="header" href="#newadmin">NewAdmin</a></h3>
+<p>Admin changed</p>
+<pre><code class="language-solidity">event NewAdmin(address indexed oldAdmin, address indexed newAdmin);
+</code></pre>
+<h3 id="newvalidatortimelock"><a class="header" href="#newvalidatortimelock">NewValidatorTimelock</a></h3>
+<p>ValidatorTimelock changed</p>
+<pre><code class="language-solidity">event NewValidatorTimelock(
+  address indexed oldValidatorTimelock, address indexed newValidatorTimelock
+);
+</code></pre>
+<h3 id="newvalidatortimelockpostv29"><a class="header" href="#newvalidatortimelockpostv29">NewValidatorTimelockPostV29</a></h3>
+<p>ValidatorTimelockPostV29 changed</p>
+<pre><code class="language-solidity">event NewValidatorTimelockPostV29(
+  address indexed oldValidatorTimelockPostV29,
+  address indexed newvalidatorTimelockPostV29
+);
+</code></pre>
+<h3 id="newservernotifier"><a class="header" href="#newservernotifier">NewServerNotifier</a></h3>
+<p>ServerNotifier changed</p>
+<pre><code class="language-solidity">event NewServerNotifier(
+  address indexed oldServerNotifier, address indexed newServerNotifier
+);
+</code></pre>
+<h3 id="newchaincreationparams"><a class="header" href="#newchaincreationparams">NewChainCreationParams</a></h3>
+<p>chain creation parameters changed</p>
+<pre><code class="language-solidity">event NewChainCreationParams(
+  address genesisUpgrade,
+  bytes32 genesisBatchHash,
+  uint64 genesisIndexRepeatedStorageChanges,
+  bytes32 genesisBatchCommitment,
+  Diamond.DiamondCutData newInitialCut,
+  bytes32 newInitialCutHash,
+  bytes forceDeploymentsData,
+  bytes32 forceDeploymentHash
+);
+</code></pre>
+<h3 id="newupgradecuthash"><a class="header" href="#newupgradecuthash">NewUpgradeCutHash</a></h3>
+<p>New UpgradeCutHash</p>
+<pre><code class="language-solidity">event NewUpgradeCutHash(
+  uint256 indexed protocolVersion, bytes32 indexed upgradeCutHash
+);
+</code></pre>
+<h3 id="newupgradecutdata"><a class="header" href="#newupgradecutdata">NewUpgradeCutData</a></h3>
+<p>New UpgradeCutData</p>
+<pre><code class="language-solidity">event NewUpgradeCutData(
+  uint256 indexed protocolVersion, Diamond.DiamondCutData diamondCutData
+);
+</code></pre>
+<h3 id="newprotocolversion"><a class="header" href="#newprotocolversion">NewProtocolVersion</a></h3>
+<p>New ProtocolVersion</p>
+<pre><code class="language-solidity">event NewProtocolVersion(
+  uint256 indexed oldProtocolVersion, uint256 indexed newProtocolVersion
+);
+</code></pre>
+<h3 id="updateprotocolversiondeadline"><a class="header" href="#updateprotocolversiondeadline">UpdateProtocolVersionDeadline</a></h3>
+<p>Updated ProtocolVersion deadline</p>
+<pre><code class="language-solidity">event UpdateProtocolVersionDeadline(
+  uint256 indexed protocolVersion, uint256 deadline
+);
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../../contracts/l1-contracts/state-transition/IValidatorTimelock.sol/interface.IValidatorTimelock.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../../contracts/l1-contracts/state-transition/L1StateTransitionErrors.sol/error.L1StateTransitionErrors.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../../contracts/l1-contracts/state-transition/IValidatorTimelock.sol/interface.IValidatorTimelock.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../../contracts/l1-contracts/state-transition/L1StateTransitionErrors.sol/error.L1StateTransitionErrors.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../../elasticlunr.min.js"></script>
+        <script src="../../../../mark.min.js"></script>
+        <script src="../../../../searcher.js"></script>
+
+        <script src="../../../../clipboard.min.js"></script>
+        <script src="../../../../highlight.js"></script>
+        <script src="../../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../../solidity.min.js"></script>
+
+
+    </div>
+    </body>
+</html>

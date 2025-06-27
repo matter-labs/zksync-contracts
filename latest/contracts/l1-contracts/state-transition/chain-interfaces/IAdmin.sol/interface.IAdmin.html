@@ -1,0 +1,476 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>IAdmin - ZKSync Contracts</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../../../favicon.png">
+        <link rel="stylesheet" href="../../../../../css/variables.css">
+        <link rel="stylesheet" href="../../../../../css/general.css">
+        <link rel="stylesheet" href="../../../../../css/chrome.css">
+        <link rel="stylesheet" href="../../../../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../../../book.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../../../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">ZKSync Contracts</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/matter-labs/zksync-contracts" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="iadmin"><a class="header" href="#iadmin">IAdmin</a></h1>
+<p><a href="https://github.com/matter-labs/zksync-contracts/blob/b5917be5e3e10da8710466f2c120aebadc92ff69/contracts/l1-contracts/state-transition/chain-interfaces/IAdmin.sol">Git Source</a></p>
+<p><strong>Inherits:</strong>
+<a href="/contracts/l1-contracts/state-transition/chain-interfaces/IZKChainBase.sol/interface.IZKChainBase.html">IZKChainBase</a></p>
+<p><strong>Title:</strong>
+The interface of the Admin Contract that controls access rights for contract management.</p>
+<p><strong>Author:</strong>
+Matter Labs</p>
+<p><strong>Note:</strong>
+security-contact: security@matterlabs.dev</p>
+<h2 id="functions"><a class="header" href="#functions">Functions</a></h2>
+<h3 id="setpendingadmin"><a class="header" href="#setpendingadmin">setPendingAdmin</a></h3>
+<p>Starts the transfer of admin rights. Only the current admin can propose a new pending one.</p>
+<p>New admin can accept admin rights by calling <code>acceptAdmin</code> function.</p>
+<pre><code class="language-solidity">function setPendingAdmin(address _newPendingAdmin) external;
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_newPendingAdmin</code></td><td><code>address</code></td><td>Address of the new admin</td></tr>
+</tbody></table>
+</div>
+<h3 id="acceptadmin"><a class="header" href="#acceptadmin">acceptAdmin</a></h3>
+<p>Accepts transfer of admin rights. Only pending admin can accept the role.</p>
+<pre><code class="language-solidity">function acceptAdmin() external;
+</code></pre>
+<h3 id="setvalidator"><a class="header" href="#setvalidator">setValidator</a></h3>
+<p>Change validator status (active or not active)</p>
+<pre><code class="language-solidity">function setValidator(address _validator, bool _active) external;
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_validator</code></td><td><code>address</code></td><td>Validator address</td></tr>
+<tr><td><code>_active</code></td><td><code>bool</code></td><td>Active flag</td></tr>
+</tbody></table>
+</div>
+<h3 id="setporteravailability"><a class="header" href="#setporteravailability">setPorterAvailability</a></h3>
+<p>Change zk porter availability</p>
+<pre><code class="language-solidity">function setPorterAvailability(bool _zkPorterIsAvailable) external;
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_zkPorterIsAvailable</code></td><td><code>bool</code></td><td>The availability of zk porter shard</td></tr>
+</tbody></table>
+</div>
+<h3 id="setprioritytxmaxgaslimit"><a class="header" href="#setprioritytxmaxgaslimit">setPriorityTxMaxGasLimit</a></h3>
+<p>Change the max L2 gas limit for L1 -&gt; L2 transactions</p>
+<pre><code class="language-solidity">function setPriorityTxMaxGasLimit(uint256 _newPriorityTxMaxGasLimit) external;
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_newPriorityTxMaxGasLimit</code></td><td><code>uint256</code></td><td>The maximum number of L2 gas that a user can request for L1 -&gt; L2 transactions</td></tr>
+</tbody></table>
+</div>
+<h3 id="changefeeparams"><a class="header" href="#changefeeparams">changeFeeParams</a></h3>
+<p>Change the fee params for L1-&gt;L2 transactions</p>
+<pre><code class="language-solidity">function changeFeeParams(FeeParams calldata _newFeeParams) external;
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_newFeeParams</code></td><td><code>FeeParams</code></td><td>The new fee params</td></tr>
+</tbody></table>
+</div>
+<h3 id="settokenmultiplier"><a class="header" href="#settokenmultiplier">setTokenMultiplier</a></h3>
+<p>Change the token multiplier for L1-&gt;L2 transactions</p>
+<pre><code class="language-solidity">function setTokenMultiplier(uint128 _nominator, uint128 _denominator) external;
+</code></pre>
+<h3 id="setpubdatapricingmode"><a class="header" href="#setpubdatapricingmode">setPubdataPricingMode</a></h3>
+<p>Change the pubdata pricing mode before the first batch is processed</p>
+<pre><code class="language-solidity">function setPubdataPricingMode(PubdataPricingMode _pricingMode) external;
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_pricingMode</code></td><td><code>PubdataPricingMode</code></td><td>The new pubdata pricing mode</td></tr>
+</tbody></table>
+</div>
+<h3 id="settransactionfilterer"><a class="header" href="#settransactionfilterer">setTransactionFilterer</a></h3>
+<p>Set the transaction filterer</p>
+<pre><code class="language-solidity">function setTransactionFilterer(address _transactionFilterer) external;
+</code></pre>
+<h3 id="allowevmemulation"><a class="header" href="#allowevmemulation">allowEvmEmulation</a></h3>
+<p>Allow EVM emulation on chain</p>
+<pre><code class="language-solidity">function allowEvmEmulation() external returns (bytes32 canonicalTxHash);
+</code></pre>
+<h3 id="upgradechainfromversion"><a class="header" href="#upgradechainfromversion">upgradeChainFromVersion</a></h3>
+<p>Perform the upgrade from the current protocol version with the corresponding upgrade data</p>
+<pre><code class="language-solidity">function upgradeChainFromVersion(
+  uint256 _protocolVersion,
+  Diamond.DiamondCutData calldata _cutData
+) external;
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_protocolVersion</code></td><td><code>uint256</code></td><td>The current protocol version from which upgrade is executed</td></tr>
+<tr><td><code>_cutData</code></td><td><code>Diamond.DiamondCutData</code></td><td>The diamond cut parameters that is executed in the upgrade</td></tr>
+</tbody></table>
+</div>
+<h3 id="executeupgrade"><a class="header" href="#executeupgrade">executeUpgrade</a></h3>
+<p>Executes a proposed governor upgrade</p>
+<p>Only the ChainTypeManager contract can execute the upgrade</p>
+<pre><code class="language-solidity">function executeUpgrade(Diamond.DiamondCutData calldata _diamondCut) external;
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_diamondCut</code></td><td><code>Diamond.DiamondCutData</code></td><td>The diamond cut parameters to be executed</td></tr>
+</tbody></table>
+</div>
+<h3 id="freezediamond"><a class="header" href="#freezediamond">freezeDiamond</a></h3>
+<p>Instantly pause the functionality of all freezable facets &amp; their selectors</p>
+<p>Only the governance mechanism may freeze Diamond Proxy</p>
+<pre><code class="language-solidity">function freezeDiamond() external;
+</code></pre>
+<h3 id="unfreezediamond"><a class="header" href="#unfreezediamond">unfreezeDiamond</a></h3>
+<p>Unpause the functionality of all freezable facets &amp; their selectors</p>
+<p>Only the CTM can unfreeze Diamond Proxy</p>
+<pre><code class="language-solidity">function unfreezeDiamond() external;
+</code></pre>
+<h3 id="genesisupgrade"><a class="header" href="#genesisupgrade">genesisUpgrade</a></h3>
+<pre><code class="language-solidity">function genesisUpgrade(
+  address _l1GenesisUpgrade,
+  address _ctmDeployer,
+  bytes calldata _forceDeploymentData,
+  bytes[] calldata _factoryDeps
+) external;
+</code></pre>
+<h3 id="getrollupdamanager"><a class="header" href="#getrollupdamanager">getRollupDAManager</a></h3>
+<p>Returns address of the RollupDAManager of the ZK Chain.</p>
+<pre><code class="language-solidity">function getRollupDAManager() external view returns (address);
+</code></pre>
+<h3 id="setdavalidatorpair"><a class="header" href="#setdavalidatorpair">setDAValidatorPair</a></h3>
+<p>Set the L1 DA validator address as well as the L2 DA validator address.</p>
+<p>While in principle it is possible that updating only one of the addresses is needed,
+usually these should work in pair and L1 validator typically expects a specific input from the L2 Validator.
+That's why we change those together to prevent admins of chains from shooting themselves in the foot.</p>
+<pre><code class="language-solidity">function setDAValidatorPair(address _l1DAValidator, address _l2DAValidator)
+  external;
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_l1DAValidator</code></td><td><code>address</code></td><td>The address of the L1 DA validator</td></tr>
+<tr><td><code>_l2DAValidator</code></td><td><code>address</code></td><td>The address of the L2 DA validator</td></tr>
+</tbody></table>
+</div>
+<h3 id="makepermanentrollup"><a class="header" href="#makepermanentrollup">makePermanentRollup</a></h3>
+<p>Makes the chain as permanent rollup.</p>
+<p>This is a security feature needed for chains that should be
+trusted to keep their data available even if the chain admin becomes malicious
+and tries to set the DA validator pair to something which does not publish DA to Ethereum.</p>
+<p>DANGEROUS: once activated, there is no way back!</p>
+<pre><code class="language-solidity">function makePermanentRollup() external;
+</code></pre>
+<h3 id="forwardedbridgeburn"><a class="header" href="#forwardedbridgeburn">forwardedBridgeBurn</a></h3>
+<p>Similar to IL1AssetHandler interface, used to send chains.</p>
+<pre><code class="language-solidity">function forwardedBridgeBurn(
+  address _settlementLayer,
+  address _originalCaller,
+  bytes calldata _data
+) external payable returns (bytes memory _bridgeMintData);
+</code></pre>
+<h3 id="forwardedbridgerecoverfailedtransfer"><a class="header" href="#forwardedbridgerecoverfailedtransfer">forwardedBridgeRecoverFailedTransfer</a></h3>
+<p>Similar to IL1AssetHandler interface, used to claim failed chain transfers.</p>
+<pre><code class="language-solidity">function forwardedBridgeRecoverFailedTransfer(
+  uint256 _chainId,
+  bytes32 _assetInfo,
+  address _originalCaller,
+  bytes calldata _chainData
+) external payable;
+</code></pre>
+<h3 id="forwardedbridgemint"><a class="header" href="#forwardedbridgemint">forwardedBridgeMint</a></h3>
+<p>Similar to IL1AssetHandler interface, used to receive chains.</p>
+<pre><code class="language-solidity">function forwardedBridgeMint(
+  bytes calldata _data,
+  bool _contractAlreadyDeployed
+) external payable;
+</code></pre>
+<h3 id="preparechaincommitment"><a class="header" href="#preparechaincommitment">prepareChainCommitment</a></h3>
+<pre><code class="language-solidity">function prepareChainCommitment()
+  external
+  view
+  returns (ZKChainCommitment memory commitment);
+</code></pre>
+<h2 id="events"><a class="header" href="#events">Events</a></h2>
+<h3 id="isporteravailablestatusupdate"><a class="header" href="#isporteravailablestatusupdate">IsPorterAvailableStatusUpdate</a></h3>
+<p>Porter availability status changes</p>
+<pre><code class="language-solidity">event IsPorterAvailableStatusUpdate(bool isPorterAvailable);
+</code></pre>
+<h3 id="validatorstatusupdate"><a class="header" href="#validatorstatusupdate">ValidatorStatusUpdate</a></h3>
+<p>Validator's status changed</p>
+<pre><code class="language-solidity">event ValidatorStatusUpdate(address indexed validatorAddress, bool isActive);
+</code></pre>
+<h3 id="newpendingadmin"><a class="header" href="#newpendingadmin">NewPendingAdmin</a></h3>
+<p>pendingAdmin is changed</p>
+<p>Also emitted when new admin is accepted and in this case, <code>newPendingAdmin</code> would be zero address</p>
+<pre><code class="language-solidity">event NewPendingAdmin(
+  address indexed oldPendingAdmin, address indexed newPendingAdmin
+);
+</code></pre>
+<h3 id="newadmin"><a class="header" href="#newadmin">NewAdmin</a></h3>
+<p>Admin changed</p>
+<pre><code class="language-solidity">event NewAdmin(address indexed oldAdmin, address indexed newAdmin);
+</code></pre>
+<h3 id="newprioritytxmaxgaslimit"><a class="header" href="#newprioritytxmaxgaslimit">NewPriorityTxMaxGasLimit</a></h3>
+<p>Priority transaction max L2 gas limit changed</p>
+<pre><code class="language-solidity">event NewPriorityTxMaxGasLimit(
+  uint256 oldPriorityTxMaxGasLimit, uint256 newPriorityTxMaxGasLimit
+);
+</code></pre>
+<h3 id="newfeeparams"><a class="header" href="#newfeeparams">NewFeeParams</a></h3>
+<p>Fee params for L1-&gt;L2 transactions changed</p>
+<pre><code class="language-solidity">event NewFeeParams(FeeParams oldFeeParams, FeeParams newFeeParams);
+</code></pre>
+<h3 id="pubdatapricingmodeupdate"><a class="header" href="#pubdatapricingmodeupdate">PubdataPricingModeUpdate</a></h3>
+<p>Validium mode status changed</p>
+<pre><code class="language-solidity">event PubdataPricingModeUpdate(PubdataPricingMode validiumMode);
+</code></pre>
+<h3 id="newtransactionfilterer"><a class="header" href="#newtransactionfilterer">NewTransactionFilterer</a></h3>
+<p>The transaction filterer has been updated</p>
+<pre><code class="language-solidity">event NewTransactionFilterer(
+  address oldTransactionFilterer, address newTransactionFilterer
+);
+</code></pre>
+<h3 id="newbasetokenmultiplier"><a class="header" href="#newbasetokenmultiplier">NewBaseTokenMultiplier</a></h3>
+<p>BaseToken multiplier for L1-&gt;L2 transactions changed</p>
+<pre><code class="language-solidity">event NewBaseTokenMultiplier(
+  uint128 oldNominator,
+  uint128 oldDenominator,
+  uint128 newNominator,
+  uint128 newDenominator
+);
+</code></pre>
+<h3 id="executeupgrade-1"><a class="header" href="#executeupgrade-1">ExecuteUpgrade</a></h3>
+<p>Emitted when an upgrade is executed.</p>
+<pre><code class="language-solidity">event ExecuteUpgrade(Diamond.DiamondCutData diamondCut);
+</code></pre>
+<h3 id="migrationcomplete"><a class="header" href="#migrationcomplete">MigrationComplete</a></h3>
+<p>Emitted when the migration to the new settlement layer is complete.</p>
+<pre><code class="language-solidity">event MigrationComplete();
+</code></pre>
+<h3 id="freeze"><a class="header" href="#freeze">Freeze</a></h3>
+<p>Emitted when the contract is frozen.</p>
+<pre><code class="language-solidity">event Freeze();
+</code></pre>
+<h3 id="unfreeze"><a class="header" href="#unfreeze">Unfreeze</a></h3>
+<p>Emitted when the contract is unfrozen.</p>
+<pre><code class="language-solidity">event Unfreeze();
+</code></pre>
+<h3 id="enableevmemulator"><a class="header" href="#enableevmemulator">EnableEvmEmulator</a></h3>
+<p>The EVM emulator has been enabled</p>
+<pre><code class="language-solidity">event EnableEvmEmulator();
+</code></pre>
+<h3 id="newl2davalidator"><a class="header" href="#newl2davalidator">NewL2DAValidator</a></h3>
+<p>New pair of DA validators set</p>
+<pre><code class="language-solidity">event NewL2DAValidator(
+  address indexed oldL2DAValidator, address indexed newL2DAValidator
+);
+</code></pre>
+<h3 id="newl1davalidator"><a class="header" href="#newl1davalidator">NewL1DAValidator</a></h3>
+<pre><code class="language-solidity">event NewL1DAValidator(
+  address indexed oldL1DAValidator, address indexed newL1DAValidator
+);
+</code></pre>
+<h3 id="bridgemint"><a class="header" href="#bridgemint">BridgeMint</a></h3>
+<pre><code class="language-solidity">event BridgeMint(address indexed _account, uint256 _amount);
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../../../contracts/l1-contracts/state-transition/chain-interfaces/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../../../contracts/l1-contracts/state-transition/chain-interfaces/IDiamondInit.sol/interface.IDiamondInit.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../../../contracts/l1-contracts/state-transition/chain-interfaces/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../../../contracts/l1-contracts/state-transition/chain-interfaces/IDiamondInit.sol/interface.IDiamondInit.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../../../elasticlunr.min.js"></script>
+        <script src="../../../../../mark.min.js"></script>
+        <script src="../../../../../searcher.js"></script>
+
+        <script src="../../../../../clipboard.min.js"></script>
+        <script src="../../../../../highlight.js"></script>
+        <script src="../../../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../../../solidity.min.js"></script>
+
+
+    </div>
+    </body>
+</html>

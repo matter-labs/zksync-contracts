@@ -1,0 +1,483 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>EfficientCall - ZKSync Contracts</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../../favicon.png">
+        <link rel="stylesheet" href="../../../../css/variables.css">
+        <link rel="stylesheet" href="../../../../css/general.css">
+        <link rel="stylesheet" href="../../../../css/chrome.css">
+        <link rel="stylesheet" href="../../../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../../book.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">ZKSync Contracts</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/matter-labs/zksync-contracts" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="efficientcall"><a class="header" href="#efficientcall">EfficientCall</a></h1>
+<p><a href="https://github.com/matter-labs/zksync-contracts/blob/b5917be5e3e10da8710466f2c120aebadc92ff69/contracts/system-contracts/libraries/EfficientCall.sol">Git Source</a></p>
+<p><strong>Author:</strong>
+Matter Labs</p>
+<p>This library is used to perform ultra-efficient calls using zkEVM-specific features.</p>
+<p>EVM calls always accept a memory slice as input and return a memory slice as output.
+Therefore, even if the user has a ready-made calldata slice, they still need to copy it to memory
+before calling. This is especially inefficient for large inputs (proxies, multi-calls, etc.).
+In turn, zkEVM operates over a fat pointer, which is a set of (memory page, offset, start, length) in the memory/calldata/returndata.
+This allows forwarding the calldata slice as is, without copying it to memory.</p>
+<p>Fat pointer is not just an integer, it is an extended data type supported on the VM level.
+zkEVM creates the wellformed fat pointers for all the calldata/returndata regions, later
+the contract may manipulate the already created fat pointers to forward a slice of the data, but not
+to create new fat pointers!</p>
+<p>The allowed operation on fat pointers are:</p>
+<ol>
+<li><code>ptr.add</code> - Transforms <code>ptr.offset</code> into <code>ptr.offset + u32(_value)</code>. If overflow happens then it panics.</li>
+<li><code>ptr.sub</code> - Transforms <code>ptr.offset</code> into <code>ptr.offset - u32(_value)</code>. If underflow happens then it panics.</li>
+<li><code>ptr.pack</code> - Do the concatenation between the lowest 128 bits of the pointer itself and the highest 128 bits of <code>_value</code>. It is typically used to prepare the ABI for external calls.</li>
+<li><code>ptr.shrink</code> - Transforms <code>ptr.length</code> into <code>ptr.length - u32(_shrink)</code>. If underflow happens then it panics.</li>
+</ol>
+<p>The call opcodes accept the fat pointer and change it to its canonical form before passing it to the child call</p>
+<ol>
+<li><code>ptr.start</code> is transformed into <code>ptr.offset + ptr.start</code></li>
+<li><code>ptr.length</code> is transformed into <code>ptr.length - ptr.offset</code></li>
+<li><code>ptr.offset</code> is transformed into <code>0</code></li>
+</ol>
+<p><strong>Note:</strong>
+security-contact: security@matterlabs.dev</p>
+<h2 id="functions"><a class="header" href="#functions">Functions</a></h2>
+<h3 id="keccak"><a class="header" href="#keccak">keccak</a></h3>
+<p>Call the <code>keccak256</code> without copying calldata to memory.</p>
+<pre><code class="language-solidity">function keccak(bytes calldata _data) internal view returns (bytes32);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_data</code></td><td><code>bytes</code></td><td>The preimage data.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>&lt;none&gt;</code></td><td><code>bytes32</code></td><td>The <code>keccak256</code> hash.</td></tr>
+</tbody></table>
+</div>
+<h3 id="sha"><a class="header" href="#sha">sha</a></h3>
+<p>Call the <code>sha256</code> precompile without copying calldata to memory.</p>
+<pre><code class="language-solidity">function sha(bytes calldata _data) internal view returns (bytes32);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_data</code></td><td><code>bytes</code></td><td>The preimage data.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>&lt;none&gt;</code></td><td><code>bytes32</code></td><td>The <code>sha256</code> hash.</td></tr>
+</tbody></table>
+</div>
+<h3 id="call"><a class="header" href="#call">call</a></h3>
+<p>Perform a <code>call</code> without copying calldata to memory.</p>
+<pre><code class="language-solidity">function call(
+  uint256 _gas,
+  address _address,
+  uint256 _value,
+  bytes calldata _data,
+  bool _isSystem
+) internal returns (bytes memory returnData);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_gas</code></td><td><code>uint256</code></td><td>The gas to use for the call.</td></tr>
+<tr><td><code>_address</code></td><td><code>address</code></td><td>The address to call.</td></tr>
+<tr><td><code>_value</code></td><td><code>uint256</code></td><td>The <code>msg.value</code> to send.</td></tr>
+<tr><td><code>_data</code></td><td><code>bytes</code></td><td>The calldata to use for the call.</td></tr>
+<tr><td><code>_isSystem</code></td><td><code>bool</code></td><td>Whether the call should contain the <code>isSystem</code> flag.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>returnData</code></td><td><code>bytes</code></td><td>The copied to memory return data.</td></tr>
+</tbody></table>
+</div>
+<h3 id="staticcall"><a class="header" href="#staticcall">staticCall</a></h3>
+<p>Perform a <code>staticCall</code> without copying calldata to memory.</p>
+<pre><code class="language-solidity">function staticCall(uint256 _gas, address _address, bytes calldata _data)
+  internal
+  view
+  returns (bytes memory returnData);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_gas</code></td><td><code>uint256</code></td><td>The gas to use for the call.</td></tr>
+<tr><td><code>_address</code></td><td><code>address</code></td><td>The address to call.</td></tr>
+<tr><td><code>_data</code></td><td><code>bytes</code></td><td>The calldata to use for the call.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>returnData</code></td><td><code>bytes</code></td><td>The copied to memory return data.</td></tr>
+</tbody></table>
+</div>
+<h3 id="delegatecall"><a class="header" href="#delegatecall">delegateCall</a></h3>
+<p>Perform a <code>delegateCall</code> without copying calldata to memory.</p>
+<pre><code class="language-solidity">function delegateCall(uint256 _gas, address _address, bytes calldata _data)
+  internal
+  returns (bytes memory returnData);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_gas</code></td><td><code>uint256</code></td><td>The gas to use for the call.</td></tr>
+<tr><td><code>_address</code></td><td><code>address</code></td><td>The address to call.</td></tr>
+<tr><td><code>_data</code></td><td><code>bytes</code></td><td>The calldata to use for the call.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>returnData</code></td><td><code>bytes</code></td><td>The copied to memory return data.</td></tr>
+</tbody></table>
+</div>
+<h3 id="mimiccall"><a class="header" href="#mimiccall">mimicCall</a></h3>
+<p>Perform a <code>mimicCall</code> (a call with custom msg.sender) without copying calldata to memory.</p>
+<pre><code class="language-solidity">function mimicCall(
+  uint256 _gas,
+  address _address,
+  bytes calldata _data,
+  address _whoToMimic,
+  bool _isConstructor,
+  bool _isSystem
+) internal returns (bytes memory returnData);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_gas</code></td><td><code>uint256</code></td><td>The gas to use for the call.</td></tr>
+<tr><td><code>_address</code></td><td><code>address</code></td><td>The address to call.</td></tr>
+<tr><td><code>_data</code></td><td><code>bytes</code></td><td>The calldata to use for the call.</td></tr>
+<tr><td><code>_whoToMimic</code></td><td><code>address</code></td><td>The <code>msg.sender</code> for the next call.</td></tr>
+<tr><td><code>_isConstructor</code></td><td><code>bool</code></td><td>Whether the call should contain the <code>isConstructor</code> flag.</td></tr>
+<tr><td><code>_isSystem</code></td><td><code>bool</code></td><td>Whether the call should contain the <code>isSystem</code> flag.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>returnData</code></td><td><code>bytes</code></td><td>The copied to memory return data.</td></tr>
+</tbody></table>
+</div>
+<h3 id="rawcall"><a class="header" href="#rawcall">rawCall</a></h3>
+<p>Perform a <code>call</code> without copying calldata to memory.</p>
+<pre><code class="language-solidity">function rawCall(
+  uint256 _gas,
+  address _address,
+  uint256 _value,
+  bytes calldata _data,
+  bool _isSystem
+) internal returns (bool success);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_gas</code></td><td><code>uint256</code></td><td>The gas to use for the call.</td></tr>
+<tr><td><code>_address</code></td><td><code>address</code></td><td>The address to call.</td></tr>
+<tr><td><code>_value</code></td><td><code>uint256</code></td><td>The <code>msg.value</code> to send.</td></tr>
+<tr><td><code>_data</code></td><td><code>bytes</code></td><td>The calldata to use for the call.</td></tr>
+<tr><td><code>_isSystem</code></td><td><code>bool</code></td><td>Whether the call should contain the <code>isSystem</code> flag.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>success</code></td><td><code>bool</code></td><td>whether the call was successful.</td></tr>
+</tbody></table>
+</div>
+<h3 id="rawstaticcall"><a class="header" href="#rawstaticcall">rawStaticCall</a></h3>
+<p>Perform a <code>staticCall</code> without copying calldata to memory.</p>
+<pre><code class="language-solidity">function rawStaticCall(uint256 _gas, address _address, bytes calldata _data)
+  internal
+  view
+  returns (bool success);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_gas</code></td><td><code>uint256</code></td><td>The gas to use for the call.</td></tr>
+<tr><td><code>_address</code></td><td><code>address</code></td><td>The address to call.</td></tr>
+<tr><td><code>_data</code></td><td><code>bytes</code></td><td>The calldata to use for the call.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>success</code></td><td><code>bool</code></td><td>whether the call was successful.</td></tr>
+</tbody></table>
+</div>
+<h3 id="rawdelegatecall"><a class="header" href="#rawdelegatecall">rawDelegateCall</a></h3>
+<p>Perform a <code>delegatecall</code> without copying calldata to memory.</p>
+<pre><code class="language-solidity">function rawDelegateCall(uint256 _gas, address _address, bytes calldata _data)
+  internal
+  returns (bool success);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_gas</code></td><td><code>uint256</code></td><td>The gas to use for the call.</td></tr>
+<tr><td><code>_address</code></td><td><code>address</code></td><td>The address to call.</td></tr>
+<tr><td><code>_data</code></td><td><code>bytes</code></td><td>The calldata to use for the call.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>success</code></td><td><code>bool</code></td><td>whether the call was successful.</td></tr>
+</tbody></table>
+</div>
+<h3 id="rawmimiccall"><a class="header" href="#rawmimiccall">rawMimicCall</a></h3>
+<p>Perform a <code>mimicCall</code> (call with custom msg.sender) without copying calldata to memory.</p>
+<p>If called not in kernel mode, it will result in a revert (enforced by the VM)</p>
+<pre><code class="language-solidity">function rawMimicCall(
+  uint256 _gas,
+  address _address,
+  bytes calldata _data,
+  address _whoToMimic,
+  bool _isConstructor,
+  bool _isSystem
+) internal returns (bool success);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_gas</code></td><td><code>uint256</code></td><td>The gas to use for the call.</td></tr>
+<tr><td><code>_address</code></td><td><code>address</code></td><td>The address to call.</td></tr>
+<tr><td><code>_data</code></td><td><code>bytes</code></td><td>The calldata to use for the call.</td></tr>
+<tr><td><code>_whoToMimic</code></td><td><code>address</code></td><td>The <code>msg.sender</code> for the next call.</td></tr>
+<tr><td><code>_isConstructor</code></td><td><code>bool</code></td><td>Whether the call should contain the <code>isConstructor</code> flag.</td></tr>
+<tr><td><code>_isSystem</code></td><td><code>bool</code></td><td>Whether the call should contain the <code>isSystem</code> flag.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>success</code></td><td><code>bool</code></td><td>whether the call was successful.</td></tr>
+</tbody></table>
+</div>
+<h3 id="_verifycallresult"><a class="header" href="#_verifycallresult">_verifyCallResult</a></h3>
+<p>Verify that a low-level call was successful, and revert if it wasn't, by bubbling the revert reason.</p>
+<pre><code class="language-solidity">function _verifyCallResult(bool _success)
+  private
+  pure
+  returns (bytes memory returnData);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_success</code></td><td><code>bool</code></td><td>Whether the call was successful.</td></tr>
+</tbody></table>
+</div>
+<p><strong>Returns</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>returnData</code></td><td><code>bytes</code></td><td>The copied to memory return data.</td></tr>
+</tbody></table>
+</div>
+<h3 id="propagaterevert"><a class="header" href="#propagaterevert">propagateRevert</a></h3>
+<p>Propagate the revert reason from the current call to the caller.</p>
+<pre><code class="language-solidity">function propagateRevert() internal pure;
+</code></pre>
+<h3 id="_loadfarcallabiintoactiveptr"><a class="header" href="#_loadfarcallabiintoactiveptr">_loadFarCallABIIntoActivePtr</a></h3>
+<p>Load the far call ABI into active ptr, that will be used for the next call by reference.</p>
+<pre><code class="language-solidity">function _loadFarCallABIIntoActivePtr(
+  uint256 _gas,
+  bytes calldata _data,
+  bool _isConstructor,
+  bool _isSystem
+) private view;
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_gas</code></td><td><code>uint256</code></td><td>The gas to be passed to the call.</td></tr>
+<tr><td><code>_data</code></td><td><code>bytes</code></td><td>The calldata to be passed to the call.</td></tr>
+<tr><td><code>_isConstructor</code></td><td><code>bool</code></td><td>Whether the call is a constructor call.</td></tr>
+<tr><td><code>_isSystem</code></td><td><code>bool</code></td><td>Whether the call is a system call.</td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../../contracts/system-contracts/libraries/TransactionHelper.sol/constants.TransactionHelper.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../../contracts/system-contracts/libraries/RLPEncoder.sol/library.RLPEncoder.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../../contracts/system-contracts/libraries/TransactionHelper.sol/constants.TransactionHelper.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../../contracts/system-contracts/libraries/RLPEncoder.sol/library.RLPEncoder.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../../elasticlunr.min.js"></script>
+        <script src="../../../../mark.min.js"></script>
+        <script src="../../../../searcher.js"></script>
+
+        <script src="../../../../clipboard.min.js"></script>
+        <script src="../../../../highlight.js"></script>
+        <script src="../../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../../solidity.min.js"></script>
+
+
+    </div>
+    </body>
+</html>
