@@ -28,13 +28,10 @@ jobs:
     #   - if: github.event.release.target_commitish == 'main'
     #     run: yarn publish --tag latest --access public
 
-      - name: Install Rust toolchain
-        uses: actions-rust-lang/setup-rust-toolchain@v1
+      - name: Set up Foundry
+        uses: foundry-rs/foundry-toolchain@v1
         with:
-          toolchain: stable
-
-      - name: Install soldeer CLI
-        run: cargo install soldeer
+          version: stable
 
       - name: Configure Soldeer token
         run: |
