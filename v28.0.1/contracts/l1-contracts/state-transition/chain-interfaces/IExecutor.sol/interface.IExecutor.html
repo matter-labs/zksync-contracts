@@ -1,0 +1,418 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>IExecutor - ZKSync Contracts</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../../../favicon.png">
+        <link rel="stylesheet" href="../../../../../css/variables.css">
+        <link rel="stylesheet" href="../../../../../css/general.css">
+        <link rel="stylesheet" href="../../../../../css/chrome.css">
+        <link rel="stylesheet" href="../../../../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../../../book.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../../../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">ZKSync Contracts</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/matter-labs/zksync-contracts" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="iexecutor"><a class="header" href="#iexecutor">IExecutor</a></h1>
+<p><a href="https://github.com/matter-labs/zksync-contracts/blob/df3e167e528433a1b7073cb33b1253ee4f052445/contracts/l1-contracts/state-transition/chain-interfaces/IExecutor.sol">Git Source</a></p>
+<p><strong>Inherits:</strong>
+<a href="/contracts/l1-contracts/state-transition/chain-interfaces/IZKChainBase.sol/interface.IZKChainBase.html">IZKChainBase</a></p>
+<p><strong>Author:</strong>
+Matter Labs</p>
+<p><strong>Note:</strong>
+security-contact: security@matterlabs.dev</p>
+<h2 id="functions"><a class="header" href="#functions">Functions</a></h2>
+<h3 id="commitbatchessharedbridge"><a class="header" href="#commitbatchessharedbridge">commitBatchesSharedBridge</a></h3>
+<p>Function called by the operator to commit new batches. It is responsible for:</p>
+<ul>
+<li>Verifying the correctness of their timestamps.</li>
+<li>Processing their L2-&gt;L1 logs.</li>
+<li>Storing batch commitments.</li>
+</ul>
+<pre><code class="language-solidity">function commitBatchesSharedBridge(
+  uint256 _chainId,
+  uint256 _processFrom,
+  uint256 _processTo,
+  bytes calldata _commitData
+) external;
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_chainId</code></td><td><code>uint256</code></td><td>Chain ID of the chain.</td></tr>
+<tr><td><code>_processFrom</code></td><td><code>uint256</code></td><td>The batch number from which the processing starts.</td></tr>
+<tr><td><code>_processTo</code></td><td><code>uint256</code></td><td>The batch number at which the processing ends.</td></tr>
+<tr><td><code>_commitData</code></td><td><code>bytes</code></td><td>The encoded data of the new batches to be committed.</td></tr>
+</tbody></table>
+</div>
+<h3 id="provebatchessharedbridge"><a class="header" href="#provebatchessharedbridge">proveBatchesSharedBridge</a></h3>
+<p>Batches commitment verification.</p>
+<p><em>Only verifies batch commitments without any other processing.</em></p>
+<pre><code class="language-solidity">function proveBatchesSharedBridge(
+  uint256 _chainId,
+  uint256 _processBatchFrom,
+  uint256 _processBatchTo,
+  bytes calldata _proofData
+) external;
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_chainId</code></td><td><code>uint256</code></td><td>Chain ID of the chain.</td></tr>
+<tr><td><code>_processBatchFrom</code></td><td><code>uint256</code></td><td>The batch number from which the verification starts.</td></tr>
+<tr><td><code>_processBatchTo</code></td><td><code>uint256</code></td><td>The batch number at which the verification ends.</td></tr>
+<tr><td><code>_proofData</code></td><td><code>bytes</code></td><td>The encoded data of the new batches to be verified.</td></tr>
+</tbody></table>
+</div>
+<h3 id="executebatchessharedbridge"><a class="header" href="#executebatchessharedbridge">executeBatchesSharedBridge</a></h3>
+<p>The function called by the operator to finalize (execute) batches. It is responsible for:</p>
+<ul>
+<li>Processing all pending operations (commpleting priority requests).</li>
+<li>Finalizing this batch (i.e. allowing to withdraw funds from the system)</li>
+</ul>
+<pre><code class="language-solidity">function executeBatchesSharedBridge(
+  uint256 _chainId,
+  uint256 _processFrom,
+  uint256 _processTo,
+  bytes calldata _executeData
+) external;
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_chainId</code></td><td><code>uint256</code></td><td>Chain ID of the chain.</td></tr>
+<tr><td><code>_processFrom</code></td><td><code>uint256</code></td><td>The batch number from which the execution starts.</td></tr>
+<tr><td><code>_processTo</code></td><td><code>uint256</code></td><td>The batch number at which the execution ends.</td></tr>
+<tr><td><code>_executeData</code></td><td><code>bytes</code></td><td>The encoded data of the new batches to be executed.</td></tr>
+</tbody></table>
+</div>
+<h3 id="revertbatchessharedbridge"><a class="header" href="#revertbatchessharedbridge">revertBatchesSharedBridge</a></h3>
+<p>Reverts unexecuted batches</p>
+<pre><code class="language-solidity">function revertBatchesSharedBridge(uint256 _chainId, uint256 _newLastBatch)
+  external;
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>_chainId</code></td><td><code>uint256</code></td><td>Chain ID of the chain</td></tr>
+<tr><td><code>_newLastBatch</code></td><td><code>uint256</code></td><td>batch number after which batches should be reverted NOTE: Doesn't delete the stored data about batches, but only decreases counters that are responsible for the number of batches</td></tr>
+</tbody></table>
+</div>
+<h2 id="events"><a class="header" href="#events">Events</a></h2>
+<h3 id="blockcommit"><a class="header" href="#blockcommit">BlockCommit</a></h3>
+<p>Event emitted when a batch is committed</p>
+<p><em>It has the name "BlockCommit" and not "BatchCommit" due to backward compatibility considerations</em></p>
+<pre><code class="language-solidity">event BlockCommit(
+  uint256 indexed batchNumber,
+  bytes32 indexed batchHash,
+  bytes32 indexed commitment
+);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>batchNumber</code></td><td><code>uint256</code></td><td>Number of the batch committed</td></tr>
+<tr><td><code>batchHash</code></td><td><code>bytes32</code></td><td>Hash of the L2 batch</td></tr>
+<tr><td><code>commitment</code></td><td><code>bytes32</code></td><td>Calculated input for the ZKsync circuit</td></tr>
+</tbody></table>
+</div>
+<h3 id="blocksverification"><a class="header" href="#blocksverification">BlocksVerification</a></h3>
+<p>Event emitted when batches are verified</p>
+<p><em>It has the name "BlocksVerification" and not "BatchesVerification" due to backward compatibility considerations</em></p>
+<pre><code class="language-solidity">event BlocksVerification(
+  uint256 indexed previousLastVerifiedBatch,
+  uint256 indexed currentLastVerifiedBatch
+);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>previousLastVerifiedBatch</code></td><td><code>uint256</code></td><td>Batch number of the previous last verified batch</td></tr>
+<tr><td><code>currentLastVerifiedBatch</code></td><td><code>uint256</code></td><td>Batch number of the current last verified batch</td></tr>
+</tbody></table>
+</div>
+<h3 id="blockexecution"><a class="header" href="#blockexecution">BlockExecution</a></h3>
+<p>Event emitted when a batch is executed</p>
+<p><em>It has the name "BlockExecution" and not "BatchExecution" due to backward compatibility considerations</em></p>
+<pre><code class="language-solidity">event BlockExecution(
+  uint256 indexed batchNumber,
+  bytes32 indexed batchHash,
+  bytes32 indexed commitment
+);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>batchNumber</code></td><td><code>uint256</code></td><td>Number of the batch executed</td></tr>
+<tr><td><code>batchHash</code></td><td><code>bytes32</code></td><td>Hash of the L2 batch</td></tr>
+<tr><td><code>commitment</code></td><td><code>bytes32</code></td><td>Verified input for the ZKsync circuit</td></tr>
+</tbody></table>
+</div>
+<h3 id="blocksrevert"><a class="header" href="#blocksrevert">BlocksRevert</a></h3>
+<p>Event emitted when batches are reverted</p>
+<p><em>It has the name "BlocksRevert" and not "BatchesRevert" due to backward compatibility considerations</em></p>
+<pre><code class="language-solidity">event BlocksRevert(
+  uint256 totalBatchesCommitted,
+  uint256 totalBatchesVerified,
+  uint256 totalBatchesExecuted
+);
+</code></pre>
+<p><strong>Parameters</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>totalBatchesCommitted</code></td><td><code>uint256</code></td><td>Total number of committed batches after the revert</td></tr>
+<tr><td><code>totalBatchesVerified</code></td><td><code>uint256</code></td><td>Total number of verified batches after the revert</td></tr>
+<tr><td><code>totalBatchesExecuted</code></td><td><code>uint256</code></td><td>Total number of executed batches</td></tr>
+</tbody></table>
+</div>
+<h2 id="structs"><a class="header" href="#structs">Structs</a></h2>
+<h3 id="storedbatchinfo"><a class="header" href="#storedbatchinfo">StoredBatchInfo</a></h3>
+<p>Rollup batch stored data</p>
+<pre><code class="language-solidity">struct StoredBatchInfo {
+  uint64 batchNumber;
+  bytes32 batchHash;
+  uint64 indexRepeatedStorageChanges;
+  uint256 numberOfLayer1Txs;
+  bytes32 priorityOperationsHash;
+  bytes32 l2LogsTreeRoot;
+  uint256 timestamp;
+  bytes32 commitment;
+}
+</code></pre>
+<p><strong>Properties</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>batchNumber</code></td><td><code>uint64</code></td><td>Rollup batch number</td></tr>
+<tr><td><code>batchHash</code></td><td><code>bytes32</code></td><td>Hash of L2 batch</td></tr>
+<tr><td><code>indexRepeatedStorageChanges</code></td><td><code>uint64</code></td><td>The serial number of the shortcut index that's used as a unique identifier for storage keys that were used twice or more</td></tr>
+<tr><td><code>numberOfLayer1Txs</code></td><td><code>uint256</code></td><td>Number of priority operations to be processed</td></tr>
+<tr><td><code>priorityOperationsHash</code></td><td><code>bytes32</code></td><td>Hash of all priority operations from this batch</td></tr>
+<tr><td><code>l2LogsTreeRoot</code></td><td><code>bytes32</code></td><td>Root hash of tree that contains L2 -&gt; L1 messages from this batch</td></tr>
+<tr><td><code>timestamp</code></td><td><code>uint256</code></td><td>Rollup batch timestamp, have the same format as Ethereum batch constant</td></tr>
+<tr><td><code>commitment</code></td><td><code>bytes32</code></td><td>Verified input for the ZKsync circuit</td></tr>
+</tbody></table>
+</div>
+<h3 id="commitbatchinfo"><a class="header" href="#commitbatchinfo">CommitBatchInfo</a></h3>
+<p>Data needed to commit new batch</p>
+<p><em>pubdataCommitments format: This will always start with a 1 byte pubdataSource flag. Current allowed values are 0 (calldata) or 1 (blobs)
+kzg: list of: opening point (16 bytes) || claimed value (32 bytes) || commitment (48 bytes) || proof (48 bytes) = 144 bytes
+calldata: pubdataCommitments.length - 1 - 32 bytes of pubdata
+and 32 bytes appended to serve as the blob commitment part for the aux output part of the batch commitment</em></p>
+<p><em>For 2 blobs we will be sending 288 bytes of calldata instead of the full amount for pubdata.</em></p>
+<p><em>When using calldata, we only need to send one blob commitment since the max number of bytes in calldata fits in a single blob and we can pull the
+linear hash from the system logs</em></p>
+<pre><code class="language-solidity">struct CommitBatchInfo {
+  uint64 batchNumber;
+  uint64 timestamp;
+  uint64 indexRepeatedStorageChanges;
+  bytes32 newStateRoot;
+  uint256 numberOfLayer1Txs;
+  bytes32 priorityOperationsHash;
+  bytes32 bootloaderHeapInitialContentsHash;
+  bytes32 eventsQueueStateHash;
+  bytes systemLogs;
+  bytes operatorDAInput;
+}
+</code></pre>
+<p><strong>Properties</strong></p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>batchNumber</code></td><td><code>uint64</code></td><td>Number of the committed batch</td></tr>
+<tr><td><code>timestamp</code></td><td><code>uint64</code></td><td>Unix timestamp denoting the start of the batch execution</td></tr>
+<tr><td><code>indexRepeatedStorageChanges</code></td><td><code>uint64</code></td><td>The serial number of the shortcut index that's used as a unique identifier for storage keys that were used twice or more</td></tr>
+<tr><td><code>newStateRoot</code></td><td><code>bytes32</code></td><td>The state root of the full state tree</td></tr>
+<tr><td><code>numberOfLayer1Txs</code></td><td><code>uint256</code></td><td>Number of priority operations to be processed</td></tr>
+<tr><td><code>priorityOperationsHash</code></td><td><code>bytes32</code></td><td>Hash of all priority operations from this batch</td></tr>
+<tr><td><code>bootloaderHeapInitialContentsHash</code></td><td><code>bytes32</code></td><td>Hash of the initial contents of the bootloader heap. In practice it serves as the commitment to the transactions in the batch.</td></tr>
+<tr><td><code>eventsQueueStateHash</code></td><td><code>bytes32</code></td><td>Hash of the events queue state. In practice it serves as the commitment to the events in the batch.</td></tr>
+<tr><td><code>systemLogs</code></td><td><code>bytes</code></td><td>concatenation of all L2 -&gt; L1 system logs in the batch</td></tr>
+<tr><td><code>operatorDAInput</code></td><td><code>bytes</code></td><td>Packed pubdata commitments/data.</td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../../../contracts/l1-contracts/state-transition/chain-interfaces/IDiamondInit.sol/interface.IDiamondInit.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../../../contracts/l1-contracts/state-transition/chain-interfaces/IExecutor.sol/constants.IExecutor.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../../../contracts/l1-contracts/state-transition/chain-interfaces/IDiamondInit.sol/interface.IDiamondInit.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../../../contracts/l1-contracts/state-transition/chain-interfaces/IExecutor.sol/constants.IExecutor.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../../../elasticlunr.min.js"></script>
+        <script src="../../../../../mark.min.js"></script>
+        <script src="../../../../../searcher.js"></script>
+
+        <script src="../../../../../clipboard.min.js"></script>
+        <script src="../../../../../highlight.js"></script>
+        <script src="../../../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../../../solidity.min.js"></script>
+
+
+    </div>
+    </body>
+</html>
