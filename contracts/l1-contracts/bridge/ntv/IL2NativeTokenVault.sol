@@ -26,4 +26,6 @@ interface IL2NativeTokenVault is INativeTokenVault {
   );
 
   function l2TokenAddress(address _l1Token) external view returns (address);
+
+  function setLegacyTokenAssetId(address _l2TokenAddress) external;
 }

@@ -2,6 +2,7 @@
 // We use a floating point pragma here so it can be used within other projects that interact with the ZKsync ecosystem without using our exact pragma version.
 pragma solidity ^0.8.0;
 
+import { EfficientCall } from "../system-contracts/libraries/EfficientCall.sol";
 import { BytecodeError, MalformedBytecode } from "./errors/L2ContractErrors.sol";
 
 /**
@@ -17,7 +18,7 @@ import { BytecodeError, MalformedBytecode } from "./errors/L2ContractErrors.sol"
  * - The contract on L1 accepts all sent messages and if the message came from this system contract
  * it requires that the preimage of `value` be provided.
  */
-interface IL2Messenger {
+interface IL1Messenger {
   /// @notice Sends an arbitrary length message to L1.
   /// @param _message The variable length message to be sent to L1.
   /// @return Returns the keccak256 hashed value of the message.
@@ -137,8 +138,8 @@ address constant L2_BRIDGEHUB_ADDRESS = address(USER_CONTRACTS_OFFSET + 0x02);
 
 uint256 constant L1_CHAIN_ID = 1;
 
-IL2Messenger constant L2_MESSENGER =
-  IL2Messenger(address(SYSTEM_CONTRACTS_OFFSET + 0x08));
+IL1Messenger constant L2_MESSENGER =
+  IL1Messenger(address(SYSTEM_CONTRACTS_OFFSET + 0x08));
 
 IBaseToken constant L2_BASE_TOKEN_ADDRESS =
   IBaseToken(address(SYSTEM_CONTRACTS_OFFSET + 0x0a));
@@ -148,6 +149,115 @@ ICompressor constant COMPRESSOR_CONTRACT =
 
 IPubdataChunkPublisher constant PUBDATA_CHUNK_PUBLISHER =
   IPubdataChunkPublisher(address(SYSTEM_CONTRACTS_OFFSET + 0x11));
+
+/**
+ * @author Matter Labs
+ * @custom:security-contact security@matterlabs.dev
+ * @notice Helper library for working with L2 contracts on L1.
+ */
+library L2ContractHelper {
+  /// @dev The prefix used to create CREATE2 addresses.
+  bytes32 private constant CREATE2_PREFIX = keccak256("zksyncCreate2");
+
+  /// @notice Sends L2 -> L1 arbitrary-long message through the system contract messenger.
+  /// @param _message Data to be sent to L1.
+  /// @return keccak256 hash of the sent message.
+  function sendMessageToL1(bytes memory _message) internal returns (bytes32) {
+    return L2_MESSENGER.sendToL1(_message);
+  }
+
+  /// @notice Computes the create2 address for a Layer 2 contract.
+  /// @param _sender The address of the contract creator.
+  /// @param _salt The salt value to use in the create2 address computation.
+  /// @param _bytecodeHash The contract bytecode hash.
+  /// @param _constructorInputHash The keccak256 hash of the constructor input data.
+  /// @return The create2 address of the contract.
+  /// NOTE: L2 create2 derivation is different from L1 derivation!
+  function computeCreate2Address(
+    address _sender,
+    bytes32 _salt,
+    bytes32 _bytecodeHash,
+    bytes32 _constructorInputHash
+  ) internal pure returns (address) {
+    bytes32 senderBytes = bytes32(uint256(uint160(_sender)));
+    bytes32 data = keccak256(
+      // solhint-disable-next-line func-named-parameters
+      bytes.concat(
+        CREATE2_PREFIX, senderBytes, _salt, _bytecodeHash, _constructorInputHash
+      )
+    );
+
+    return address(uint160(uint256(data)));
+  }
+
+  /// @notice Validate the bytecode format and calculate its hash.
+  /// @param _bytecode The bytecode to hash.
+  /// @return hashedBytecode The 32-byte hash of the bytecode.
+  /// Note: The function reverts the execution if the bytecode has non expected format:
+  /// - Bytecode bytes length is not a multiple of 32
+  /// - Bytecode bytes length is not less than 2^21 bytes (2^16 words)
+  /// - Bytecode words length is not odd
+  function hashL2BytecodeCalldata(bytes calldata _bytecode)
+    internal
+    view
+    returns (bytes32 hashedBytecode)
+  {
+    // Note that the length of the bytecode must be provided in 32-byte words.
+    if (_bytecode.length % 32 != 0) {
+      revert MalformedBytecode(BytecodeError.Length);
+    }
+
+    uint256 bytecodeLenInWords = _bytecode.length / 32;
+    // bytecode length must be less than 2^16 words
+    if (bytecodeLenInWords >= 2 ** 16) {
+      revert MalformedBytecode(BytecodeError.NumberOfWords);
+    }
+    // bytecode length in words must be odd
+    if (bytecodeLenInWords % 2 == 0) {
+      revert MalformedBytecode(BytecodeError.WordsMustBeOdd);
+    }
+    hashedBytecode = EfficientCall.sha(_bytecode)
+      & 0x00000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+    // Setting the version of the hash
+    hashedBytecode = (hashedBytecode | bytes32(uint256(1 << 248)));
+    // Setting the length
+    hashedBytecode = hashedBytecode | bytes32(bytecodeLenInWords << 224);
+  }
+
+  /// @notice Validate the bytecode format and calculate its hash.
+  /// @param _bytecode The bytecode to hash.
+  /// @return hashedBytecode The 32-byte hash of the bytecode.
+  /// Note: The function reverts the execution if the bytecode has non expected format:
+  /// - Bytecode bytes length is not a multiple of 32
+  /// - Bytecode bytes length is not less than 2^21 bytes (2^16 words)
+  /// - Bytecode words length is not odd
+  function hashL2Bytecode(bytes memory _bytecode)
+    internal
+    pure
+    returns (bytes32 hashedBytecode)
+  {
+    // Note that the length of the bytecode must be provided in 32-byte words.
+    if (_bytecode.length % 32 != 0) {
+      revert MalformedBytecode(BytecodeError.Length);
+    }
+
+    uint256 bytecodeLenInWords = _bytecode.length / 32;
+    // bytecode length must be less than 2^16 words
+    if (bytecodeLenInWords >= 2 ** 16) {
+      revert MalformedBytecode(BytecodeError.NumberOfWords);
+    }
+    // bytecode length in words must be odd
+    if (bytecodeLenInWords % 2 == 0) {
+      revert MalformedBytecode(BytecodeError.WordsMustBeOdd);
+    }
+    hashedBytecode = sha256(_bytecode)
+      & 0x00000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+    // Setting the version of the hash
+    hashedBytecode = (hashedBytecode | bytes32(uint256(1 << 248)));
+    // Setting the length
+    hashedBytecode = hashedBytecode | bytes32(bytecodeLenInWords << 224);
+  }
+}
 
 /// @notice Structure used to represent a ZKsync transaction.
 struct Transaction {
