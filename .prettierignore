@@ -7,3 +7,4 @@ lib/*
 **/*.sol
 README.md
 zkout/
+docs/*
