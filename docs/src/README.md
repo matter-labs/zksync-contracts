@@ -12,7 +12,7 @@
 
 [![NPM](https://img.shields.io/npm/v/@matterlabs/zksync-contracts)](https://www.npmjs.com/package/@matterlabs/zksync-contracts)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE-MIT)
-[![Docs](https://img.shields.io/badge/docs-reference-blue)](https://docs.zksync.io)
+[![Docs](https://img.shields.io/badge/docs-reference-blue)](https://matter-labs.github.io/zksync-contracts/latest/)
 [![X: @zksyncdevs](https://img.shields.io/badge/follow-@zksyncdevs-1DA1F2?logo=x)](https://x.com/zksyncdevs)
 
 </div>
@@ -56,12 +56,12 @@ contract MyPaymaster is IPaymaster {
 }
 ```
 
-See more examples in the [official docs](https://docs.zksync.io).
-
 ## 📖 Documentation
 
-* **API reference:** [https://docs.zksync.io](https://docs.zksync.io)
+* **Interface & Libraries** [Interface docs](https://matter-labs.github.io/zksync-contracts/latest/)
+* **Contract Specs** [Core Contract Specifications](https://matter-labs.github.io/zksync-era/core/latest/specs/contracts/index.html)
 * **Canonical source:** [matter-labs/era-contracts](https://github.com/matter-labs/era-contracts)
+* **ZKsync Docs:** [https://docs.zksync.io](https://docs.zksync.io)
 
 ## 🤝 Contributing
 
