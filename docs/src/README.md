@@ -1,6 +1,10 @@
 <div align="center">
 
-# 🛠️ ZKsync Contracts
+<picture>
+  <source srcset=".github/assets/elastic_white.svg" media="(prefers-color-scheme: dark)" />
+  <img src=".github/assets/elastic_black.svg" alt="ZKsync" width="28" style="vertical-align: middle;">
+</picture>
+<span style="font-size:1.5em; vertical-align: middle;">ZKsync Contracts</span>
 
 *Canonical L1 & L2 contract interfaces for the ZKsync ecosystem*
 
@@ -12,8 +16,7 @@
 </div>
 
 > **Snapshot notice**  
-> These contracts target **protocol version 26**, commit [`6badcb8a`](https://github.com/matter-labs/era-contracts/commit/6badcb8a9b6114c6dd10d3b172a96812250604b0).  
-> Verify against on-chain bytecode if you are using another network or version.
+> These contracts target **protocol version 26**, commit [`6badcb8a`](https://github.com/matter-labs/era-contracts/commit/6badcb8a9b6114c6dd10d3b172a96812250604b0).
 
 ---
 
@@ -56,7 +59,7 @@ See more examples in the [official docs](https://docs.zksync.io).
 ## 📖 Documentation
 
 * **API reference:** [https://docs.zksync.io](https://docs.zksync.io)
-* **Canonical source:** [matter-labs/era-contracts](https://github.com/matter-labs/era-contracts) (this repo is a curated subset)
+* **Canonical source:** [matter-labs/era-contracts](https://github.com/matter-labs/era-contracts)
 
 ## 🤝 Contributing
 
