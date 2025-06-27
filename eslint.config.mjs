@@ -26,6 +26,6 @@ export default [
     rules: { 'prettier/prettier': 'error' },
   },
   {
-    ignores: [`README.md`, 'lib/**', 'artifacts/**', 'cache/**', 'out/**', 'node_modules/**', 'zkout/**', 'docs/**'],
+    ignores: ['.github/**', `README.md`, 'lib/**', 'artifacts/**', 'cache/**', 'out/**', 'node_modules/**', 'zkout/**', 'docs/**'],
   },
 ];
