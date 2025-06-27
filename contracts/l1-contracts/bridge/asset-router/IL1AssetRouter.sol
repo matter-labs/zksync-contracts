@@ -4,6 +4,8 @@ pragma solidity ^0.8.0;
 
 import { L2TransactionRequestTwoBridgesInner } from
   "../../bridgehub/IBridgehub.sol";
+
+import { IL1ERC20Bridge } from "../interfaces/IL1ERC20Bridge.sol";
 import { IL1Nullifier } from "../interfaces/IL1Nullifier.sol";
 import { IL1SharedBridgeLegacy } from "../interfaces/IL1SharedBridgeLegacy.sol";
 import { INativeTokenVault } from "../ntv/INativeTokenVault.sol";
@@ -87,6 +89,8 @@ interface IL1AssetRouter is IAssetRouterBase, IL1SharedBridgeLegacy {
   ) external;
 
   function setNativeTokenVault(INativeTokenVault _nativeTokenVault) external;
+
+  function setL1Erc20Bridge(IL1ERC20Bridge _legacyBridge) external;
 
   /// @notice Withdraw funds from the initiated deposit, that failed when finalizing on L2.
   /// @param _chainId The ZK chain id to which the deposit was initiated.

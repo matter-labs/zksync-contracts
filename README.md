@@ -18,7 +18,7 @@
 </div>
 
 > **Snapshot notice**  
-> These contracts target **protocol version 26**, commit [`6badcb8a`](https://github.com/matter-labs/era-contracts/commit/6badcb8a9b6114c6dd10d3b172a96812250604b0).
+> These contracts target **protocol version 27**, commit [`9076929`](https://github.com/matter-labs/era-contracts/commit/90769297e5324b8c9cfaa10eaf146816ad8dcc8b).
 
 ---
 

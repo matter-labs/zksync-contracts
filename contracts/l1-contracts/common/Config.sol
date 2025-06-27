@@ -168,3 +168,7 @@ struct ZKChainCommitment {
   /// @notice Whether a chain is a permanent rollup.
   bool isPermanentRollup;
 }
+
+/// @dev Used as the `msg.sender` for system service transactions.
+address constant SERVICE_TRANSACTION_SENDER =
+  address(uint160(0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF));

@@ -14,11 +14,14 @@ import { Diamond } from "./libraries/Diamond.sol";
 /// @param validatorTimelock The address that serves as consensus, i.e. can submit blocks to be processed
 /// @param chainCreationParams The struct that contains the fields that define how a new chain should be created
 /// @param protocolVersion The initial protocol version on the newly deployed chain
+/// @param serverNotifier The address that serves as server notifier
+// solhint-disable-next-line gas-struct-packing
 struct ChainTypeManagerInitializeData {
   address owner;
   address validatorTimelock;
   ChainCreationParams chainCreationParams;
   uint256 protocolVersion;
+  address serverNotifier;
 }
 
 /// @notice The struct that contains the fields that define how a new chain should be created
@@ -61,6 +64,11 @@ interface IChainTypeManager {
   /// @notice ValidatorTimelock changed
   event NewValidatorTimelock(
     address indexed oldValidatorTimelock, address indexed newValidatorTimelock
+  );
+
+  /// @notice ServerNotifier changed
+  event NewServerNotifier(
+    address indexed oldServerNotifier, address indexed newServerNotifier
   );
 
   /// @notice chain creation parameters changed
