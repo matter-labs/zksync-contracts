@@ -8,7 +8,7 @@
   ZKsync Contracts
 </h1>
 
-*Canonical L1 & L2 contract interfaces for the ZKsync ecosystem*
+*Canonical L1 & L2 contract interfaces for the ZKsync Elastic Network*
 
 [![NPM](https://img.shields.io/npm/v/@matterlabs/zksync-contracts)](https://www.npmjs.com/package/@matterlabs/zksync-contracts)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE-MIT)
