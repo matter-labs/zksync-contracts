@@ -20,7 +20,6 @@ quote_style = "double"
 sort_imports = true
 
 [doc]
-out        = "docs"
+out        = "doc-temp"
 title      = "ZKSync Contracts"
 repository = "https://github.com/matter-labs/zksync-contracts"
-book       = "./docs/book.toml"
