@@ -1,0 +1,414 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Common - ZKSync Contracts</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../favicon.png">
+        <link rel="stylesheet" href="../../../css/variables.css">
+        <link rel="stylesheet" href="../../../css/general.css">
+        <link rel="stylesheet" href="../../../css/chrome.css">
+        <link rel="stylesheet" href="../../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../book.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">ZKSync Contracts</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/matter-labs/zksync-contracts" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="contents"><a class="header" href="#contents">Contents</a></h1>
+<ul>
+<li><a href="/contracts/l1-contracts/common/interfaces">interfaces</a></li>
+<li><a href="/contracts/l1-contracts/common/l2-helpers">l2-helpers</a></li>
+<li><a href="/contracts/l1-contracts/common/libraries">libraries</a></li>
+<li><a href="Config.sol/struct.PriorityTreeCommitment.html">PriorityTreeCommitment</a></li>
+<li><a href="Config.sol/struct.ZKChainCommitment.html">ZKChainCommitment</a></li>
+<li><a href="Config.sol/constants.Config.html">Config constants</a></li>
+<li><a href="L1ContractErrors.sol/error.AccessToFallbackDenied.html">AccessToFallbackDenied</a></li>
+<li><a href="L1ContractErrors.sol/error.AccessToFunctionDenied.html">AccessToFunctionDenied</a></li>
+<li><a href="L1ContractErrors.sol/error.AddressAlreadySet.html">AddressAlreadySet</a></li>
+<li><a href="L1ContractErrors.sol/error.AddressHasNoCode.html">AddressHasNoCode</a></li>
+<li><a href="L1ContractErrors.sol/error.AddressMismatch.html">AddressMismatch</a></li>
+<li><a href="L1ContractErrors.sol/error.AlreadyPermanentRollup.html">AlreadyPermanentRollup</a></li>
+<li><a href="L1ContractErrors.sol/error.AlreadyWhitelisted.html">AlreadyWhitelisted</a></li>
+<li><a href="L1ContractErrors.sol/error.AmountMustBeGreaterThanZero.html">AmountMustBeGreaterThanZero</a></li>
+<li><a href="L1ContractErrors.sol/error.AssetHandlerDoesNotExist.html">AssetHandlerDoesNotExist</a></li>
+<li><a href="L1ContractErrors.sol/error.AssetHandlerNotRegistered.html">AssetHandlerNotRegistered</a></li>
+<li><a href="L1ContractErrors.sol/error.AssetIdAlreadyRegistered.html">AssetIdAlreadyRegistered</a></li>
+<li><a href="L1ContractErrors.sol/error.AssetIdMismatch.html">AssetIdMismatch</a></li>
+<li><a href="L1ContractErrors.sol/error.AssetIdNotSupported.html">AssetIdNotSupported</a></li>
+<li><a href="L1ContractErrors.sol/error.AssetRouterAllowanceNotZero.html">AssetRouterAllowanceNotZero</a></li>
+<li><a href="L1ContractErrors.sol/error.BaseTokenGasPriceDenominatorNotSet.html">BaseTokenGasPriceDenominatorNotSet</a></li>
+<li><a href="L1ContractErrors.sol/error.BatchHashMismatch.html">BatchHashMismatch</a></li>
+<li><a href="L1ContractErrors.sol/error.BatchNotExecuted.html">BatchNotExecuted</a></li>
+<li><a href="L1ContractErrors.sol/error.BatchNumberMismatch.html">BatchNumberMismatch</a></li>
+<li><a href="L1ContractErrors.sol/error.BridgeHubAlreadyRegistered.html">BridgeHubAlreadyRegistered</a></li>
+<li><a href="L1ContractErrors.sol/error.BridgeMintNotImplemented.html">BridgeMintNotImplemented</a></li>
+<li><a href="L1ContractErrors.sol/error.BurningNativeWETHNotSupported.html">BurningNativeWETHNotSupported</a></li>
+<li><a href="L1ContractErrors.sol/error.BytecodeAlreadyPublished.html">BytecodeAlreadyPublished</a></li>
+<li><a href="L1ContractErrors.sol/error.CallerNotTimerAdmin.html">CallerNotTimerAdmin</a></li>
+<li><a href="L1ContractErrors.sol/error.CallNotAllowed.html">CallNotAllowed</a></li>
+<li><a href="L1ContractErrors.sol/error.CanOnlyProcessOneBatch.html">CanOnlyProcessOneBatch</a></li>
+<li><a href="L1ContractErrors.sol/error.CantExecuteUnprovenBatches.html">CantExecuteUnprovenBatches</a></li>
+<li><a href="L1ContractErrors.sol/error.CantRevertExecutedBatch.html">CantRevertExecutedBatch</a></li>
+<li><a href="L1ContractErrors.sol/error.ChainAlreadyLive.html">ChainAlreadyLive</a></li>
+<li><a href="L1ContractErrors.sol/error.ChainIdAlreadyExists.html">ChainIdAlreadyExists</a></li>
+<li><a href="L1ContractErrors.sol/error.ChainIdCantBeCurrentChain.html">ChainIdCantBeCurrentChain</a></li>
+<li><a href="L1ContractErrors.sol/error.ChainIdMismatch.html">ChainIdMismatch</a></li>
+<li><a href="L1ContractErrors.sol/error.ChainIdNotRegistered.html">ChainIdNotRegistered</a></li>
+<li><a href="L1ContractErrors.sol/error.ChainIdTooBig.html">ChainIdTooBig</a></li>
+<li><a href="L1ContractErrors.sol/error.CTMAlreadyRegistered.html">CTMAlreadyRegistered</a></li>
+<li><a href="L1ContractErrors.sol/error.CTMNotRegistered.html">CTMNotRegistered</a></li>
+<li><a href="L1ContractErrors.sol/error.DeadlineNotYetPassed.html">DeadlineNotYetPassed</a></li>
+<li><a href="L1ContractErrors.sol/error.DefaultAdminTransferNotAllowed.html">DefaultAdminTransferNotAllowed</a></li>
+<li><a href="L1ContractErrors.sol/error.DelegateCallFailed.html">DelegateCallFailed</a></li>
+<li><a href="L1ContractErrors.sol/error.DenominatorIsZero.html">DenominatorIsZero</a></li>
+<li><a href="L1ContractErrors.sol/error.DeployFailed.html">DeployFailed</a></li>
+<li><a href="L1ContractErrors.sol/error.DeployingBridgedTokenForNativeToken.html">DeployingBridgedTokenForNativeToken</a></li>
+<li><a href="L1ContractErrors.sol/error.DepositDoesNotExist.html">DepositDoesNotExist</a></li>
+<li><a href="L1ContractErrors.sol/error.DepositExists.html">DepositExists</a></li>
+<li><a href="L1ContractErrors.sol/error.DiamondAlreadyFrozen.html">DiamondAlreadyFrozen</a></li>
+<li><a href="L1ContractErrors.sol/error.DiamondNotFrozen.html">DiamondNotFrozen</a></li>
+<li><a href="L1ContractErrors.sol/error.EmptyAddress.html">EmptyAddress</a></li>
+<li><a href="L1ContractErrors.sol/error.EmptyAssetId.html">EmptyAssetId</a></li>
+<li><a href="L1ContractErrors.sol/error.EmptyBytes32.html">EmptyBytes32</a></li>
+<li><a href="L1ContractErrors.sol/error.EmptyData.html">EmptyData</a></li>
+<li><a href="L1ContractErrors.sol/error.EmptyDeposit.html">EmptyDeposit</a></li>
+<li><a href="L1ContractErrors.sol/error.EmptyPrecommitData.html">EmptyPrecommitData</a></li>
+<li><a href="L1ContractErrors.sol/error.EmptyProofLength.html">EmptyProofLength</a></li>
+<li><a href="L1ContractErrors.sol/error.ETHDepositNotSupported.html">ETHDepositNotSupported</a></li>
+<li><a href="L1ContractErrors.sol/error.FacetExists.html">FacetExists</a></li>
+<li><a href="L1ContractErrors.sol/error.GasPerPubdataMismatch.html">GasPerPubdataMismatch</a></li>
+<li><a href="L1ContractErrors.sol/error.GenesisBatchCommitmentZero.html">GenesisBatchCommitmentZero</a></li>
+<li><a href="L1ContractErrors.sol/error.GenesisBatchHashZero.html">GenesisBatchHashZero</a></li>
+<li><a href="L1ContractErrors.sol/error.GenesisIndexStorageZero.html">GenesisIndexStorageZero</a></li>
+<li><a href="L1ContractErrors.sol/error.GenesisUpgradeZero.html">GenesisUpgradeZero</a></li>
+<li><a href="L1ContractErrors.sol/error.HashedLogIsDefault.html">HashedLogIsDefault</a></li>
+<li><a href="L1ContractErrors.sol/error.HashMismatch.html">HashMismatch</a></li>
+<li><a href="L1ContractErrors.sol/error.IncorrectBatchBounds.html">IncorrectBatchBounds</a></li>
+<li><a href="L1ContractErrors.sol/error.IncorrectBridgeHubAddress.html">IncorrectBridgeHubAddress</a></li>
+<li><a href="L1ContractErrors.sol/error.IncorrectTokenAddressFromNTV.html">IncorrectTokenAddressFromNTV</a></li>
+<li><a href="L1ContractErrors.sol/error.InsufficientChainBalance.html">InsufficientChainBalance</a></li>
+<li><a href="L1ContractErrors.sol/error.InvalidBatchNumber.html">InvalidBatchNumber</a></li>
+<li><a href="L1ContractErrors.sol/error.InvalidCaller.html">InvalidCaller</a></li>
+<li><a href="L1ContractErrors.sol/error.InvalidDAForPermanentRollup.html">InvalidDAForPermanentRollup</a></li>
+<li><a href="L1ContractErrors.sol/error.InvalidDelay.html">InvalidDelay</a></li>
+<li><a href="L1ContractErrors.sol/error.InvalidLogSender.html">InvalidLogSender</a></li>
+<li><a href="L1ContractErrors.sol/error.InvalidMessageRoot.html">InvalidMessageRoot</a></li>
+<li><a href="L1ContractErrors.sol/error.InvalidNTVBurnData.html">InvalidNTVBurnData</a></li>
+<li><a href="L1ContractErrors.sol/error.InvalidNumberOfBlobs.html">InvalidNumberOfBlobs</a></li>
+<li><a href="L1ContractErrors.sol/error.InvalidPackedPrecommitmentLength.html">InvalidPackedPrecommitmentLength</a></li>
+<li><a href="L1ContractErrors.sol/error.InvalidProof.html">InvalidProof</a></li>
+<li><a href="L1ContractErrors.sol/error.InvalidProofLengthForFinalNode.html">InvalidProofLengthForFinalNode</a></li>
+<li><a href="L1ContractErrors.sol/error.InvalidProtocolVersion.html">InvalidProtocolVersion</a></li>
+<li><a href="L1ContractErrors.sol/error.InvalidPubdataPricingMode.html">InvalidPubdataPricingMode</a></li>
+<li><a href="L1ContractErrors.sol/error.InvalidSelector.html">InvalidSelector</a></li>
+<li><a href="L1ContractErrors.sol/error.InvalidSystemLogsLength.html">InvalidSystemLogsLength</a></li>
+<li><a href="L1ContractErrors.sol/error.InvalidUpgradeTxn.html">InvalidUpgradeTxn</a></li>
+<li><a href="L1ContractErrors.sol/error.L2TimestampTooBig.html">L2TimestampTooBig</a></li>
+<li><a href="L1ContractErrors.sol/error.L2WithdrawalMessageWrongLength.html">L2WithdrawalMessageWrongLength</a></li>
+<li><a href="L1ContractErrors.sol/error.LegacyBridgeNotSet.html">LegacyBridgeNotSet</a></li>
+<li><a href="L1ContractErrors.sol/error.LegacyBridgeUsesNonNativeToken.html">LegacyBridgeUsesNonNativeToken</a></li>
+<li><a href="L1ContractErrors.sol/error.LegacyEncodingUsedForNonL1Token.html">LegacyEncodingUsedForNonL1Token</a></li>
+<li><a href="L1ContractErrors.sol/error.LegacyMethodForNonL1Token.html">LegacyMethodForNonL1Token</a></li>
+<li><a href="L1ContractErrors.sol/error.LengthIsNotDivisibleBy32.html">LengthIsNotDivisibleBy32</a></li>
+<li><a href="L1ContractErrors.sol/error.LogAlreadyProcessed.html">LogAlreadyProcessed</a></li>
+<li><a href="L1ContractErrors.sol/error.MalformedBytecode.html">MalformedBytecode</a></li>
+<li><a href="L1ContractErrors.sol/error.MerkleIndexOrHeightMismatch.html">MerkleIndexOrHeightMismatch</a></li>
+<li><a href="L1ContractErrors.sol/error.MerkleIndexOutOfBounds.html">MerkleIndexOutOfBounds</a></li>
+<li><a href="L1ContractErrors.sol/error.MerkleNothingToProve.html">MerkleNothingToProve</a></li>
+<li><a href="L1ContractErrors.sol/error.MerklePathEmpty.html">MerklePathEmpty</a></li>
+<li><a href="L1ContractErrors.sol/error.MerklePathLengthMismatch.html">MerklePathLengthMismatch</a></li>
+<li><a href="L1ContractErrors.sol/error.MerklePathOutOfBounds.html">MerklePathOutOfBounds</a></li>
+<li><a href="L1ContractErrors.sol/error.MerkleWrongIndex.html">MerkleWrongIndex</a></li>
+<li><a href="L1ContractErrors.sol/error.MerkleWrongLength.html">MerkleWrongLength</a></li>
+<li><a href="L1ContractErrors.sol/error.MigrationPaused.html">MigrationPaused</a></li>
+<li><a href="L1ContractErrors.sol/error.MigrationsNotPaused.html">MigrationsNotPaused</a></li>
+<li><a href="L1ContractErrors.sol/error.MissingSystemLogs.html">MissingSystemLogs</a></li>
+<li><a href="L1ContractErrors.sol/error.MsgValueMismatch.html">MsgValueMismatch</a></li>
+<li><a href="L1ContractErrors.sol/error.MsgValueTooLow.html">MsgValueTooLow</a></li>
+<li><a href="L1ContractErrors.sol/error.NewDeadlineExceedsMaxDeadline.html">NewDeadlineExceedsMaxDeadline</a></li>
+<li><a href="L1ContractErrors.sol/error.NewDeadlineNotGreaterThanCurrent.html">NewDeadlineNotGreaterThanCurrent</a></li>
+<li><a href="L1ContractErrors.sol/error.NoCallsProvided.html">NoCallsProvided</a></li>
+<li><a href="L1ContractErrors.sol/error.NoCTMForAssetId.html">NoCTMForAssetId</a></li>
+<li><a href="L1ContractErrors.sol/error.NoFunctionsForDiamondCut.html">NoFunctionsForDiamondCut</a></li>
+<li><a href="L1ContractErrors.sol/error.NoFundsTransferred.html">NoFundsTransferred</a></li>
+<li><a href="L1ContractErrors.sol/error.NoLegacySharedBridge.html">NoLegacySharedBridge</a></li>
+<li><a href="L1ContractErrors.sol/error.NonEmptyCalldata.html">NonEmptyCalldata</a></li>
+<li><a href="L1ContractErrors.sol/error.NonEmptyMsgValue.html">NonEmptyMsgValue</a></li>
+<li><a href="L1ContractErrors.sol/error.NonIncreasingTimestamp.html">NonIncreasingTimestamp</a></li>
+<li><a href="L1ContractErrors.sol/error.NonSequentialBatch.html">NonSequentialBatch</a></li>
+<li><a href="L1ContractErrors.sol/error.NonSequentialVersion.html">NonSequentialVersion</a></li>
+<li><a href="L1ContractErrors.sol/error.NotAllowed.html">NotAllowed</a></li>
+<li><a href="L1ContractErrors.sol/error.NotARestriction.html">NotARestriction</a></li>
+<li><a href="L1ContractErrors.sol/error.NotAZKChain.html">NotAZKChain</a></li>
+<li><a href="L1ContractErrors.sol/error.NotInitializedReentrancyGuard.html">NotInitializedReentrancyGuard</a></li>
+<li><a href="L1ContractErrors.sol/error.NotWhitelisted.html">NotWhitelisted</a></li>
+<li><a href="L1ContractErrors.sol/error.OnlyEraSupported.html">OnlyEraSupported</a></li>
+<li><a href="L1ContractErrors.sol/error.OnlySelfAllowed.html">OnlySelfAllowed</a></li>
+<li><a href="L1ContractErrors.sol/error.OperationExists.html">OperationExists</a></li>
+<li><a href="L1ContractErrors.sol/error.OperationMustBePending.html">OperationMustBePending</a></li>
+<li><a href="L1ContractErrors.sol/error.OperationMustBeReady.html">OperationMustBeReady</a></li>
+<li><a href="L1ContractErrors.sol/error.OriginChainIdNotFound.html">OriginChainIdNotFound</a></li>
+<li><a href="L1ContractErrors.sol/error.PrecommitmentMismatch.html">PrecommitmentMismatch</a></li>
+<li><a href="L1ContractErrors.sol/error.PreviousOperationNotExecuted.html">PreviousOperationNotExecuted</a></li>
+<li><a href="L1ContractErrors.sol/error.PriorityOperationsRollingHashMismatch.html">PriorityOperationsRollingHashMismatch</a></li>
+<li><a href="L1ContractErrors.sol/error.PriorityTxPubdataExceedsMaxPubDataPerBatch.html">PriorityTxPubdataExceedsMaxPubDataPerBatch</a></li>
+<li><a href="L1ContractErrors.sol/error.ProtocolIdMismatch.html">ProtocolIdMismatch</a></li>
+<li><a href="L1ContractErrors.sol/error.ProtocolIdNotGreater.html">ProtocolIdNotGreater</a></li>
+<li><a href="L1ContractErrors.sol/error.PubdataGreaterThanLimit.html">PubdataGreaterThanLimit</a></li>
+<li><a href="L1ContractErrors.sol/error.QueueIsEmpty.html">QueueIsEmpty</a></li>
+<li><a href="L1ContractErrors.sol/error.Reentrancy.html">Reentrancy</a></li>
+<li><a href="L1ContractErrors.sol/error.RemoveFunctionFacetAddressNotZero.html">RemoveFunctionFacetAddressNotZero</a></li>
+<li><a href="L1ContractErrors.sol/error.RemoveFunctionFacetAddressZero.html">RemoveFunctionFacetAddressZero</a></li>
+<li><a href="L1ContractErrors.sol/error.RemovingPermanentRestriction.html">RemovingPermanentRestriction</a></li>
+<li><a href="L1ContractErrors.sol/error.ReplaceFunctionFacetAddressZero.html">ReplaceFunctionFacetAddressZero</a></li>
+<li><a href="L1ContractErrors.sol/error.RestrictionWasAlreadyPresent.html">RestrictionWasAlreadyPresent</a></li>
+<li><a href="L1ContractErrors.sol/error.RestrictionWasNotPresent.html">RestrictionWasNotPresent</a></li>
+<li><a href="L1ContractErrors.sol/error.RevertedBatchNotAfterNewLastBatch.html">RevertedBatchNotAfterNewLastBatch</a></li>
+<li><a href="L1ContractErrors.sol/error.RoleAccessDenied.html">RoleAccessDenied</a></li>
+<li><a href="L1ContractErrors.sol/error.SelectorsMustAllHaveSameFreezability.html">SelectorsMustAllHaveSameFreezability</a></li>
+<li><a href="L1ContractErrors.sol/error.SettlementLayersMustSettleOnL1.html">SettlementLayersMustSettleOnL1</a></li>
+<li><a href="L1ContractErrors.sol/error.SharedBridgeNotSet.html">SharedBridgeNotSet</a></li>
+<li><a href="L1ContractErrors.sol/error.SharedBridgeValueNotSet.html">SharedBridgeValueNotSet</a></li>
+<li><a href="L1ContractErrors.sol/error.SlotOccupied.html">SlotOccupied</a></li>
+<li><a href="L1ContractErrors.sol/error.SystemLogsSizeTooBig.html">SystemLogsSizeTooBig</a></li>
+<li><a href="L1ContractErrors.sol/error.TimeNotReached.html">TimeNotReached</a></li>
+<li><a href="L1ContractErrors.sol/error.TimerAlreadyStarted.html">TimerAlreadyStarted</a></li>
+<li><a href="L1ContractErrors.sol/error.TimestampError.html">TimestampError</a></li>
+<li><a href="L1ContractErrors.sol/error.TokenIsLegacy.html">TokenIsLegacy</a></li>
+<li><a href="L1ContractErrors.sol/error.TokenNotLegacy.html">TokenNotLegacy</a></li>
+<li><a href="L1ContractErrors.sol/error.TokenNotSupported.html">TokenNotSupported</a></li>
+<li><a href="L1ContractErrors.sol/error.TokensWithFeesNotSupported.html">TokensWithFeesNotSupported</a></li>
+<li><a href="L1ContractErrors.sol/error.TooHighDeploymentNonce.html">TooHighDeploymentNonce</a></li>
+<li><a href="L1ContractErrors.sol/error.TooManyFactoryDeps.html">TooManyFactoryDeps</a></li>
+<li><a href="L1ContractErrors.sol/error.TooMuchGas.html">TooMuchGas</a></li>
+<li><a href="L1ContractErrors.sol/error.TransactionNotAllowed.html">TransactionNotAllowed</a></li>
+<li><a href="L1ContractErrors.sol/error.TxHashMismatch.html">TxHashMismatch</a></li>
+<li><a href="L1ContractErrors.sol/error.TxnBodyGasLimitNotEnoughGas.html">TxnBodyGasLimitNotEnoughGas</a></li>
+<li><a href="L1ContractErrors.sol/error.UnallowedImplementation.html">UnallowedImplementation</a></li>
+<li><a href="L1ContractErrors.sol/error.Unauthorized.html">Unauthorized</a></li>
+<li><a href="L1ContractErrors.sol/error.UndefinedDiamondCutAction.html">UndefinedDiamondCutAction</a></li>
+<li><a href="L1ContractErrors.sol/error.UnexpectedSystemLog.html">UnexpectedSystemLog</a></li>
+<li><a href="L1ContractErrors.sol/error.UnknownVerifierType.html">UnknownVerifierType</a></li>
+<li><a href="L1ContractErrors.sol/error.UnsupportedCommitBatchEncoding.html">UnsupportedCommitBatchEncoding</a></li>
+<li><a href="L1ContractErrors.sol/error.UnsupportedEncodingVersion.html">UnsupportedEncodingVersion</a></li>
+<li><a href="L1ContractErrors.sol/error.UnsupportedExecuteBatchEncoding.html">UnsupportedExecuteBatchEncoding</a></li>
+<li><a href="L1ContractErrors.sol/error.UnsupportedProofBatchEncoding.html">UnsupportedProofBatchEncoding</a></li>
+<li><a href="L1ContractErrors.sol/error.UpgradeBatchNumberIsNotZero.html">UpgradeBatchNumberIsNotZero</a></li>
+<li><a href="L1ContractErrors.sol/error.ValidateTxnNotEnoughGas.html">ValidateTxnNotEnoughGas</a></li>
+<li><a href="L1ContractErrors.sol/error.ValueMismatch.html">ValueMismatch</a></li>
+<li><a href="L1ContractErrors.sol/error.VerifiedBatchesExceedsCommittedBatches.html">VerifiedBatchesExceedsCommittedBatches</a></li>
+<li><a href="L1ContractErrors.sol/error.WithdrawalAlreadyFinalized.html">WithdrawalAlreadyFinalized</a></li>
+<li><a href="L1ContractErrors.sol/error.WithdrawFailed.html">WithdrawFailed</a></li>
+<li><a href="L1ContractErrors.sol/error.WrappedBaseTokenAlreadyRegistered.html">WrappedBaseTokenAlreadyRegistered</a></li>
+<li><a href="L1ContractErrors.sol/error.WrongMagicValue.html">WrongMagicValue</a></li>
+<li><a href="L1ContractErrors.sol/error.ZeroAddress.html">ZeroAddress</a></li>
+<li><a href="L1ContractErrors.sol/error.ZeroChainId.html">ZeroChainId</a></li>
+<li><a href="L1ContractErrors.sol/error.ZKChainLimitReached.html">ZKChainLimitReached</a></li>
+<li><a href="L1ContractErrors.sol/enum.SharedBridgeKey.html">SharedBridgeKey</a></li>
+<li><a href="L1ContractErrors.sol/enum.BytecodeError.html">BytecodeError</a></li>
+<li><a href="L1ContractErrors.sol/enum.UpgradeTxVerifyParam.html">UpgradeTxVerifyParam</a></li>
+<li><a href="Messaging.sol/enum.TxStatus.html">TxStatus</a></li>
+<li><a href="Messaging.sol/struct.L2Log.html">L2Log</a></li>
+<li><a href="Messaging.sol/struct.L2Message.html">L2Message</a></li>
+<li><a href="Messaging.sol/struct.WritePriorityOpParams.html">WritePriorityOpParams</a></li>
+<li><a href="Messaging.sol/struct.L2CanonicalTransaction.html">L2CanonicalTransaction</a></li>
+<li><a href="Messaging.sol/struct.BridgehubL2TransactionRequest.html">BridgehubL2TransactionRequest</a></li>
+<li><a href="Messaging.sol/struct.InteropRoot.html">InteropRoot</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../contracts/l1-contracts/bridgehub/IChainAssetHandler.sol/interface.IChainAssetHandler.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../contracts/l1-contracts/common/interfaces/IL2ContractDeployer.sol/interface.IL2ContractDeployer.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../contracts/l1-contracts/bridgehub/IChainAssetHandler.sol/interface.IChainAssetHandler.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../contracts/l1-contracts/common/interfaces/IL2ContractDeployer.sol/interface.IL2ContractDeployer.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr.min.js"></script>
+        <script src="../../../mark.min.js"></script>
+        <script src="../../../searcher.js"></script>
+
+        <script src="../../../clipboard.min.js"></script>
+        <script src="../../../highlight.js"></script>
+        <script src="../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../solidity.min.js"></script>
+
+
+    </div>
+    </body>
+</html>
