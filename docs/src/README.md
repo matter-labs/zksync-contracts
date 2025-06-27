@@ -4,7 +4,7 @@
   <source srcset=".github/assets/elastic_white.svg" media="(prefers-color-scheme: dark)" />
   <img src=".github/assets/elastic_black.svg" alt="ZKsync" width="28" style="vertical-align: middle;">
 </picture>
-<span style="font-size:1.5em; vertical-align: middle;">ZKsync Contracts</span>
+<span style="font-size:2.5em; vertical-align: middle;">ZKsync Contracts</span>
 
 *Canonical L1 & L2 contract interfaces for the ZKsync ecosystem*
 
