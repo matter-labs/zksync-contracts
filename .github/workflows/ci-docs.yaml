@@ -54,8 +54,6 @@ jobs:
 
     - name: Install Foundry
       uses: foundry-rs/foundry-toolchain@v1
-      with:
-        version: latest
 
     - name: Install Rust
       uses: actions-rust-lang/setup-rust-toolchain@v1
