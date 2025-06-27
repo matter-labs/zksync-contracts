@@ -2,10 +2,8 @@ name: ci-run
 
 on:
   push:
-    branches:
-      - "main"
-    tags:
-      - "v*.*.*"
+    branches: [ main ]
+    tags:     [ "v*.*.*" ]
   pull_request:
     paths:
       - 'docs/**'
@@ -24,57 +22,65 @@ on:
 
 permissions:
   contents: write
-  pages: write
+  pages:    write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
+env:
+  DOCS_ROOT: docs
+  DOCS_SRC:  docs/src
+  ENABLE_TESTS: false
 
 jobs:
-
   deploy-docs:
     name: deploy-docs 📘
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    env:
-      DOCS_DIR: 'docs/book'
-      ENABLE_TESTS: false
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-        with:
-          ref: ${{ inputs.ref || '' }}
+    - name: Checkout repo
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.ref || '' }}
 
-      - name: Extract version from tag
-        if: startsWith(github.ref, 'refs/tags/')
-        id: extract-version
-        shell: 'bash -ex {0}'
-        run: |
-          TAG="${{ github.ref_name }}"
-          VERSION="${TAG#*-}"
-          echo "version=${VERSION}" >> "${GITHUB_OUTPUT}"
+    - name: Extract version from tag
+      if: startsWith(github.ref, 'refs/tags/')
+      id: version
+      shell: bash -e {0}
+      run: |
+        echo "value=${GITHUB_REF_NAME#*-}" >> "$GITHUB_OUTPUT"
 
-      - name: Install Rust
-        uses: actions-rust-lang/setup-rust-toolchain@v1
-        with:
-          toolchain: stable
+    - name: Install Foundry
+      uses: foundry-rs/foundry-toolchain@v1
+      with:
+        version: latest
 
-      - name: Prepare rustdoc
-        shell: 'bash -ex {0}'
-        run: |
-          cargo doc --no-deps
-          cp -r target/doc docs/book/src/rustdoc
+    - name: Install Rust
+      uses: actions-rust-lang/setup-rust-toolchain@v1
+      with:
+        toolchain: stable
 
-      - name: Deploy core docs
-        uses: matter-labs/deploy-mdbooks@c72ae3825faeb7d20cbf3e67714f7253dd0ee7cb # v1
-        with:
-          version: ${{ inputs.version || steps.extract-version.outputs.version || github.ref_name }}
-          docs-dir: ${{ env.DOCS_DIR }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          enable-tests: ${{ env.ENABLE_TESTS }}
-          deploy: ${{ github.event_name != 'pull_request' }}
+    - name: Forge → markdown
+      run: forge doc --out doc-temp
+
+    - name: Replace contracts/ subtree in docs/src
+      shell: bash -e {0}
+      run: |
+        rm -rf $DOCS_SRC/contracts
+        mkdir -p  $DOCS_SRC
+        rsync -a --delete doc-temp/src/contracts $DOCS_SRC/
+        rm -rf doc-temp
+
+    - name: Build mdBook
+      run: mdbook build $DOCS_ROOT
+
+    - name: Deploy mdBook to gh-pages
+      uses: matter-labs/deploy-mdbooks@c72ae3825faeb7d20cbf3e67714f7253dd0ee7cb
+      with: 
+        version:      ${{ inputs.version || steps.version.outputs.value || github.ref_name }}
+        docs-dir:     ${{ env.DOCS_ROOT }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        enable-tests: ${{ env.ENABLE_TESTS }}
+        deploy:       ${{ github.event_name != 'pull_request' }}
