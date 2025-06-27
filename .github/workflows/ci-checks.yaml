@@ -12,7 +12,6 @@ jobs:
   general-checks:
     name: general-checks 🧹
     runs-on: ubuntu-latest
-    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
 
@@ -47,7 +46,6 @@ jobs:
   foundry-checks:
     name: foundry-checks 🛠️
     runs-on: ubuntu-latest
-    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
@@ -71,7 +69,6 @@ jobs:
   hardhat-checks:
     name: hardhat-checks 🏗️
     runs-on: ubuntu-latest
-    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
 
