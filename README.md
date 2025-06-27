@@ -3,7 +3,7 @@
 <h1>
   <picture>
     <source srcset=".github/assets/elastic_white.svg" media="(prefers-color-scheme: dark)" />
-    <img src=".github/assets/elastic_black.svg" alt="ZKsync" width="28" style="vertical-align: middle;">
+    <img src=".github/assets/elastic_black.svg" alt="ZKsync" width="32" style="vertical-align: middle;">
   </picture>
   ZKsync Contracts
 </h1>
@@ -12,13 +12,13 @@
 
 [![NPM](https://img.shields.io/npm/v/@matterlabs/zksync-contracts)](https://www.npmjs.com/package/@matterlabs/zksync-contracts)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE-MIT)
-[![Docs](https://img.shields.io/badge/docs-reference-blue)](https://docs.zksync.io)
+[![Docs](https://img.shields.io/badge/docs-reference-blue)](https://matter-labs.github.io/zksync-contracts/latest/)
 [![X: @zksyncdevs](https://img.shields.io/badge/follow-@zksyncdevs-1DA1F2?logo=x)](https://x.com/zksyncdevs)
 
 </div>
 
 > **Snapshot notice**  
-> These contracts target **protocol version 27**, commit [`9076929`](https://github.com/matter-labs/era-contracts/commit/90769297e5324b8c9cfaa10eaf146816ad8dcc8b).
+> These contracts target **protocol version 28**, commit [`9fcd2823`](https://github.com/matter-labs/era-contracts/commit/9fcd28238cf749462b22e513a9f545008637f301).
 
 ---
 
@@ -56,12 +56,19 @@ contract MyPaymaster is IPaymaster {
 }
 ```
 
-See more examples in the [official docs](https://docs.zksync.io).
-
 ## 📖 Documentation
 
-* **API reference:** [https://docs.zksync.io](https://docs.zksync.io)
-* **Canonical source:** [matter-labs/era-contracts](https://github.com/matter-labs/era-contracts)
+* **Interface & Library Docs**
+  [Solidity interfaces and helper libraries](https://matter-labs.github.io/zksync-contracts/latest/)
+
+* **System Contract Specifications**
+  [Core system contract specs](https://matter-labs.github.io/zksync-era/core/latest/specs/contracts/index.html)
+
+* **Source Repository**
+  [GitHub – matter-labs/era-contracts](https://github.com/matter-labs/era-contracts)
+
+* **ZKsync Docs**
+  [docs.zksync.io](https://docs.zksync.io)
 
 ## 🤝 Contributing
 
