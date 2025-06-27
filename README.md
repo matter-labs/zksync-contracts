@@ -1,24 +1,30 @@
-# ZKsync Contracts
+<div align="center">
 
-[![Logo](https://raw.githubusercontent.com/matter-labs/v2-testnet-contracts/beta/logo.svg)](https://zksync.io)
+<h1>
+  <picture>
+    <source srcset=".github/assets/elastic_white.svg" media="(prefers-color-scheme: dark)" />
+    <img src=".github/assets/elastic_black.svg" alt="ZKsync" width="28" style="vertical-align: middle;">
+  </picture>
+  ZKsync Contracts
+</h1>
 
-> [!WARNING]
-> This project is provided on the best effort basis and might not accurately reflect contracts that are deployed on any particular ZK chain. Proper source of truth is still [era-contracts](https://github.com/matter-labs/era-contracts)
+*Canonical L1 & L2 contract interfaces for the ZKsync Elastic Network*
 
-This package contains lightweight subset of ZKsync L1, L2 and system contracts that we consider to be publicly facing. For more details see [era-contracts](https://github.com/matter-labs/era-contracts).
+[![NPM](https://img.shields.io/npm/v/@matterlabs/zksync-contracts)](https://www.npmjs.com/package/@matterlabs/zksync-contracts)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE-MIT)
+[![Docs](https://img.shields.io/badge/docs-reference-blue)](https://docs.zksync.io)
+[![X: @zksyncdevs](https://img.shields.io/badge/follow-@zksyncdevs-1DA1F2?logo=x)](https://x.com/zksyncdevs)
 
-> [!IMPORTANT]
-> Current contract snapshot was made for protocol version 26 as taken from commit [6badcb8a9b6114c6dd10d3b172a96812250604b0](https://github.com/matter-labs/era-contracts/commit/6badcb8a9b6114c6dd10d3b172a96812250604b0)
+</div>
 
-## Installation
+> **Snapshot notice**  
+> These contracts target **protocol version 26**, commit [`6badcb8a`](https://github.com/matter-labs/era-contracts/commit/6badcb8a9b6114c6dd10d3b172a96812250604b0).
 
-### Hardhat
+---
 
-```bash
-bun install @matterlabs/zksync-contracts
-```
+## 📦 Installation
 
-### Foundry
+To install with [**Foundry-ZKsync**](https://github.com/matter-labs/foundry-zksync):
 
 ```bash
 forge install matter-labs/zksync-contracts
@@ -27,36 +33,53 @@ forge install matter-labs/zksync-contracts
 Add the following to the `remappings.txt` file of your project:
 
 ```txt
-@matterlabs/zksync-contracts/=lib/zksync-contracts/
+@matterlabs/zksync-contracts/=lib/v2-testnet-contracts/
 ```
 
-## Usage
+To install with [**Hardhat**](https://github.com/matter-labs/hardhat-zksync):
+
+```bash
+bun install @matterlabs/zksync-contracts
+```
+
+## 🚀 Quick start
 
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import { IPaymaster } from '@matterlabs/zksync-contracts/contracts/system-contracts/interfaces/IPaymaster.sol';
+import {IPaymaster} from
+    "@matterlabs/zksync-contracts/contracts/system-contracts/interfaces/IPaymaster.sol";
 
 contract MyPaymaster is IPaymaster {
-  // IMPLEMENTATION
+    // Your implementation here
 }
 ```
 
-You can find a lot of useful examples in the [ZKsync docs](https://docs.zksync.io).
+See more examples in the [official docs](https://docs.zksync.io).
 
-## License
+## 📖 Documentation
 
-ZKsync Contracts are distributed under the terms of the MIT license.
+* **API reference:** [https://docs.zksync.io](https://docs.zksync.io)
+* **Canonical source:** [matter-labs/era-contracts](https://github.com/matter-labs/era-contracts)
 
-See [LICENSE-MIT](LICENSE-MIT) for details.
+## 🤝 Contributing
 
-## Official Links
+Bug fixes, new snapshots, and added ABIs are welcome!
+Open an issue before large changes and follow the standard PR workflow.
 
-- [Website](https://zksync.io)
-- [GitHub](https://github.com/matter-labs)
-- [ZK Credo](https://github.com/zksync/credo)
-- [X](https://x.com/zksync)
-- [X for Devs](https://x.com/zksyncdevs)
-- [Discord](https://join.zksync.dev)
-- [Mirror](https://zksync.mirror.xyz)
+## 📜 License
+
+Dual-licensed under **MIT** / **Apache-2.0**.
+See [LICENSE-MIT](LICENSE-MIT) and [LICENSE-APACHE](LICENSE-APACHE).
+
+<div align="center">
+
+[Website](https://zksync.io) •
+[GitHub](https://github.com/matter-labs) •
+[X](https://x.com/zksync) •
+[X for Devs](https://x.com/zksyncdevs) •
+[Discord](https://join.zksync.dev) •
+[Mirror](https://zksync.mirror.xyz)
+
+</div>

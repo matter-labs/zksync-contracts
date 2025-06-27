@@ -18,3 +18,8 @@ tab_width = 2
 bracket_spacing = true
 quote_style = "double"
 sort_imports = true
+
+[doc]
+out        = "doc-temp"
+title      = "ZKSync Contracts"
+repository = "https://github.com/matter-labs/zksync-contracts"
