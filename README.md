@@ -20,6 +20,11 @@
 > **Snapshot notice**  
 > These contracts target **protocol version 28**, commit [`9fcd2823`](https://github.com/matter-labs/era-contracts/commit/9fcd28238cf749462b22e513a9f545008637f301).
 
+> [!NOTE]
+> 🛠️ This is a **development repository** for _interfaces only_.  
+> If you're looking for **contract implementations**, see  
+> 👉 [matter-labs/era-contracts](https://github.com/matter-labs/era-contracts/tree/release-v28)
+
 ---
 
 ## 📦 Installation
@@ -65,7 +70,7 @@ contract MyPaymaster is IPaymaster {
   [Core system contract specs](https://matter-labs.github.io/zksync-era/core/latest/specs/contracts/index.html)
 
 * **Source Repository**
-  [GitHub – matter-labs/era-contracts](https://github.com/matter-labs/era-contracts)
+  [GitHub – matter-labs/era-contracts](https://github.com/matter-labs/era-contracts/tree/release-v28)
 
 * **ZKsync Docs**
   [docs.zksync.io](https://docs.zksync.io)
