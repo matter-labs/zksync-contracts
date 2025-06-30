@@ -29,6 +29,8 @@ jobs:
       config: '.github/release-please/config.json'     # Specify the path to the configuration file
       manifest: '.github/release-please/manifest.json' # Specify the path to the manifest file
       upgrade-dependencies: false                      # Do not upgrade workspace dependencies
+      update-cargo-lock : false
+      publish-to-crates-io: false
 
   # Trigger workflow to publish binaries
   release-binaries:

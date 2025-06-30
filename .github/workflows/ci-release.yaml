@@ -80,3 +80,53 @@ jobs:
           prerelease: ${{ inputs.prerelease_name != '' }}
           files: |
             contracts-build-${{ steps.tag.outputs.value }}.tar.gz
+
+  # Trigger package publishing to npm and soldeer registry
+  publish:
+    name: publish-package 📦
+    runs-on: ubuntu-latest
+
+    env:
+        SOLDEER_PROJECT_NAME: ${{ github.repository_owner }}
+        NODE_AUTH_TOKEN:      ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
+        SOLDEER_AUTH_TOKEN:   ${{ secrets.SOLDEER_AUTH_TOKEN }}
+
+    steps:
+        - uses: actions/checkout@v4
+
+        - uses: actions/setup-node@v4
+          with:
+            node-version: 22.x
+            registry-url: "https://registry.npmjs.org"
+            scope: "@matterlabs"
+        - run: yarn
+
+        - if: github.event.release.target_commitish == 'main'
+          run: yarn publish --tag latest --access public
+
+        - name: Set up Foundry
+          uses: foundry-rs/foundry-toolchain@v1
+          with:
+            version: stable
+
+        - name: Configure Soldeer token
+          run: |
+            mkdir -p ~/.soldeer
+            echo "$SOLDEER_AUTH_TOKEN" > ~/.soldeer/.soldeer_login
+            shell: bash
+
+        - name: Push to Soldeer (dry-run)
+          id: soldeer-dry-run
+          run: |
+            VERSION="$(echo "${{ github.event.release.tag_name }}" | sed -E 's/^v//')"
+            NAME="${SOLDEER_PROJECT_NAME##*/}"
+            forge soldeer push "${NAME}~${VERSION}" --dry-run --skip-warnings
+            shell: bash
+
+        - name: Push to Soldeer (live)
+          if: steps.soldeer-dry-run.outcome == 'success'
+          run: |
+            VERSION="$(echo "${{ github.event.release.tag_name }}" | sed -E 's/^v//')"
+            NAME="${SOLDEER_PROJECT_NAME##*/}"
+            forge soldeer push "${NAME}~${VERSION}" --skip-warnings
+            shell: bash
