@@ -95,22 +95,22 @@ jobs:
 
         - name: Configure Soldeer token
           run: |
-            mkdir -p ~/.soldeer
-            echo "$SOLDEER_AUTH_TOKEN" > ~/.soldeer/.soldeer_login
-            shell: bash
+              mkdir -p ~/.soldeer
+              echo "$SOLDEER_AUTH_TOKEN" > ~/.soldeer/.soldeer_login
+              shell: bash
 
         - name: Push to Soldeer (dry-run)
           id: soldeer-dry-run
           run: |
-            VERSION="$(echo "${{ github.event.release.tag_name }}" | sed -E 's/^v//')"
-            NAME="${SOLDEER_PROJECT_NAME##*/}"
-            forge soldeer push "${NAME}~${VERSION}" --dry-run --skip-warnings
-            shell: bash
+              VERSION="$(echo "${{ github.event.release.tag_name }}" | sed -E 's/^v//')"
+              NAME="${SOLDEER_PROJECT_NAME##*/}"
+              forge soldeer push "${NAME}~${VERSION}" --dry-run --skip-warnings
+              shell: bash
 
         - name: Push to Soldeer (live)
           if: steps.soldeer-dry-run.outcome == 'success'
           run: |
-            VERSION="$(echo "${{ github.event.release.tag_name }}" | sed -E 's/^v//')"
-            NAME="${SOLDEER_PROJECT_NAME##*/}"
-            forge soldeer push "${NAME}~${VERSION}" --skip-warnings
-            shell: bash
+              VERSION="$(echo "${{ github.event.release.tag_name }}" | sed -E 's/^v//')"
+              NAME="${SOLDEER_PROJECT_NAME##*/}"
+              forge soldeer push "${NAME}~${VERSION}" --skip-warnings
+              shell: bash
