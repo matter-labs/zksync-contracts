@@ -50,25 +50,11 @@ jobs:
             echo "value=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Install Foundry-ZKsync
-        if: ${{ env.COMPILE_ARTIFACTS == 'true' }}
-        uses: dutterbutter/foundry-zksync-toolchain@v1
-
-      - name: Build
-        if: ${{ env.COMPILE_ARTIFACTS == 'true' }}
-        run: forge build --zksync
-
-      - name: Package build artifacts
-        if: ${{ env.COMPILE_ARTIFACTS == 'true' }}
-        run: |
-          tar -czf contracts-build-${{ steps.tag.outputs.value }}.tar.gz out
-
       - name: Update release-please release artifacts
         if: ${{ inputs.tag != '' }}
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ inputs.tag }}
-          files: 'contracts-build-${{ steps.tag.outputs.value }}.tar.gz'
 
       - name: Publish release
         if: ${{ inputs.prerelease_name != '' }}
@@ -78,8 +64,6 @@ jobs:
           name: ZKsync Contracts ${{ steps.tag.outputs.value }}${{ inputs.prerelease_name && format(' {0}', inputs.prerelease_name) || '' }}
           target_commitish: ${{ github.sha }}
           prerelease: ${{ inputs.prerelease_name != '' }}
-          files: |
-            contracts-build-${{ steps.tag.outputs.value }}.tar.gz
 
   # Trigger package publishing to npm and soldeer registry
   publish:

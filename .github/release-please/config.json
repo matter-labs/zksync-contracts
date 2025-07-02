@@ -9,7 +9,7 @@
       "component": "zksync-contracts",
       "extra-files": [
         {
-          "type": "generic",
+          "type": "json",
           "path": "package.json"
         }
       ]
