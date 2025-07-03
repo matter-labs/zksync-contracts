@@ -7,10 +7,6 @@ on:
         type: string
         description: "Exact git tag to release (omit to use HEAD)"
         required: false
-      prerelease_name:
-        type: string 
-        description: "If set, publish a pre-release with this suffix"
-        required: false
   workflow_dispatch:
     inputs:
       tag:
@@ -22,6 +18,11 @@ on:
         required: false
         type: string
         default: ""
+      skip_publish:
+        description: "Skip publishing to npm and Soldeer"
+        required: false
+        type: boolean
+        default: true
 
 jobs:
   create-release:
@@ -69,7 +70,7 @@ jobs:
   publish:
     name: publish-package 📦
     runs-on: ubuntu-latest
-
+    if: ${{ inputs.skip_publish != 'true' }}
     env:
         SOLDEER_PROJECT_NAME: ${{ github.repository_owner }}
         NODE_AUTH_TOKEN:      ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
@@ -85,7 +86,7 @@ jobs:
             scope: "@matterlabs"
         - run: yarn
 
-        - if: github.event.release.target_commitish == 'main'
+        - name: Publish to npm
           run: yarn publish --tag latest --access public
 
         - name: Set up Foundry
@@ -94,16 +95,16 @@ jobs:
             version: stable
 
         - name: Configure Soldeer token
+          shell: bash
           run: |
               mkdir -p ~/.soldeer
-              echo "$SOLDEER_AUTH_TOKEN" > ~/.soldeer/.soldeer_login
-              shell: bash
+              echo "$SOLDEER_AUTH_TOKEN" > ~/.soldeer/.soldeer_login    
 
         - name: Push to Soldeer (dry-run)
           id: soldeer-dry-run
           shell: bash
           run: |
-            VERSION="$(echo "${{ github.event.release.tag_name }}" | sed -E 's/^v//')"
+            VERSION="$(echo "${{ inputs.tag }}" | sed -E 's/^v//')"
             NAME="${SOLDEER_PROJECT_NAME##*/}"
             forge soldeer push "${NAME}~${VERSION}" --dry-run --skip-warnings
 
@@ -111,6 +112,6 @@ jobs:
           if: steps.soldeer-dry-run.outcome == 'success'
           shell: bash
           run: |
-            VERSION="$(echo "${{ github.event.release.tag_name }}" | sed -E 's/^v//')"
+            VERSION="$(echo "${{ inputs.tag }}" | sed -E 's/^v//')"
             NAME="${SOLDEER_PROJECT_NAME##*/}"
             forge soldeer push "${NAME}~${VERSION}" --skip-warnings
