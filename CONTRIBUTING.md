@@ -17,9 +17,9 @@ If you're looking to contribute, here’s what to keep in mind:
 
 To propose a change:
 
-* Fork the repo.
-* Make the update (limited to syncing existing upstream changes or fixing missing files).
-* Submit a PR with a clear description and rationale.
+- Fork the repo.
+- Make the update (limited to syncing existing upstream changes or fixing missing files).
+- Submit a PR with a clear description and rationale.
 
 Note: If your change modifies contract logic or structure, please open it in the [era-contracts](https://github.com/matter-labs/era-contracts) repository instead.
 
@@ -33,9 +33,9 @@ All contributions to this project are made under both the [Apache 2.0](LICENSE-A
 
 Some helpful links:
 
-* [Developer documentation](https://matter-labs.github.io/zksync-contracts/latest/)
-* [ZKsync Docs](https://docs.zksync.io/)
-* [README](./README.md)
+- [Developer documentation](https://matter-labs.github.io/zksync-contracts/latest/)
+- [ZKsync Docs](https://docs.zksync.io/)
+- [README](./README.md)
 
 ## Code of Conduct
 
