@@ -17,8 +17,10 @@
     "lint": "bunx eslint . --ext .js,.ts",
     "lint:fix": "bunx eslint . --ext .js,.ts --fix",
     "hh:compile": "bunx hardhat compile",
+    "hh:compile-zksync": "USE_ZKSYNC=true bunx hardhat compile",
     "foundry:compile-zksync": "forge build --zksync",
-    "foundry:compile": "forge build"
+    "foundry:compile": "forge build",
+    "docs:serve": "mdbook serve docs"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",
@@ -26,11 +28,12 @@
     "@types/node": "^24.0.4",
     "@typescript-eslint/eslint-plugin": "^8.35.0",
     "@typescript-eslint/parser": "^8.35.0",
+    "dotenv": "^17.1.0",
     "eslint": "^9.29.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.5.1",
     "globals": "^16.2.0",
-    "hardhat": "=2.22.18",
+    "hardhat": "^2.25.0",
     "prettier": "^3.6.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
