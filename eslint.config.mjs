@@ -37,6 +37,7 @@ export default [
       'zkout/**',
       'docs/**',
       'CHANGELOG.md',
+      'hardhat.config.ts',
     ],
   },
 ];
