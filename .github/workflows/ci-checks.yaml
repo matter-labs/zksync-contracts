@@ -53,14 +53,19 @@ jobs:
 
       - name: Set up Foundry
         uses: foundry-rs/foundry-toolchain@v1
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           version: stable
+
 
       - name: Build
         run: forge build --sizes
 
       - name: Set up Foundry-ZKsync
         uses: dutterbutter/foundry-zksync-toolchain@v1
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
         run: forge build --sizes --zksync
@@ -88,3 +93,19 @@ jobs:
 
       - name: Compile
         run: bun run hh:compile
+
+
+  # Special job that allows some of the jobs to be skipped or failed
+  # requiring others to be successful
+  pr-checks:
+    runs-on: ubuntu-latest
+    if: always()
+    needs:
+      - general-checks
+      - foundry-checks
+      - hardhat-checks
+    steps:
+      - name: Decide on PR checks
+        uses: re-actors/alls-green@release/v1
+        with:
+          jobs: ${{ toJSON(needs) }}

@@ -1,0 +1,117 @@
+name: ci-run-release
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        type: string
+        description: "Exact git tag to release (omit to use HEAD)"
+        required: false
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Git tag to release (leave blank for HEAD)"
+        required: false
+        type: string
+      prerelease_name:
+        description: "Suffix for a manual pre-release (blank = full release)"
+        required: false
+        type: string
+        default: ""
+      skip_publish:
+        description: "Skip publishing to npm and Soldeer"
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  create-release:
+    name: create-release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+
+    env:
+      COMPILE_ARTIFACTS: "false"
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.tag || '' }}
+
+      - name: Determine tag
+        id: tag
+        run: |
+          if [ -n "${{ inputs.tag }}" ]; then
+            echo "value=${{ inputs.tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Update release-please release artifacts
+        if: ${{ inputs.tag != '' }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.tag }}
+
+      - name: Publish release
+        if: ${{ inputs.prerelease_name != '' }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.value }}
+          name: ZKsync Contracts ${{ steps.tag.outputs.value }}${{ inputs.prerelease_name && format(' {0}', inputs.prerelease_name) || '' }}
+          target_commitish: ${{ github.sha }}
+          prerelease: ${{ inputs.prerelease_name != '' }}
+
+  # Trigger package publishing to npm and soldeer registry
+  publish:
+    name: publish-package 📦
+    runs-on: ubuntu-latest
+    if: ${{ inputs.skip_publish != 'true' }}
+    env:
+        SOLDEER_PROJECT_NAME: ${{ github.repository_owner }}
+        NODE_AUTH_TOKEN:      ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
+        SOLDEER_AUTH_TOKEN:   ${{ secrets.SOLDEER_AUTH_TOKEN }}
+
+    steps:
+        - uses: actions/checkout@v4
+
+        - uses: actions/setup-node@v4
+          with:
+            node-version: 22.x
+            registry-url: "https://registry.npmjs.org"
+            scope: "@matterlabs"
+        - run: yarn
+
+        - name: Publish to npm
+          run: yarn publish --tag latest --access public
+
+        - name: Set up Foundry
+          uses: foundry-rs/foundry-toolchain@v1
+          with:
+            version: stable
+
+        - name: Configure Soldeer token
+          shell: bash
+          run: |
+              mkdir -p ~/.soldeer
+              echo "$SOLDEER_AUTH_TOKEN" > ~/.soldeer/.soldeer_login    
+
+        - name: Push to Soldeer (dry-run)
+          id: soldeer-dry-run
+          shell: bash
+          run: |
+            VERSION="$(echo "${{ inputs.tag }}" | sed -E 's/^v//')"
+            NAME="${SOLDEER_PROJECT_NAME##*/}"
+            forge soldeer push "${NAME}~${VERSION}" --dry-run --skip-warnings
+
+        - name: Push to Soldeer (live)
+          if: steps.soldeer-dry-run.outcome == 'success'
+          shell: bash
+          run: |
+            VERSION="$(echo "${{ inputs.tag }}" | sed -E 's/^v//')"
+            NAME="${SOLDEER_PROJECT_NAME##*/}"
+            forge soldeer push "${NAME}~${VERSION}" --skip-warnings
