@@ -36,6 +36,7 @@ export default [
       'node_modules/**',
       'zkout/**',
       'docs/**',
+      'CHANGELOG.md',
     ],
   },
 ];
