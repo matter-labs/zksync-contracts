@@ -85,6 +85,8 @@ Open an issue before large changes and follow the standard PR workflow.
 Dual-licensed under **MIT** / **Apache-2.0**.
 See [LICENSE-MIT](LICENSE-MIT) and [LICENSE-APACHE](LICENSE-APACHE).
 
+---
+
 <div align="center">
 
 [Website](https://zksync.io) •
