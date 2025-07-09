@@ -27,7 +27,7 @@ jobs:
           key: bun-${{ runner.os }}-${{ hashFiles('bun.lockb') }}
 
       - name: Install deps
-        run: bun install
+        run: bun install --frozen-lockfile
 
       - name: Set up Foundry
         uses: foundry-rs/foundry-toolchain@v1
