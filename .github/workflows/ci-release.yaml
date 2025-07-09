@@ -72,7 +72,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ inputs.skip_publish != 'true' }}
     env:
-        SOLDEER_PROJECT_NAME: ${{ github.repository_owner }}
+        SOLDEER_PROJECT_NAME: "@zksync-contracts"
         NODE_AUTH_TOKEN:      ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
         SOLDEER_AUTH_TOKEN:   ${{ secrets.SOLDEER_AUTH_TOKEN }}
 
