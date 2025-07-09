@@ -1,5 +1,13 @@
 # Changelog
 
+## [28.0.1](https://github.com/matter-labs/zksync-contracts/compare/v28.0.0...v28.0.1) (2025-07-09)
+
+
+### Bug Fixes
+
+* add missing tx helper methods ([#17](https://github.com/matter-labs/zksync-contracts/issues/17)) ([13baf58](https://github.com/matter-labs/zksync-contracts/commit/13baf5819f80b43f363d5e57a4648c0b1ca6fce6))
+* fix soldeer package publishing ([#16](https://github.com/matter-labs/zksync-contracts/issues/16)) ([1341d80](https://github.com/matter-labs/zksync-contracts/commit/1341d80fcb1791262f0c1f77fcebb64825f5b084))
+
 ## [28.0.0](https://github.com/matter-labs/zksync-contracts/compare/v27.0.0...v28.0.0) (2025-07-09)
 
 
