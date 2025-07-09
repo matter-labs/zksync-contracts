@@ -58,7 +58,6 @@ jobs:
         with:
           version: stable
 
-
       - name: Build
         run: forge build --sizes
 
@@ -94,6 +93,8 @@ jobs:
       - name: Compile
         run: bun run hh:compile
 
+      - name: Compile with ZKsync
+        run: bun run hh:compile-zksync
 
   # Special job that allows some of the jobs to be skipped or failed
   # requiring others to be successful

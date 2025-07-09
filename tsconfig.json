@@ -6,7 +6,9 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "outDir": "dist",
-    "types": ["node"]
+    "types": ["node"],
+    "skipLibCheck": true
   },
-  "include": ["hardhat.config.ts", "contracts/**/*", "scripts/**/*", "test/**/*"]
+  "include": ["hardhat.config.ts", "contracts/**/*", "scripts/**/*", "test/**/*"],
+  "exclude": ["node_modules"]
 }

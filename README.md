@@ -38,7 +38,7 @@ forge install matter-labs/zksync-contracts
 Add the following to the `remappings.txt` file of your project:
 
 ```txt
-@matterlabs/zksync-contracts/=lib/v2-testnet-contracts/
+@matterlabs/zksync-contracts/=lib/matterlabs/zksync-contracts/
 ```
 
 To install with [**Hardhat**](https://github.com/matter-labs/hardhat-zksync):
