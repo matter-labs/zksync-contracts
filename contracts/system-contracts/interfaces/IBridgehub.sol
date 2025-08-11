@@ -8,8 +8,13 @@ interface IBridgehub {
   function setAddresses(
     address _assetRouter,
     address _ctmDeployer,
-    address _messageRoot
+    address _messageRoot,
+    address _chainAssetHandler
   ) external;
 
+  function setChainAssetHandler(address _chainAssetHandler) external;
+
   function owner() external view returns (address);
+
+  function l1CtmDeployer() external returns (address);
 }

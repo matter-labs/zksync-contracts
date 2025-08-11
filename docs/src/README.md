@@ -18,7 +18,12 @@
 </div>
 
 > **Snapshot notice**  
-> These contracts target **protocol version 27**, commit [`9076929`](https://github.com/matter-labs/era-contracts/commit/90769297e5324b8c9cfaa10eaf146816ad8dcc8b).
+> These contracts target **protocol version 29**, commit [`65234ab0`](https://github.com/matter-labs/era-contracts/commit/65234ab0617c677d8a3d266af9e95506db351280).
+
+> [!NOTE]
+> 🛠️ This is a **development repository** for _interfaces only_.
+> If you're looking for **contract implementations**, see
+> 👉 [matter-labs/era-contracts](https://github.com/matter-labs/era-contracts/tree/draft-v29)
 
 ---
 
