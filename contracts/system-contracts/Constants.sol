@@ -18,6 +18,8 @@ import { IImmutableSimulator } from "./interfaces/IImmutableSimulator.sol";
 import { IKnownCodesStorage } from "./interfaces/IKnownCodesStorage.sol";
 
 import { IL1Messenger } from "./interfaces/IL1Messenger.sol";
+import { IL2AssetRouter } from "./interfaces/IL2AssetRouter.sol";
+import { IL2NativeTokenVault } from "./interfaces/IL2NativeTokenVault.sol";
 import { IMessageRoot } from "./interfaces/IMessageRoot.sol";
 import { INonceHolder } from "./interfaces/INonceHolder.sol";
 import { IPubdataChunkPublisher } from "./interfaces/IPubdataChunkPublisher.sol";
@@ -122,11 +124,12 @@ IEvmHashesStorage constant EVM_HASHES_STORAGE =
 
 ICreate2Factory constant L2_CREATE2_FACTORY =
   ICreate2Factory(address(USER_CONTRACTS_OFFSET));
-address constant L2_ASSET_ROUTER = address(USER_CONTRACTS_OFFSET + 0x03);
+IL2AssetRouter constant L2_ASSET_ROUTER =
+  IL2AssetRouter(address(USER_CONTRACTS_OFFSET + 0x03));
 IBridgehub constant L2_BRIDGE_HUB =
   IBridgehub(address(USER_CONTRACTS_OFFSET + 0x02));
-address constant L2_NATIVE_TOKEN_VAULT_ADDR =
-  address(USER_CONTRACTS_OFFSET + 0x04);
+IL2NativeTokenVault constant L2_NATIVE_TOKEN_VAULT =
+  IL2NativeTokenVault(address(USER_CONTRACTS_OFFSET + 0x04));
 IMessageRoot constant L2_MESSAGE_ROOT =
   IMessageRoot(address(USER_CONTRACTS_OFFSET + 0x05));
 // Note, that on its own this contract does not provide much functionality, but having it on a constant address
@@ -135,6 +138,8 @@ address constant SLOAD_CONTRACT_ADDRESS = address(USER_CONTRACTS_OFFSET + 0x06);
 
 address constant WRAPPED_BASE_TOKEN_IMPL_ADDRESS =
   address(USER_CONTRACTS_OFFSET + 0x07);
+
+address constant L2_CHAIN_ASSET_HANDLER = address(USER_CONTRACTS_OFFSET + 0x0a);
 
 /// @dev If the bitwise AND of the extraAbi[2] param when calling the MSG_VALUE_SIMULATOR
 /// is non-zero, the call will be assumed to be a system one.
@@ -169,6 +174,8 @@ enum SystemLogKey {
   PREV_BATCH_HASH_KEY,
   L2_DA_VALIDATOR_OUTPUT_HASH_KEY,
   USED_L2_DA_VALIDATOR_ADDRESS_KEY,
+  MESSAGE_ROOT_ROLLING_HASH_KEY,
+  L2_TXS_STATUS_ROLLING_HASH_KEY,
   EXPECTED_SYSTEM_CONTRACT_UPGRADE_TX_HASH_KEY
 }
 

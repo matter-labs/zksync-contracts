@@ -13,6 +13,6 @@ interface IPubdataChunkPublisher {
   /// @dev Note: This is an early implementation, in the future we plan to support up to 16 blobs per l1 batch.
   function chunkPubdataToBlobs(bytes calldata _pubdata)
     external
-    pure
+    view
     returns (bytes32[] memory blobLinearHashes);
 }

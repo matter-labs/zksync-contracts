@@ -19,4 +19,6 @@ interface IMessageRoot {
     uint256 _batchNumber,
     bytes32 _chainBatchRoot
   ) external;
+
+  function historicalRoot(uint256 _blockNumber) external view returns (bytes32);
 }

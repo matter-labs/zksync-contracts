@@ -66,6 +66,12 @@ interface IChainTypeManager {
     address indexed oldValidatorTimelock, address indexed newValidatorTimelock
   );
 
+  /// @notice ValidatorTimelockPostV29 changed
+  event NewValidatorTimelockPostV29(
+    address indexed oldValidatorTimelockPostV29,
+    address indexed newvalidatorTimelockPostV29
+  );
+
   /// @notice ServerNotifier changed
   event NewServerNotifier(
     address indexed oldServerNotifier, address indexed newServerNotifier
@@ -77,7 +83,9 @@ interface IChainTypeManager {
     bytes32 genesisBatchHash,
     uint64 genesisIndexRepeatedStorageChanges,
     bytes32 genesisBatchCommitment,
+    Diamond.DiamondCutData newInitialCut,
     bytes32 newInitialCutHash,
+    bytes forceDeploymentsData,
     bytes32 forceDeploymentHash
   );
 
@@ -141,7 +149,10 @@ interface IChainTypeManager {
   function initialize(ChainTypeManagerInitializeData calldata _initializeData)
     external;
 
-  function setValidatorTimelock(address _validatorTimelock) external;
+  function setLegacyValidatorTimelock(address _validatorTimelock) external;
+
+  function setValidatorTimelockPostV29(address _validatorTimelockPostV29)
+    external;
 
   function setChainCreationParams(
     ChainCreationParams calldata _chainCreationParams
