@@ -13,7 +13,7 @@
 
    ```solidity
    // SPDX-License-Identifier: MIT
-   pragma solidity ^0.8.20;
+   pragma solidity ^0.8.28;
 
    import {IPaymaster} from
        "@matterlabs/zksync-contracts/contracts/system-contracts/interfaces/IPaymaster.sol";
