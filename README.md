@@ -77,8 +77,10 @@ contract MyPaymaster is IPaymaster {
 
 ## 🤝 Contributing
 
-Bug fixes, new snapshots, and added ABIs are welcome!
+Bug fixes, new snapshots, and added ABIs are welcome!  
 Open an issue before large changes and follow the standard PR workflow.
+
+For full guidelines, please see the [Contributing Guide](./CONTRIBUTING.md).
 
 ## 📜 License
 
