@@ -1,6 +1,6 @@
 {
   "name": "@matterlabs/zksync-contracts",
-  "version": "28.0.1",
+  "version": "29.0.0",
   "description": "ZKsync Smart Contracts",
   "repository": {
     "type": "git",

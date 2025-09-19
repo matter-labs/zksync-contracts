@@ -1,5 +1,12 @@
 # Changelog
 
+## [29.0.0](https://github.com/matter-labs/zksync-contracts/compare/v28.0.1...v29.0.0) (2025-09-19)
+
+
+### Bug Fixes
+
+* release 29.0.0 ([#21](https://github.com/matter-labs/zksync-contracts/issues/21)) ([4056900](https://github.com/matter-labs/zksync-contracts/commit/4056900759efdbc73e294f46339b302b19f31b30))
+
 ## [28.0.1](https://github.com/matter-labs/zksync-contracts/compare/v28.0.0...v28.0.1) (2025-07-09)
 
 
