@@ -2,8 +2,9 @@
 // We use a floating point pragma here so it can be used within other projects that interact with the ZKsync ecosystem without using our exact pragma version.
 pragma solidity ^0.8.0;
 
-import { IMessageVerification } from
-  "../../state-transition/chain-interfaces/IMessageVerification.sol";
+import {
+  IMessageVerification
+} from "../../state-transition/chain-interfaces/IMessageVerification.sol";
 import { IL2InteropRootStorage } from "../interfaces/IL2InteropRootStorage.sol";
 import { IL2ToL1Messenger } from "./IL2ToL1Messenger.sol";
 
@@ -14,7 +15,8 @@ uint160 constant SYSTEM_CONTRACTS_OFFSET = 0x8000; // 2^15
 uint160 constant USER_CONTRACTS_OFFSET = 0x10000; // 2^16
 
 /// @dev The formal address of the initial program of the system: the bootloader
-address constant L2_BOOTLOADER_ADDRESS = address(SYSTEM_CONTRACTS_OFFSET + 0x01);
+address constant L2_BOOTLOADER_ADDRESS =
+  address(SYSTEM_CONTRACTS_OFFSET + 0x01);
 
 /// @dev The address of the known code storage system contract
 address constant L2_KNOWN_CODE_STORAGE_SYSTEM_CONTRACT_ADDR =
@@ -62,10 +64,12 @@ address constant MSG_VALUE_SYSTEM_CONTRACT =
   address(SYSTEM_CONTRACTS_OFFSET + 0x09);
 
 /// @dev The address of the create2 factory contract
-address constant L2_CREATE2_FACTORY_ADDR = address(USER_CONTRACTS_OFFSET + 0x00);
+address constant L2_CREATE2_FACTORY_ADDR =
+  address(USER_CONTRACTS_OFFSET + 0x00);
 
 /// @dev The address used to execute the genesis upgrade
-address constant L2_GENESIS_UPGRADE_ADDR = address(USER_CONTRACTS_OFFSET + 0x01);
+address constant L2_GENESIS_UPGRADE_ADDR =
+  address(USER_CONTRACTS_OFFSET + 0x01);
 
 /// @dev The genesis upgrade address is reused for all version specific upgrades
 address constant L2_VERSION_SPECIFIC_UPGRADER_ADDR = L2_GENESIS_UPGRADE_ADDR;

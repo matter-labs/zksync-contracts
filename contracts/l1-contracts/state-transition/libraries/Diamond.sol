@@ -63,7 +63,8 @@ library Diamond {
   /// @param isFrozen Denotes whether the diamond proxy is frozen and all freezable facets are not accessible
   struct DiamondStorage {
     mapping(bytes4 selector => SelectorToFacet selectorInfo) selectorToFacet;
-    mapping(address facetAddress => FacetToSelectors facetInfo) facetToSelectors;
+    mapping(address facetAddress => FacetToSelectors facetInfo)
+      facetToSelectors;
     address[] facets;
     bool isFrozen;
   }
@@ -207,7 +208,9 @@ library Diamond {
 
   /// @dev Remove association with function and facet
   /// NOTE: expect but NOT enforce that `_selectors` is NON-EMPTY array
-  function _removeFunctions(address _facet, bytes4[] memory _selectors) private {
+  function _removeFunctions(address _facet, bytes4[] memory _selectors)
+    private
+  {
     DiamondStorage storage ds = getDiamondStorage();
 
     // facet address must be zero
@@ -329,7 +332,9 @@ library Diamond {
 
   /// @dev Delegates call to the initialization address with provided calldata
   /// @dev Used as a final step of diamond cut to execute the logic of the initialization for changed facets
-  function _initializeDiamondCut(address _init, bytes memory _calldata) private {
+  function _initializeDiamondCut(address _init, bytes memory _calldata)
+    private
+  {
     if (_init == address(0)) {
       // Non-empty calldata for zero address
       if (_calldata.length != 0) {

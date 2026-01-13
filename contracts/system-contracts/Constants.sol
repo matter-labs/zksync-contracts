@@ -22,7 +22,9 @@ import { IL2AssetRouter } from "./interfaces/IL2AssetRouter.sol";
 import { IL2NativeTokenVault } from "./interfaces/IL2NativeTokenVault.sol";
 import { IMessageRoot } from "./interfaces/IMessageRoot.sol";
 import { INonceHolder } from "./interfaces/INonceHolder.sol";
-import { IPubdataChunkPublisher } from "./interfaces/IPubdataChunkPublisher.sol";
+import {
+  IPubdataChunkPublisher
+} from "./interfaces/IPubdataChunkPublisher.sol";
 import { ISystemContext } from "./interfaces/ISystemContext.sol";
 
 /// @dev All the system contracts introduced by ZKsync have their addresses
@@ -97,7 +99,8 @@ IBootloaderUtilities constant BOOTLOADER_UTILITIES =
   IBootloaderUtilities(address(SYSTEM_CONTRACTS_OFFSET + 0x0c));
 
 // It will be a different value for tests, while shouldn't. But for now, this constant is not used by other contracts, so that's fine.
-address constant EVENT_WRITER_CONTRACT = address(SYSTEM_CONTRACTS_OFFSET + 0x0d);
+address constant EVENT_WRITER_CONTRACT =
+  address(SYSTEM_CONTRACTS_OFFSET + 0x0d);
 
 ICompressor constant COMPRESSOR_CONTRACT =
   ICompressor(address(SYSTEM_CONTRACTS_OFFSET + 0x0e));

@@ -104,9 +104,9 @@ interface IMailboxImpl is IZKChainBase {
   /// @notice Request execution of L2 transaction through the Bridgehub.
   /// @dev Only accessible from L1, this is getting checked in the Bridgehub.
   /// @param _request the request for the L2 transaction.
-  function bridgehubRequestL2Transaction(
-    BridgehubL2TransactionRequest calldata _request
-  ) external returns (bytes32 canonicalTxHash);
+  function bridgehubRequestL2Transaction(BridgehubL2TransactionRequest calldata _request)
+    external
+    returns (bytes32 canonicalTxHash);
 
   /// @notice The chain's mailbox receives the tx from the Bridgehub on Gateway.
   /// @param _canonicalTxHash the canonical transaction hash.

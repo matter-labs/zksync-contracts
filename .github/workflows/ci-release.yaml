@@ -24,6 +24,10 @@ on:
         type: boolean
         default: true
 
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
+  
 jobs:
   create-release:
     name: create-release
@@ -73,7 +77,6 @@ jobs:
     if: ${{ inputs.skip_publish != 'true' }}
     env:
         SOLDEER_PROJECT_NAME: "@zksync-contracts"
-        NODE_AUTH_TOKEN:      ${{ secrets.NPMJS_NPM_MATTERLABS_AUTOMATION_TOKEN }}
         SOLDEER_AUTH_TOKEN:   ${{ secrets.SOLDEER_AUTH_TOKEN }}
 
     steps:
@@ -87,7 +90,7 @@ jobs:
         - run: yarn
 
         - name: Publish to npm
-          run: yarn publish --tag latest --access public
+          run: yarn publish --tag latest --access public --provenance
 
         - name: Set up Foundry
           uses: foundry-rs/foundry-toolchain@v1

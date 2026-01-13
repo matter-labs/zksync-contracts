@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import { IL2ContractDeployer } from
-  "../../common/interfaces/IL2ContractDeployer.sol";
+import {
+  IL2ContractDeployer
+} from "../../common/interfaces/IL2ContractDeployer.sol";
 
 interface IL2GatewayUpgrade {
   function upgrade(

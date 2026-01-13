@@ -163,7 +163,8 @@ library BatchDecoder {
 
     if (
       provedBatches[0].batchNumber != _processBatchFrom
-        || provedBatches[provedBatches.length - 1].batchNumber != _processBatchTo
+        || provedBatches[provedBatches.length - 1].batchNumber
+          != _processBatchTo
     ) {
       revert IncorrectBatchBounds(
         _processBatchFrom,

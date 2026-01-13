@@ -53,4 +53,6 @@ error SecondBridgeAddressTooLow(
 // 0x90c7cbf1
 error SLNotWhitelisted();
 // 0x92626457
-error WrongCounterPart(address addressOnCounterPart, address l2BridgehubAddress);
+error WrongCounterPart(
+  address addressOnCounterPart, address l2BridgehubAddress
+);

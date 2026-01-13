@@ -62,9 +62,8 @@ interface IL1Nullifier {
     bytes32[] calldata _merkleProof
   ) external;
 
-  function finalizeDeposit(
-    FinalizeL1DepositParams calldata _finalizeWithdrawalParams
-  ) external;
+  function finalizeDeposit(FinalizeL1DepositParams calldata _finalizeWithdrawalParams)
+    external;
 
   function BRIDGE_HUB() external view returns (IBridgehub);
 
@@ -83,8 +82,7 @@ interface IL1Nullifier {
 
   function l1NativeTokenVault() external view returns (IL1NativeTokenVault);
 
-  function setL1NativeTokenVault(IL1NativeTokenVault _nativeTokenVault)
-    external;
+  function setL1NativeTokenVault(IL1NativeTokenVault _nativeTokenVault) external;
 
   function setL1AssetRouter(address _l1AssetRouter) external;
 
