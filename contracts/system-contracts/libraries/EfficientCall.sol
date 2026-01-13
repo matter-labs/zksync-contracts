@@ -181,10 +181,15 @@ library EfficientCall {
       uint256 forwardMask = _isSystem ? MSG_VALUE_SIMULATOR_IS_SYSTEM_BIT : 0;
 
       assembly {
-        success :=
-          call(
-            msgValueSimulator, callAddr, _value, _address, 0xFFFF, forwardMask, 0
-          )
+        success := call(
+          msgValueSimulator,
+          callAddr,
+          _value,
+          _address,
+          0xFFFF,
+          forwardMask,
+          0
+        )
       }
     }
   }

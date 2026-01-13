@@ -162,8 +162,8 @@ library L2ContractHelper {
     pure
     returns (uint256 codeLengthInWords)
   {
-    codeLengthInWords =
-      uint256(uint8(_bytecodeHash[2])) * 256 + uint256(uint8(_bytecodeHash[3]));
+    codeLengthInWords = uint256(uint8(_bytecodeHash[2])) * 256
+      + uint256(uint8(_bytecodeHash[3]));
   }
 
   /// @notice Computes the create2 address for a Layer 2 contract.

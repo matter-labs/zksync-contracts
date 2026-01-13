@@ -64,10 +64,7 @@ interface ISystemContext {
     view
     returns (uint128 blockNumber, uint128 blockTimestamp);
 
-  function gasPerPubdataByte()
-    external
-    view
-    returns (uint256 gasPerPubdataByte);
+  function gasPerPubdataByte() external view returns (uint256 gasPerPubdataByte);
 
   function getCurrentPubdataSpent()
     external

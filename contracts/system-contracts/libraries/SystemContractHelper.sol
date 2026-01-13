@@ -278,8 +278,9 @@ library SystemContractHelper {
     pure
     returns (uint32 pubdataPublished)
   {
-    pubdataPublished =
-      uint32(extractNumberFromMeta(meta, META_PUBDATA_PUBLISHED_OFFSET, 32));
+    pubdataPublished = uint32(
+      extractNumberFromMeta(meta, META_PUBDATA_PUBLISHED_OFFSET, 32)
+    );
   }
 
   /// @notice Given the packed representation of `ZkSyncMeta`, retrieves the number of the current size
