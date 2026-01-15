@@ -20,6 +20,8 @@ interface IL2AssetRouter is IAssetRouterBase {
 
   function L1_ASSET_ROUTER() external view returns (address);
 
+  function BASE_TOKEN_ASSET_ID() external view returns (bytes32);
+
   function withdrawLegacyBridge(
     address _l1Receiver,
     address _l2Token,
