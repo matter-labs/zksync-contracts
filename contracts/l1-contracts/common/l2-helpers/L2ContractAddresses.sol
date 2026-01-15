@@ -7,6 +7,10 @@ import {
 } from "../../state-transition/chain-interfaces/IMessageVerification.sol";
 import { IL2InteropRootStorage } from "../interfaces/IL2InteropRootStorage.sol";
 import { IL2ToL1Messenger } from "./IL2ToL1Messenger.sol";
+import { IL2Bridgehub } from "../../bridgehub/IL2Bridgehub.sol";
+import { IL2NativeTokenVault } from "../../bridge/ntv/IL2NativeTokenVault.sol";
+import { IL2AssetRouter } from "../../bridge/asset-router/IL2AssetRouter.sol";
+import { IInteropCenter } from "../../interop/IInteropCenter.sol";
 
 /// @dev the offset for the system contracts
 uint160 constant SYSTEM_CONTRACTS_OFFSET = 0x8000; // 2^15
@@ -106,3 +110,20 @@ IMessageVerification constant L2_MESSAGE_VERIFICATION =
 /// @dev The address of the L2 chain handler system contract
 address constant L2_CHAIN_ASSET_HANDLER_ADDR =
   address(USER_CONTRACTS_OFFSET + 0x0a);
+
+/// @dev the address of the L2 interop center
+address constant L2_INTEROP_CENTER_ADDR =
+  address(USER_CONTRACTS_OFFSET + 0x10);
+IInteropCenter constant L2_INTEROP_CENTER =
+  IInteropCenter(L2_INTEROP_CENTER_ADDR);
+
+/// @dev Typed constant for L2 Bridgehub
+IL2Bridgehub constant L2_BRIDGEHUB = IL2Bridgehub(L2_BRIDGEHUB_ADDR);
+
+/// @dev Typed constant for L2 Native Token Vault
+IL2NativeTokenVault constant L2_NATIVE_TOKEN_VAULT =
+  IL2NativeTokenVault(L2_NATIVE_TOKEN_VAULT_ADDR);
+
+/// @dev Typed constant for L2 Asset Router
+IL2AssetRouter constant L2_ASSET_ROUTER =
+  IL2AssetRouter(L2_ASSET_ROUTER_ADDR);
