@@ -38,7 +38,13 @@ function parseAltTransactionReceipt(jsonString: string): RpcResponse {
   const parsed: RpcResponse = JSON.parse(jsonString);
 
   // Remove unwanted fields
-  const { logs, l2ToL1Logs, logsBloom, contractAddress, ...rest } = parsed.result;
+  const {
+    logs: _logs,
+    l2ToL1Logs: _l2ToL1Logs,
+    logsBloom: _logsBloom,
+    contractAddress: _contractAddress,
+    ...rest
+  } = parsed.result;
 
   // Ensure l1BatchNumber and l1BatchTxIndex have default values
   const transformed: Record<string, unknown> = { ...rest };

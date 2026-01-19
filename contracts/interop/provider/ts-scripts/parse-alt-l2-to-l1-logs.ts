@@ -48,7 +48,16 @@ function parseAltL2ToL1Logs(jsonString: string): { l2ToL1Logs: L2ToL1Log[] } {
   // Transform logs
   const l2ToL1Logs = parsed.result.l2ToL1Logs.map(log => {
     // Remove unwanted fields
-    const { logType, removed, topics, data, isService, is_service, l2_shard_id, ...rest } = log;
+    const {
+      logType: _logType,
+      removed: _removed,
+      topics: _topics,
+      data: _data,
+      isService: _isService,
+      is_service: _is_service,
+      l2_shard_id: _l2_shard_id,
+      ...rest
+    } = log;
 
     const transformed: Record<string, unknown> = { ...rest };
 

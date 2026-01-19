@@ -6,7 +6,7 @@
  * Usage: ts-node parse-alt-logs.ts '<json_string>'
  */
 
-import { padHex, walkAndTransform, padHexStrings, sortObjectKeys } from './utils';
+import { walkAndTransform, padHexStrings, sortObjectKeys } from './utils';
 
 interface Log {
   address?: string;
@@ -46,7 +46,7 @@ function parseAltLogs(jsonString: string): { logs: Log[] } {
   // Transform logs
   const logs = parsed.result.logs.map(log => {
     // Remove unwanted fields
-    const { logType, removed, topics, data, ...rest } = log;
+    const { logType: _logType, removed: _removed, topics: _topics, data: _data, ...rest } = log;
 
     // Ensure transactionLogIndex exists
     const transformed: Record<string, unknown> = { ...rest };
