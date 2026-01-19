@@ -554,14 +554,20 @@ contract InteropDemo is Script, ZKSProvider {
             proof: logProof.proof
         });
 
-        // Step 8: Execute the bundle on destination chain
+        // Step 8: Execute the bundle on destination chain via FFI (cast send)
         console.log("Step 6: Executing bundle on destination chain...");
-        vm.createSelectFork(destL2RpcUrl);
-        vm.startBroadcast();
-        IInteropHandler(interopHandlerAddress).executeBundle(encodedBundle, proof);
-        vm.stopBroadcast();
+        string memory privateKey = vm.envString("PRIVATE_KEY");
 
-        console.log("Bundle executed successfully!");
+        // Build the executeBundle calldata
+        bytes memory executeBundleCalldata = abi.encodeWithSelector(
+            IInteropHandler.executeBundle.selector,
+            encodedBundle,
+            proof
+        );
+
+        bytes32 executeTxHash = _castSendRaw(destL2RpcUrl, privateKey, interopHandlerAddress, executeBundleCalldata);
+        console.log("Bundle executed successfully! Tx hash:");
+        console.logBytes32(executeTxHash);
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -846,6 +852,7 @@ contract InteropDemo is Script, ZKSProvider {
         address MESSAGE_VERIFICATION = 0x0000000000000000000000000000000000010009;
 
         verified = _proveL2MessageInclusionShared(
+            destRpcUrl,
             MESSAGE_VERIFICATION,
             sourceChainId,
             logProof.batchNumber,
@@ -865,6 +872,7 @@ contract InteropDemo is Script, ZKSProvider {
 
     /// @dev Call proveL2MessageInclusionShared via FFI to avoid fork caching issues
     function _proveL2MessageInclusionShared(
+        string memory rpcUrl,
         address messageVerification,
         uint256 chainId,
         uint256 batchNumber,
@@ -874,35 +882,7 @@ contract InteropDemo is Script, ZKSProvider {
         bytes memory data,
         bytes32[] memory proof
     ) internal returns (bool) {
-        // Build proof array string for cast call
-        string memory proofStr = "[";
-        for (uint256 i = 0; i < proof.length; i++) {
-            if (i > 0) proofStr = string.concat(proofStr, ",");
-            proofStr = string.concat(proofStr, vm.toString(proof[i]));
-        }
-        proofStr = string.concat(proofStr, "]");
-
-        // Build the tuple argument for the message struct
-        string memory messageStruct = string.concat(
-            "(",
-            vm.toString(uint256(txNumberInBatch)), ",",
-            vm.toString(sender), ",",
-            vm.toString(data),
-            ")"
-        );
-
-        string[] memory args = new string[](8);
-        args[0] = "cast";
-        args[1] = "call";
-        args[2] = vm.toString(messageVerification);
-        args[3] = "proveL2MessageInclusionShared(uint256,uint256,uint256,(uint16,address,bytes),bytes32[])(bool)";
-        args[4] = vm.toString(chainId);
-        args[5] = vm.toString(batchNumber);
-        args[6] = vm.toString(index);
-        // For cast call with tuple, we need to concatenate remaining args
-        // This is complex, so let's use a simpler approach
-
-        // Simpler approach: use raw calldata
+        // Build the calldata for proveL2MessageInclusionShared
         bytes memory callData = abi.encodeWithSignature(
             "proveL2MessageInclusionShared(uint256,uint256,uint256,(uint16,address,bytes),bytes32[])",
             chainId,
@@ -916,18 +896,21 @@ contract InteropDemo is Script, ZKSProvider {
             proof
         );
 
-        string[] memory cmd = new string[](5);
+        string[] memory cmd = new string[](6);
         cmd[0] = "cast";
         cmd[1] = "call";
         cmd[2] = vm.toString(messageVerification);
         cmd[3] = vm.toString(callData);
-        cmd[4] = "--json";
+        cmd[4] = "--rpc-url";
+        cmd[5] = rpcUrl;
 
         bytes memory result = vm.ffi(cmd);
-        // Result is JSON with "result" field containing hex-encoded boolean
-        // Parse as boolean (0x01 = true, 0x00 = false)
-        bytes memory decoded = abi.decode(vm.parseJson(string(result), "$[0]"), (bytes));
-        return decoded.length > 0 && decoded[decoded.length - 1] == 0x01;
+        // Result is raw bytes (32 bytes), decode as uint256 and check if true (non-zero)
+        if (result.length >= 32) {
+            uint256 resultValue = abi.decode(result, (uint256));
+            return resultValue > 0;
+        }
+        return false;
     }
 
     /*//////////////////////////////////////////////////////////////
