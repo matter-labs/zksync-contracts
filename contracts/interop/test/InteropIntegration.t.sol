@@ -14,36 +14,6 @@ import {
 } from "../../l1-contracts/common/l2-helpers/L2ContractAddresses.sol";
 
 /**
- * @title TestReceiver
- * @notice Simple contract that implements IERC7786Recipient to receive interop messages
- * @dev Used as a target for sendBundle tests. Must be deployed separately on destination chain.
- */
-contract TestReceiver {
-    address constant INTEROP_HANDLER = 0x000000000000000000000000000000000001000d;
-
-    bytes public lastPayload;
-    bytes public lastSender;
-    uint256 public messageCount;
-
-    /// @notice ERC-7786 receiveMessage function
-    function receiveMessage(
-        bytes32, // receiveId
-        bytes calldata sender,
-        bytes calldata payload
-    ) external payable returns (bytes4) {
-        // Only accept messages from interop handler
-        require(msg.sender == INTEROP_HANDLER, "must come from interop handler");
-
-        lastPayload = payload;
-        lastSender = sender;
-        messageCount++;
-
-        // Return the function selector to acknowledge receipt
-        return this.receiveMessage.selector;
-    }
-}
-
-/**
  * @title InteropIntegrationTest
  * @notice Integration tests for L2-to-L2 interop functionality
  * @dev These tests require:
@@ -310,7 +280,7 @@ contract InteropIntegrationTest is Test {
         string[] memory cmd = new string[](9);
         cmd[0] = "forge";
         cmd[1] = "create";
-        cmd[2] = "contracts/interop/test/InteropIntegration.t.sol:TestReceiver";
+        cmd[2] = "contracts/interop/test-contracts/TestReceiver.sol:TestReceiver";
         cmd[3] = "--rpc-url";
         cmd[4] = rpcUrl;
         cmd[5] = "--private-key";

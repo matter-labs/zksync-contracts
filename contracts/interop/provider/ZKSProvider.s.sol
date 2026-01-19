@@ -560,19 +560,42 @@ contract ZKSProvider is Script {
         }
     }
 
-    function getBashScriptPath(string memory scriptName) internal returns (string memory scriptPath) {
-        scriptPath = string.concat("./contracts/interop/provider/bash-scripts/", scriptName);
+    /// @dev Maps bash script names to yarn script names
+    /// @param scriptName The original bash script name (e.g., "parse-alt-logs.sh")
+    /// @return yarnScript The yarn script name (e.g., "interop:parse:logs")
+    function getYarnScriptName(string memory scriptName) internal pure returns (string memory yarnScript) {
+        bytes32 nameHash = keccak256(bytes(scriptName));
+
+        if (nameHash == keccak256("parse-alt-logs.sh")) {
+            return "interop:parse:logs";
+        } else if (nameHash == keccak256("parse-alt-l2-to-l1-logs.sh")) {
+            return "interop:parse:l2-to-l1-logs";
+        } else if (nameHash == keccak256("parse-alt-logs-data.sh")) {
+            return "interop:parse:logs-data";
+        } else if (nameHash == keccak256("parse-alt-logs-topics.sh")) {
+            return "interop:parse:logs-topics";
+        } else if (nameHash == keccak256("parse-alt-transaction-receipt.sh")) {
+            return "interop:parse:receipt";
+        } else if (nameHash == keccak256("parse-transaction-receipt.sh")) {
+            return "interop:parse:receipt-simple";
+        } else if (nameHash == keccak256("parse-proof.sh")) {
+            return "interop:parse:proof";
+        } else if (nameHash == keccak256("parse-broadcast.sh")) {
+            return "interop:parse:broadcast";
+        }
+        revert(string.concat("Unknown script: ", scriptName));
     }
 
     function callParseAltLog(
         string memory jsonStr,
         string memory scriptName
     ) internal returns (string memory modifiedJson) {
-        string memory scriptPath = getBashScriptPath(scriptName);
-        string[] memory args = new string[](3);
-        args[0] = "sh";
-        args[1] = scriptPath;
-        args[2] = jsonStr;
+        string memory yarnScript = getYarnScriptName(scriptName);
+        string[] memory args = new string[](4);
+        args[0] = "yarn";
+        args[1] = "--silent";
+        args[2] = yarnScript;
+        args[3] = jsonStr;
 
         bytes memory modifiedJsonBytes = vm.ffi(args);
         modifiedJson = string(modifiedJsonBytes);
@@ -583,12 +606,13 @@ contract ZKSProvider is Script {
         string memory scriptName,
         uint256 index
     ) internal returns (string memory modifiedJson) {
-        string memory scriptPath = getBashScriptPath(scriptName);
-        string[] memory args = new string[](4);
-        args[0] = "sh";
-        args[1] = scriptPath;
-        args[2] = jsonStr;
-        args[3] = vm.toString(index);
+        string memory yarnScript = getYarnScriptName(scriptName);
+        string[] memory args = new string[](5);
+        args[0] = "yarn";
+        args[1] = "--silent";
+        args[2] = yarnScript;
+        args[3] = jsonStr;
+        args[4] = vm.toString(index);
 
         bytes memory modifiedJsonBytes = vm.ffi(args);
         modifiedJson = string(modifiedJsonBytes);
