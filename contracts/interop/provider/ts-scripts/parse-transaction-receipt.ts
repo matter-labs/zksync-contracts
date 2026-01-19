@@ -1,7 +1,6 @@
 #!/usr/bin/env ts-node
 /**
  * Simple transformation of transaction receipt - just rename "address" to "addr"
- * Replaces: parse-transaction-receipt.sh
  *
  * Usage: ts-node parse-transaction-receipt.ts '<json_string>'
  */

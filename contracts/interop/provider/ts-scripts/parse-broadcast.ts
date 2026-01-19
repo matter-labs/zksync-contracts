@@ -1,7 +1,6 @@
 #!/usr/bin/env ts-node
 /**
  * Parse and transform broadcast file
- * Replaces: parse-broadcast.sh
  *
  * Usage: ts-node parse-broadcast.ts <broadcast_file_path>
  */

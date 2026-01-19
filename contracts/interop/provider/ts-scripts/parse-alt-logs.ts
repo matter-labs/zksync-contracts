@@ -1,7 +1,6 @@
 #!/usr/bin/env ts-node
 /**
  * Parse and transform logs from RPC response
- * Replaces: parse-alt-logs.sh
  *
  * Usage: ts-node parse-alt-logs.ts '<json_string>'
  */

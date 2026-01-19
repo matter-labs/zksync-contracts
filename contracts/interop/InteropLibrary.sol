@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import { IL2NativeTokenVault } from
-  "../l1-contracts/bridge/ntv/IL2NativeTokenVault.sol";
+import {
+  IL2NativeTokenVault
+} from "../l1-contracts/bridge/ntv/IL2NativeTokenVault.sol";
 
 import {
   AmountMustBeGreaterThanZero,
@@ -20,14 +21,19 @@ import {
   L2_TO_L1_MESSENGER_SYSTEM_CONTRACT
 } from "../l1-contracts/common/l2-helpers/L2ContractAddresses.sol";
 
-import { DataEncoding } from "../l1-contracts/common/libraries/DataEncoding.sol";
-import { IERC7786Attributes } from
-  "../l1-contracts/interop/IERC7786Attributes.sol";
-import { IERC7786GatewaySource } from
-  "../l1-contracts/interop/IERC7786GatewaySource.sol";
+import {
+  DataEncoding
+} from "../l1-contracts/common/libraries/DataEncoding.sol";
+import {
+  IERC7786Attributes
+} from "../l1-contracts/interop/IERC7786Attributes.sol";
+import {
+  IERC7786GatewaySource
+} from "../l1-contracts/interop/IERC7786GatewaySource.sol";
 import { IInteropCenter } from "../l1-contracts/interop/IInteropCenter.sol";
-import { InteroperableAddress } from
-  "../l1-contracts/vendor/draft-InteroperableAddress.sol";
+import {
+  InteroperableAddress
+} from "../l1-contracts/vendor/draft-InteroperableAddress.sol";
 import { ArgumentsLengthNotIdentical } from "./utils/ZkSyncScriptErrors.sol";
 
 library InteropLibrary {
@@ -306,9 +312,8 @@ library InteropLibrary {
     bytes[] memory mergedAttributes =
       _concatBytesArrays(calls[0].callAttributes, bundleAttributes);
 
-    return IERC7786GatewaySource(address(L2_INTEROP_CENTER)).sendMessage(
-      calls[0].to, calls[0].data, mergedAttributes
-    );
+    return IERC7786GatewaySource(address(L2_INTEROP_CENTER))
+      .sendMessage(calls[0].to, calls[0].data, mergedAttributes);
   }
 
   /// @notice Build and send a call to receive native tokens on remote chain in one go.

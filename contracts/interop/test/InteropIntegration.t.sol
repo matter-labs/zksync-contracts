@@ -5,11 +5,13 @@ pragma solidity ^0.8.24;
 
 import { Test, console2 as console } from "forge-std/Test.sol";
 
-import { IL2NativeTokenVault } from
-  "../../l1-contracts/bridge/ntv/IL2NativeTokenVault.sol";
+import {
+  IL2NativeTokenVault
+} from "../../l1-contracts/bridge/ntv/IL2NativeTokenVault.sol";
 
-import { L2_NATIVE_TOKEN_VAULT_ADDR } from
-  "../../l1-contracts/common/l2-helpers/L2ContractAddresses.sol";
+import {
+  L2_NATIVE_TOKEN_VAULT_ADDR
+} from "../../l1-contracts/common/l2-helpers/L2ContractAddresses.sol";
 import {
   BundleStatus,
   IInteropHandler
@@ -64,8 +66,9 @@ contract InteropIntegrationTest is Test {
 
     // Step 1: Send tokens from L2A to L2B
     console.log("Step 1: Sending tokens from L2A to L2B...");
-    bytes32 txHash =
-      interop.sendToken(L2A_RPC, TEST_TOKEN, TEST_ACCOUNT, amount, L2B_CHAIN_ID);
+    bytes32 txHash = interop.sendToken(
+      L2A_RPC, TEST_TOKEN, TEST_ACCOUNT, amount, L2B_CHAIN_ID
+    );
     console.log("sendToken tx hash:");
     console.logBytes32(txHash);
     assertTrue(txHash != bytes32(0), "Transaction hash should not be zero");

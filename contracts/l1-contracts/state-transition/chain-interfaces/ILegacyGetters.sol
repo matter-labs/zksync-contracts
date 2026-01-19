@@ -25,10 +25,7 @@ interface ILegacyGetters is IZKChainBase {
   /// @dev It is a *deprecated* method, please use `storedBatchHash` instead.
   /// @dev returns zero for non-committed batches
   /// @return The hash of committed L2 batch.
-  function storedBlockHash(uint256 _batchNumber)
-    external
-    view
-    returns (bytes32);
+  function storedBlockHash(uint256 _batchNumber) external view returns (bytes32);
 
   /// @return The L2 batch number in which the upgrade transaction was processed.
   /// @dev It is a *deprecated* method, please use `getL2SystemContractsUpgradeBatchNumber` instead.

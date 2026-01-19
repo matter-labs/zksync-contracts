@@ -5,18 +5,23 @@ pragma solidity ^0.8.24;
 
 import { Script, console2 as console } from "forge-std/Script.sol";
 
-import { IL2NativeTokenVault } from
-  "../../l1-contracts/bridge/ntv/IL2NativeTokenVault.sol";
-import { INativeTokenVault } from
-  "../../l1-contracts/bridge/ntv/INativeTokenVault.sol";
+import {
+  IL2NativeTokenVault
+} from "../../l1-contracts/bridge/ntv/IL2NativeTokenVault.sol";
+import {
+  INativeTokenVault
+} from "../../l1-contracts/bridge/ntv/INativeTokenVault.sol";
 import {
   InteropBundle,
   InteropCallStarter,
   L2Message
 } from "../../l1-contracts/common/Messaging.sol";
-import { IBaseToken } from "../../l1-contracts/common/l2-helpers/IBaseToken.sol";
-import { IL2ToL1Messenger } from
-  "../../l1-contracts/common/l2-helpers/IL2ToL1Messenger.sol";
+import {
+  IBaseToken
+} from "../../l1-contracts/common/l2-helpers/IBaseToken.sol";
+import {
+  IL2ToL1Messenger
+} from "../../l1-contracts/common/l2-helpers/IL2ToL1Messenger.sol";
 import {
   L2_ASSET_ROUTER_ADDR,
   L2_BASE_TOKEN_SYSTEM_CONTRACT_ADDR,
@@ -24,18 +29,23 @@ import {
   L2_TO_L1_MESSENGER_SYSTEM_CONTRACT_ADDR
 } from "../../l1-contracts/common/l2-helpers/L2ContractAddresses.sol";
 
-import { IERC7786GatewaySource } from
-  "../../l1-contracts/interop/IERC7786GatewaySource.sol";
+import {
+  IERC7786GatewaySource
+} from "../../l1-contracts/interop/IERC7786GatewaySource.sol";
 import { IInteropCenter } from "../../l1-contracts/interop/IInteropCenter.sol";
 import {
   BundleStatus,
   CallStatus,
   IInteropHandler
 } from "../../l1-contracts/interop/IInteropHandler.sol";
-import { InteroperableAddress } from
-  "../../l1-contracts/vendor/draft-InteroperableAddress.sol";
+import {
+  InteroperableAddress
+} from "../../l1-contracts/vendor/draft-InteroperableAddress.sol";
 import { InteropLibrary } from "../InteropLibrary.sol";
-import { L2ToL1LogProof, TransactionReceipt } from "../provider/ReceipTypes.sol";
+import {
+  L2ToL1LogProof,
+  TransactionReceipt
+} from "../provider/ReceipTypes.sol";
 import { ZKSProvider } from "../provider/ZKSProvider.s.sol";
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -334,9 +344,10 @@ contract InteropScripts is Script, ZKSProvider {
     address recipient,
     uint256 destinationL2ChainId
   ) internal pure returns (bytes memory) {
-    bytes memory secondBridgeCalldata = InteropLibrary.buildSecondBridgeCalldata(
-      assetId, amount, recipient, address(0)
-    );
+    bytes memory secondBridgeCalldata =
+      InteropLibrary.buildSecondBridgeCalldata(
+          assetId, amount, recipient, address(0)
+        );
 
     InteropCallStarter[] memory calls = new InteropCallStarter[](1);
     calls[0] = InteropLibrary.buildSecondBridgeCall(
@@ -494,8 +505,7 @@ contract InteropScripts is Script, ZKSProvider {
     address unbundlerAddress
   ) internal pure returns (bytes memory) {
     // Build call and bundle attributes using InteropLibrary
-    (InteropCallStarter memory call, bytes[] memory bundleAttributes) =
-    InteropLibrary.buildCall({
+    (InteropCallStarter memory call, bytes[] memory bundleAttributes) = InteropLibrary.buildCall({
       destinationChainId: destinationChainId,
       target: target,
       executionAddress: executionAddress,
@@ -588,18 +598,18 @@ contract InteropScripts is Script, ZKSProvider {
 
     // Step 7: Build the InteropMessageProof struct
     console.log("Step 5: Building proof struct...");
-    IInteropHandler.InteropMessageProof memory proof = IInteropHandler
-      .InteropMessageProof({
-      chainId: sourceChainId,
-      l1BatchNumber: logProof.batchNumber,
-      l2MessageIndex: logProof.id,
-      message: L2Message({
-        txNumberInBatch: uint16(receipt.transactionIndex),
-        sender: INTEROP_CENTER,
-        data: l2ToL1Message
-      }),
-      proof: logProof.proof
-    });
+    IInteropHandler.InteropMessageProof memory proof =
+      IInteropHandler.InteropMessageProof({
+        chainId: sourceChainId,
+        l1BatchNumber: logProof.batchNumber,
+        l2MessageIndex: logProof.id,
+        message: L2Message({
+          txNumberInBatch: uint16(receipt.transactionIndex),
+          sender: INTEROP_CENTER,
+          data: l2ToL1Message
+        }),
+        proof: logProof.proof
+      });
 
     // Step 8: Execute the bundle on destination chain via FFI (cast send)
     console.log("Step 6: Executing bundle on destination chain...");
@@ -657,18 +667,18 @@ contract InteropScripts is Script, ZKSProvider {
       destL2RpcUrl, sourceChainId, logProof.batchNumber, bytes32(0), 300
     );
 
-    IInteropHandler.InteropMessageProof memory proof = IInteropHandler
-      .InteropMessageProof({
-      chainId: sourceChainId,
-      l1BatchNumber: logProof.batchNumber,
-      l2MessageIndex: logProof.id,
-      message: L2Message({
-        txNumberInBatch: uint16(receipt.transactionIndex),
-        sender: INTEROP_CENTER,
-        data: l2ToL1Message
-      }),
-      proof: logProof.proof
-    });
+    IInteropHandler.InteropMessageProof memory proof =
+      IInteropHandler.InteropMessageProof({
+        chainId: sourceChainId,
+        l1BatchNumber: logProof.batchNumber,
+        l2MessageIndex: logProof.id,
+        message: L2Message({
+          txNumberInBatch: uint16(receipt.transactionIndex),
+          sender: INTEROP_CENTER,
+          data: l2ToL1Message
+        }),
+        proof: logProof.proof
+      });
 
     vm.createSelectFork(destL2RpcUrl);
     IInteropHandler(interopHandlerAddress).verifyBundle(encodedBundle, proof);
@@ -944,7 +954,9 @@ contract InteropScripts is Script, ZKSProvider {
       chainId,
       batchNumber,
       index,
-      L2Message({ txNumberInBatch: txNumberInBatch, sender: sender, data: data }),
+      L2Message({
+        txNumberInBatch: txNumberInBatch, sender: sender, data: data
+      }),
       proof
     );
 

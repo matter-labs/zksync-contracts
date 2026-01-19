@@ -239,10 +239,8 @@ library InteroperableAddress {
       bytes memory chainReference_,
       bytes memory addr_
     ) = tryParseV1(self);
-    return (
-      success_ && chainType_ == 0x0000 && chainReference_.length < 33
-        && (addr_.length == 0 || addr_.length == 20)
-    )
+    return (success_ && chainType_ == 0x0000 && chainReference_.length < 33
+        && (addr_.length == 0 || addr_.length == 20))
       ? (
         true,
         uint256(bytes32(chainReference_)) >> (256 - 8 * chainReference_.length),
@@ -265,10 +263,8 @@ library InteroperableAddress {
       bytes calldata chainReference_,
       bytes calldata addr_
     ) = tryParseV1Calldata(self);
-    return (
-      success_ && chainType_ == 0x0000 && chainReference_.length < 33
-        && (addr_.length == 0 || addr_.length == 20)
-    )
+    return (success_ && chainType_ == 0x0000 && chainReference_.length < 33
+        && (addr_.length == 0 || addr_.length == 20))
       ? (
         true,
         uint256(bytes32(chainReference_)) >> (256 - 8 * chainReference_.length),

@@ -29,7 +29,8 @@ library DataEncoding {
     bytes32 _assetId,
     bytes memory _transferData
   ) internal pure returns (bytes memory) {
-    return
-      bytes.concat(NEW_ENCODING_VERSION, abi.encode(_assetId, _transferData));
+    return bytes.concat(
+      NEW_ENCODING_VERSION, abi.encode(_assetId, _transferData)
+    );
   }
 }

@@ -1,7 +1,6 @@
 #!/usr/bin/env ts-node
 /**
  * Parse and extract proof array from RPC response
- * Replaces: parse-proof.sh
  *
  * Usage: ts-node parse-proof.ts '<json_string>'
  */

@@ -18,16 +18,18 @@ import {
   TransactionReceipt
 } from "./ReceipTypes.sol";
 
-import { IL1AssetRouter } from
-  "../../l1-contracts/bridge/asset-router/IL1AssetRouter.sol";
+import {
+  IL1AssetRouter
+} from "../../l1-contracts/bridge/asset-router/IL1AssetRouter.sol";
 import {
   FinalizeL1DepositParams,
   IL1Nullifier
 } from "../../l1-contracts/bridge/interfaces/IL1Nullifier.sol";
 import { IBridgehub } from "../../l1-contracts/bridgehub/IBridgehub.sol";
 import { IMessageRoot } from "../../l1-contracts/bridgehub/IMessageRoot.sol";
-import { IGetters } from
-  "../../l1-contracts/state-transition/chain-interfaces/IGetters.sol";
+import {
+  IGetters
+} from "../../l1-contracts/state-transition/chain-interfaces/IGetters.sol";
 
 contract ZKSProvider is Script {
   function finalizeWithdrawal(

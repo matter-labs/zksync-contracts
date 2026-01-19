@@ -2,7 +2,6 @@
 /**
  * Parse and transform transaction receipt from RPC response
  * Removes logs fields and transforms field names
- * Replaces: parse-alt-transaction-receipt.sh
  *
  * Usage: ts-node parse-alt-transaction-receipt.ts '<json_string>'
  */

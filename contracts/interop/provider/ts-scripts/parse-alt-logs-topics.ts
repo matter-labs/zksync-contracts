@@ -1,7 +1,6 @@
 #!/usr/bin/env ts-node
 /**
  * Parse and extract log topics at specific index from RPC response
- * Replaces: parse-alt-logs-topics.sh
  *
  * Usage: ts-node parse-alt-logs-topics.ts '<json_string>' <index>
  */

@@ -66,10 +66,7 @@ interface IInteropHandler {
   /// @notice Returns the status of a bundle.
   /// @param bundleHash The hash of the bundle.
   /// @return The current BundleStatus.
-  function bundleStatus(bytes32 bundleHash)
-    external
-    view
-    returns (BundleStatus);
+  function bundleStatus(bytes32 bundleHash) external view returns (BundleStatus);
 
   /// @notice Returns the status of a specific call within a bundle.
   /// @param bundleHash The hash of the bundle.

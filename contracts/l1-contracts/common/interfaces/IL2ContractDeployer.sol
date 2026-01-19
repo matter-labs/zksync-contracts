@@ -48,7 +48,6 @@ interface IL2ContractDeployer {
 
   /// @notice Changes what types of bytecodes are allowed to be deployed on the chain.
   /// @param newAllowedBytecodeTypes The new allowed bytecode types mode.
-  function setAllowedBytecodeTypesToDeploy(
-    AllowedBytecodeTypes newAllowedBytecodeTypes
-  ) external;
+  function setAllowedBytecodeTypesToDeploy(AllowedBytecodeTypes newAllowedBytecodeTypes)
+    external;
 }

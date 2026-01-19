@@ -1,7 +1,6 @@
 #!/usr/bin/env ts-node
 /**
  * Parse and transform L2 to L1 logs from RPC response
- * Replaces: parse-alt-l2-to-l1-logs.sh
  *
  * Usage: ts-node parse-alt-l2-to-l1-logs.ts '<json_string>'
  */
