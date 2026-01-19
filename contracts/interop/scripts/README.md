@@ -5,7 +5,7 @@ This demo shows:
 - L2 -> L2 interop calls using `InteropLibrary`
 - **L2 -> L2 token transfers** with full execution flow
 
-Edit `l1ChainId`, `l2ChainId`, and `l2InteropCenterAddress` in `InteropDemo.s.sol` if your environment differs.
+Edit `l1ChainId`, `l2ChainId`, and `l2InteropCenterAddress` in `InteropScripts.s.sol` if your environment differs.
 
 ## Prerequisites
 
@@ -37,7 +37,7 @@ This is the most common interop use case: sending ERC20 tokens from one L2 to an
 
 ```bash
 # Using InteropLibrary.sendToken() via forge script
-forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
+forge script contracts/interop/scripts/dummy-interop/InteropScripts.s.sol \
   --legacy --ffi --rpc-url=$L2A_RPC_URL --slow --skip-simulation --broadcast \
   --private-key=$PRIVATE_KEY \
   --sig "sendToken(string,address,address,uint256,uint256)" \
@@ -48,7 +48,7 @@ forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
   <DEST_CHAIN_ID>
 
 # Example: Send 1 token (with 18 decimals) to L2B
-forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
+forge script contracts/interop/scripts/dummy-interop/InteropScripts.s.sol \
   --legacy --ffi --rpc-url=$L2A_RPC_URL --slow --skip-simulation --broadcast \
   --private-key=$PRIVATE_KEY \
   --sig "sendToken(string,address,address,uint256,uint256)" \
@@ -94,7 +94,7 @@ When the result is non-zero, the root has propagated.
 **Option A: Using the script (recommended)**
 
 ```bash
-forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
+forge script contracts/interop/scripts/dummy-interop/InteropScripts.s.sol \
   --legacy --ffi --rpc-url=$L2B_RPC_URL --slow --skip-simulation --broadcast \
   --private-key=$PRIVATE_KEY \
   --sig "executeInteropBundle(string,string,bytes32,address)" \
@@ -139,7 +139,7 @@ cast call <TOKEN_ADDRESS> "balanceOf(address)(uint256)" <RECIPIENT> --rpc-url=$L
 Send base tokens (ETH) from one L2 to another:
 
 ```bash
-forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
+forge script contracts/interop/scripts/dummy-interop/InteropScripts.s.sol \
   --legacy --ffi --rpc-url=$L2A_RPC_URL --slow --skip-simulation --broadcast \
   --private-key=$PRIVATE_KEY \
   --sig "sendNativeToL2(string,address,address,uint256,uint256)" \
@@ -159,7 +159,7 @@ Then execute the bundle on destination using the same steps as token transfer.
 Send an arbitrary contract call from one L2 to another:
 
 ```bash
-forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
+forge script contracts/interop/scripts/dummy-interop/InteropScripts.s.sol \
   --legacy --ffi --rpc-url=$L2A_RPC_URL --slow --skip-simulation --broadcast \
   --private-key=$PRIVATE_KEY \
   --sig "sendL2ToL2Call(string,uint256,address,bytes,address,address)" \
@@ -180,7 +180,7 @@ For more control, you can verify a bundle first without executing, then execute 
 ### Verify Bundle (Step 1)
 
 ```bash
-forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
+forge script contracts/interop/scripts/dummy-interop/InteropScripts.s.sol \
   --legacy --ffi --rpc-url=$L2B_RPC_URL --slow --skip-simulation --broadcast \
   --private-key=$PRIVATE_KEY \
   --sig "verifyInteropBundle(string,string,bytes32,address)" \
@@ -201,7 +201,7 @@ Use `executeInteropBundle` as shown above - it will skip verification if already
 Check if a bundle has been verified, executed, or is still pending:
 
 ```bash
-forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
+forge script contracts/interop/scripts/dummy-interop/InteropScripts.s.sol \
   --legacy --ffi --rpc-url=$L2B_RPC_URL --skip-simulation \
   --sig "getBundleStatus(string,bytes32)" \
   $L2B_RPC_URL \
@@ -217,7 +217,7 @@ Status values:
 Check individual call status:
 
 ```bash
-forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
+forge script contracts/interop/scripts/dummy-interop/InteropScripts.s.sol \
   --legacy --ffi --rpc-url=$L2B_RPC_URL --skip-simulation \
   --sig "getCallStatus(string,bytes32,uint256)" \
   $L2B_RPC_URL \
@@ -232,7 +232,7 @@ forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
 ### Get Token Info (assetId, wrapped address)
 
 ```bash
-forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
+forge script contracts/interop/scripts/dummy-interop/InteropScripts.s.sol \
   --legacy --ffi --rpc-url=$L2A_RPC_URL --skip-simulation \
   --sig "getTokenInfo(string,string,address)" \
   $L2A_RPC_URL \
@@ -243,7 +243,7 @@ forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
 ### Check Token Balance on Destination
 
 ```bash
-forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
+forge script contracts/interop/scripts/dummy-interop/InteropScripts.s.sol \
   --legacy --ffi --rpc-url=$L2A_RPC_URL --skip-simulation \
   --sig "getTokenBalance(string,string,address,address)" \
   $L2A_RPC_URL \
@@ -255,7 +255,7 @@ forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
 ### Compute Asset ID
 
 ```bash
-forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
+forge script contracts/interop/scripts/dummy-interop/InteropScripts.s.sol \
   --legacy --ffi --rpc-url=$L2A_RPC_URL --skip-simulation \
   --sig "computeAssetId(string,address)" \
   $L2A_RPC_URL \
@@ -269,7 +269,7 @@ forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
 Send a message to an ERC-7786 compliant contract (implements `receiveMessage`):
 
 ```bash
-forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
+forge script contracts/interop/scripts/dummy-interop/InteropScripts.s.sol \
   --legacy --ffi --rpc-url=$L2A_RPC_URL --slow --skip-simulation --broadcast \
   --private-key=$PRIVATE_KEY \
   --sig "sendSingleMessage(string,uint256,address,bytes,address,address)" \
@@ -287,7 +287,7 @@ Example: Send "hello" to a Greeting contract:
 # First encode the payload
 PAYLOAD=$(cast abi-encode "f(string)" "hello")
 
-forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
+forge script contracts/interop/scripts/dummy-interop/InteropScripts.s.sol \
   --legacy --ffi --rpc-url=$L2A_RPC_URL --slow --skip-simulation --broadcast \
   --private-key=$PRIVATE_KEY \
   --sig "sendSingleMessage(string,uint256,address,bytes,address,address)" \
@@ -307,18 +307,18 @@ Encode interoperable addresses:
 
 ```bash
 # Encode chain ID + address
-forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
+forge script contracts/interop/scripts/dummy-interop/InteropScripts.s.sol \
   --sig "encodeERC7930(uint256,address)" \
   6565 \
   0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
 
 # Encode just address
-forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
+forge script contracts/interop/scripts/dummy-interop/InteropScripts.s.sol \
   --sig "encodeERC7930Address(address)" \
   0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
 
 # Encode just chain ID
-forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
+forge script contracts/interop/scripts/dummy-interop/InteropScripts.s.sol \
   --sig "encodeERC7930ChainId(uint256)" \
   6565
 ```
@@ -328,7 +328,7 @@ forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
 ## L2 -> L1 Interop Bundle (Native Token)
 
 ```bash
-forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
+forge script contracts/interop/scripts/dummy-interop/InteropScripts.s.sol \
   --legacy --ffi --rpc-url=$L2_RPC_URL --slow --skip-simulation --broadcast \
   --private-key=$PRIVATE_KEY \
   --sig "sendNativeToL1(string,address,address,uint256)" \
@@ -338,7 +338,7 @@ forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
 Execute on L1:
 
 ```bash
-forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
+forge script contracts/interop/scripts/dummy-interop/InteropScripts.s.sol \
   --legacy --ffi --rpc-url=$L1_RPC_URL --slow --skip-simulation --broadcast \
   --private-key=$PRIVATE_KEY \
   --sig "executeL2ToL1InteropBundle(string,string,bytes32)" \
@@ -352,7 +352,7 @@ forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
 Simple withdrawal using the L2 base token system contract:
 
 ```bash
-forge script contracts/interop/scripts/dummy-interop/InteropDemo.s.sol \
+forge script contracts/interop/scripts/dummy-interop/InteropScripts.s.sol \
   --legacy --ffi --rpc-url=$L2_RPC_URL --slow --skip-simulation --broadcast \
   --private-key=$PRIVATE_KEY \
   --sig "withdrawToL1(string,address,uint256)" \

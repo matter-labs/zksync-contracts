@@ -7,7 +7,7 @@
  * Usage: ts-node parse-alt-transaction-receipt.ts '<json_string>'
  */
 
-import { walkAndTransform, padHexStrings, sortObjectKeys } from "./utils";
+import { walkAndTransform, padHexStrings, sortObjectKeys } from './utils';
 
 interface TransactionReceipt {
   blockHash?: string;
@@ -50,13 +50,13 @@ function parseAltTransactionReceipt(jsonString: string): RpcResponse {
   }
 
   // Rename address to addr (if present)
-  if ("address" in transformed) {
+  if ('address' in transformed) {
     transformed.addr = transformed.address;
     delete transformed.address;
   }
 
   // Rename type to txType
-  if ("type" in transformed) {
+  if ('type' in transformed) {
     transformed.txType = transformed.type;
     delete transformed.type;
   }
@@ -74,7 +74,7 @@ function parseAltTransactionReceipt(jsonString: string): RpcResponse {
 if (require.main === module) {
   const args = process.argv.slice(2);
   if (args.length === 0) {
-    console.error("Usage: ts-node parse-alt-transaction-receipt.ts <json_string>");
+    console.error('Usage: ts-node parse-alt-transaction-receipt.ts <json_string>');
     console.error('Example: ts-node parse-alt-transaction-receipt.ts \'{"result": {...}}\'');
     process.exit(1);
   }
@@ -83,7 +83,7 @@ if (require.main === module) {
     const result = parseAltTransactionReceipt(args[0]);
     console.log(JSON.stringify(result));
   } catch (error) {
-    console.error("Error parsing JSON:", error);
+    console.error('Error parsing JSON:', error);
     process.exit(1);
   }
 }

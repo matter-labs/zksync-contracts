@@ -6,8 +6,8 @@
  * Usage: ts-node parse-broadcast.ts <broadcast_file_path>
  */
 
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from 'fs';
+import * as path from 'path';
 
 interface ZksyncTransaction {
   paymasterData?: unknown;
@@ -40,14 +40,14 @@ function parseBroadcast(filePath: string): void {
   }
 
   // Read and parse file
-  const content = fs.readFileSync(filePath, "utf-8");
+  const content = fs.readFileSync(filePath, 'utf-8');
   const data: BroadcastFile = JSON.parse(content);
 
   // Transform transactions
   if (data.transactions) {
-    data.transactions = data.transactions.map((tx) => {
+    data.transactions = data.transactions.map(tx => {
       // Rename "function" to "functionKey"
-      if ("function" in tx) {
+      if ('function' in tx) {
         tx.functionKey = tx.function;
         delete tx.function;
       }
@@ -65,19 +65,19 @@ function parseBroadcast(filePath: string): void {
   }
 
   // Rename "returns" to "returnValues" at root level
-  if ("returns" in data) {
+  if ('returns' in data) {
     data.returnValues = data.returns;
     delete data.returns;
   }
 
   // Generate output filename
-  const outputFile = filePath.replace(/\.json$/, ".parsed.json");
+  const outputFile = filePath.replace(/\.json$/, '.parsed.json');
 
   // Write output
   fs.writeFileSync(outputFile, JSON.stringify(data, null, 2));
 
   console.log(`Successfully created ${outputFile}`);
-  console.log("Changes made:");
+  console.log('Changes made:');
   console.log("  - 'function' -> 'functionKey' in transactions");
   console.log("  - 'returns' -> 'returnValues' at root level");
   console.log("  - Removed 'paymasterData' from transactions.transaction.zksync");
@@ -88,14 +88,14 @@ function parseBroadcast(filePath: string): void {
 if (require.main === module) {
   const args = process.argv.slice(2);
   if (args.length === 0) {
-    console.error("Usage: ts-node parse-broadcast.ts <broadcast_file_path>");
+    console.error('Usage: ts-node parse-broadcast.ts <broadcast_file_path>');
     process.exit(1);
   }
 
   try {
     parseBroadcast(args[0]);
   } catch (error) {
-    console.error("Error processing file:", error);
+    console.error('Error processing file:', error);
     process.exit(1);
   }
 }

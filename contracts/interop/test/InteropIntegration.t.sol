@@ -5,7 +5,7 @@ pragma solidity ^0.8.24;
 
 import {Test, console2 as console} from "forge-std/Test.sol";
 
-import {InteropDemo} from "../scripts/InteropCommands.s.sol";
+import {InteropScripts} from "../scripts/InteropCommands.s.sol";
 import {IInteropHandler, BundleStatus} from "../../l1-contracts/interop/IInteropHandler.sol";
 import {IL2NativeTokenVault} from "../../l1-contracts/bridge/ntv/IL2NativeTokenVault.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -25,7 +25,7 @@ import {
  * Run with: PRIVATE_KEY=0x... forge test --match-contract InteropIntegrationTest -vvv --ffi
  */
 contract InteropIntegrationTest is Test {
-    InteropDemo public interop;
+    InteropScripts public interop;
 
     // Chain configuration
     string constant L2A_RPC = "http://localhost:3050";
@@ -43,7 +43,7 @@ contract InteropIntegrationTest is Test {
     address constant INTEROP_HANDLER = 0x000000000000000000000000000000000001000d;
 
     function setUp() public {
-        interop = new InteropDemo();
+        interop = new InteropScripts();
         // Make the interop contract persistent across fork switches
         vm.makePersistent(address(interop));
     }

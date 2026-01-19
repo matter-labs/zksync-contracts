@@ -6,7 +6,7 @@
  * Usage: ts-node parse-proof.ts '<json_string>'
  */
 
-import { walkAndTransform, padHexStrings } from "./utils";
+import { walkAndTransform, padHexStrings } from './utils';
 
 interface RpcResponse {
   result: {
@@ -32,7 +32,7 @@ function parseProof(jsonString: string): { proof: string[]; length: number } {
 if (require.main === module) {
   const args = process.argv.slice(2);
   if (args.length === 0) {
-    console.error("Usage: ts-node parse-proof.ts <json_string>");
+    console.error('Usage: ts-node parse-proof.ts <json_string>');
     console.error('Example: ts-node parse-proof.ts \'{"result": {"proof": ["0x123"]}}\'');
     process.exit(1);
   }
@@ -41,7 +41,7 @@ if (require.main === module) {
     const result = parseProof(args[0]);
     console.log(JSON.stringify(result));
   } catch (error) {
-    console.error("Error parsing JSON:", error);
+    console.error('Error parsing JSON:', error);
     process.exit(1);
   }
 }

@@ -25,7 +25,7 @@ import {INativeTokenVault} from "../../l1-contracts/bridge/ntv/INativeTokenVault
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IERC7786GatewaySource} from "../../l1-contracts/interop/IERC7786GatewaySource.sol";
 
-contract InteropDemo is Script, ZKSProvider {
+contract InteropScripts is Script, ZKSProvider {
     /*//////////////////////////////////////////////////////////////
                             CONFIGURATION
     //////////////////////////////////////////////////////////////*/

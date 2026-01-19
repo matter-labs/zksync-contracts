@@ -8,9 +8,9 @@
  * @returns Padded hex string
  */
 export function padHex(hex: string): string {
-  if (!hex.startsWith("0x")) return hex;
+  if (!hex.startsWith('0x')) return hex;
   if (hex.length >= 66) return hex;
-  return "0x" + hex.slice(2).padStart(64, "0");
+  return '0x' + hex.slice(2).padStart(64, '0');
 }
 
 /**
@@ -20,13 +20,13 @@ export function padHex(hex: string): string {
  * @returns Transformed object
  */
 export function walkAndTransform<T>(obj: T, transform: (val: string) => string): T {
-  if (typeof obj === "string") {
+  if (typeof obj === 'string') {
     return transform(obj) as T;
   }
   if (Array.isArray(obj)) {
-    return obj.map((item) => walkAndTransform(item, transform)) as T;
+    return obj.map(item => walkAndTransform(item, transform)) as T;
   }
-  if (obj !== null && typeof obj === "object") {
+  if (obj !== null && typeof obj === 'object') {
     const result: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(obj)) {
       result[key] = walkAndTransform(value, transform);
