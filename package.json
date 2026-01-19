@@ -43,6 +43,7 @@
     "eslint-plugin-prettier": "^5.5.1",
     "globals": "^16.2.0",
     "hardhat": "^2.25.0",
+    "hardhat-preprocessor": "^0.1.5",
     "prettier": "^3.6.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"

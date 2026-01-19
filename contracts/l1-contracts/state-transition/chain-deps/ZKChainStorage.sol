@@ -2,12 +2,9 @@
 
 pragma solidity ^0.8.0;
 
-import {
-  PriorityQueue
-} from "../../state-transition/libraries/PriorityQueue.sol";
-import {
-  PriorityTree
-} from "../../state-transition/libraries/PriorityTree.sol";
+import { PriorityQueue } from
+  "../../state-transition/libraries/PriorityQueue.sol";
+import { PriorityTree } from "../../state-transition/libraries/PriorityTree.sol";
 import { IVerifier, VerifierParams } from "../chain-interfaces/IVerifier.sol";
 
 /// @notice Indicates whether an upgrade is initiated and if yes what type

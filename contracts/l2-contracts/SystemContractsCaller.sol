@@ -80,15 +80,8 @@ library SystemContractsCaller {
       uint256 forwardMask = MSG_VALUE_SIMULATOR_IS_SYSTEM_BIT;
 
       assembly {
-        success := call(
-          msgValueSimulator,
-          callAddr,
-          value,
-          to,
-          farCallAbi,
-          forwardMask,
-          0
-        )
+        success :=
+          call(msgValueSimulator, callAddr, value, to, farCallAbi, forwardMask, 0)
       }
     }
   }

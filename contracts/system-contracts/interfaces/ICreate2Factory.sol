@@ -15,10 +15,7 @@ interface ICreate2Factory {
     bytes32, // _salt
     bytes32, // _bytecodeHash
     bytes calldata // _input
-  )
-    external
-    payable
-    returns (address);
+  ) external payable returns (address);
 
   /// @notice Function that calls the `create2Account` method of the `ContractDeployer` contract.
   /// @dev This function accepts the same parameters as the `create2Account` function of the ContractDeployer system contract,

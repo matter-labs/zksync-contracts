@@ -67,7 +67,10 @@ interface IAssetRouterBase {
     address _assetHandlerAddress
   ) external;
 
-  function assetHandlerAddress(bytes32 _assetId) external view returns (address);
+  function assetHandlerAddress(bytes32 _assetId)
+    external
+    view
+    returns (address);
 
   /// @notice Finalize the withdrawal and release funds.
   /// @param _chainId The chain ID of the transaction to check.

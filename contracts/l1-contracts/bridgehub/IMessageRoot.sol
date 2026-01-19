@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.0;
 
-import { IBridgehub } from "./IBridgehub.sol";
 import { ProofData } from "../common/Messaging.sol";
+import { IBridgehub } from "./IBridgehub.sol";
 
 /**
  * @author Matter Labs

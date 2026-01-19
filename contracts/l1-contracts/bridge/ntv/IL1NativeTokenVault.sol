@@ -2,9 +2,8 @@
 
 pragma solidity ^0.8.0;
 
-import {
-  IL1AssetDeploymentTracker
-} from "../interfaces/IL1AssetDeploymentTracker.sol";
+import { IL1AssetDeploymentTracker } from
+  "../interfaces/IL1AssetDeploymentTracker.sol";
 import { IL1Nullifier } from "../interfaces/IL1Nullifier.sol";
 import { INativeTokenVault } from "./INativeTokenVault.sol";
 

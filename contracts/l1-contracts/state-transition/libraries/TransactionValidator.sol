@@ -61,10 +61,10 @@ library TransactionValidator {
     // hashing its content, publishing the factory dependencies, etc.
     if (
       getMinimalPriorityTransactionGasLimit(
-          _encoded.length,
-          _transaction.factoryDeps.length,
-          _transaction.gasPerPubdataByteLimit
-        ) > l2GasForTxBody
+        _encoded.length,
+        _transaction.factoryDeps.length,
+        _transaction.gasPerPubdataByteLimit
+      ) > l2GasForTxBody
     ) {
       revert ValidateTxnNotEnoughGas();
     }
@@ -72,10 +72,9 @@ library TransactionValidator {
 
   /// @dev Used to validate upgrade transactions
   /// @param _transaction The transaction to validate
-  function validateUpgradeTransaction(L2CanonicalTransaction memory _transaction)
-    internal
-    pure
-  {
+  function validateUpgradeTransaction(
+    L2CanonicalTransaction memory _transaction
+  ) internal pure {
     // Restrict from to be within system contract range (0...2^16 - 1)
     if (_transaction.from > type(uint16).max) {
       revert InvalidUpgradeTxn(UpgradeTxVerifyParam.From);
@@ -138,13 +137,12 @@ library TransactionValidator {
       // Note that L1_TX_DELTA_544_ENCODING_BYTES is the delta in the price for every 544 bytes of
       // the transaction's encoding. It is taken as LCM between 136 and 32 (the length for each keccak256 round
       // and the size of each new encoding word).
-      costForComputation += Math.ceilDiv(
-        _encodingLength * L1_TX_DELTA_544_ENCODING_BYTES, 544
-      );
+      costForComputation +=
+        Math.ceilDiv(_encodingLength * L1_TX_DELTA_544_ENCODING_BYTES, 544);
 
       // Taking into the account the additional costs of providing new factory dependencies
-      costForComputation += _numberOfFactoryDependencies
-        * L1_TX_DELTA_FACTORY_DEPS_L2_GAS;
+      costForComputation +=
+        _numberOfFactoryDependencies * L1_TX_DELTA_FACTORY_DEPS_L2_GAS;
 
       // There is a minimal amount of computational L2 gas that the transaction should cover
       costForComputation = Math.max(costForComputation, L1_TX_MIN_L2_GAS_BASE);

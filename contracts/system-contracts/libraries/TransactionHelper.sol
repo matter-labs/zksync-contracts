@@ -3,9 +3,8 @@
 pragma solidity ^0.8.0;
 
 import { IERC20 } from "@openzeppelin/contracts-v4/token/ERC20/IERC20.sol";
-import {
-  SafeERC20
-} from "@openzeppelin/contracts-v4/token/ERC20/utils/SafeERC20.sol";
+import { SafeERC20 } from
+  "@openzeppelin/contracts-v4/token/ERC20/utils/SafeERC20.sol";
 
 import {
   BASE_TOKEN_SYSTEM_CONTRACT,

@@ -150,11 +150,7 @@ library DynamicIncrementalMerkle {
   /**
    * @dev Tree's height (does not include the root node).
    */
-  function height(Bytes32PushTree storage self)
-    internal
-    view
-    returns (uint256)
-  {
+  function height(Bytes32PushTree storage self) internal view returns (uint256) {
     return self._sides.length - 1;
   }
 }

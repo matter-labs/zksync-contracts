@@ -90,7 +90,10 @@ interface IGetters is IZKChainBase {
   /// @notice For unfinalized (non executed) batches may change
   /// @dev returns zero for non-committed batches
   /// @return The hash of committed L2 batch.
-  function storedBatchHash(uint256 _batchNumber) external view returns (bytes32);
+  function storedBatchHash(uint256 _batchNumber)
+    external
+    view
+    returns (bytes32);
 
   /// @return Bytecode hash of bootloader program.
   function getL2BootloaderBytecodeHash() external view returns (bytes32);

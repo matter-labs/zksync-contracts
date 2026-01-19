@@ -123,9 +123,8 @@ library Utils {
     returns (bytes32)
   {
     // Clear the "isConstructor" marker and set it to 0x01.
-    return
-      constructedBytecodeHash(_bytecodeHash)
-        | SET_IS_CONSTRUCTOR_MARKER_BIT_MASK;
+    return constructedBytecodeHash(_bytecodeHash)
+      | SET_IS_CONSTRUCTOR_MARKER_BIT_MASK;
   }
 
   /// @notice Sets "isConstructor" flag to FALSE for the bytecode hash
@@ -171,7 +170,7 @@ library Utils {
       & 0x00000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
     // Setting the version of the hash
     hashedBytecode =
-    (hashedBytecode | bytes32(uint256(ERA_VM_BYTECODE_FLAG) << 248));
+      (hashedBytecode | bytes32(uint256(ERA_VM_BYTECODE_FLAG) << 248));
     // Setting the length
     hashedBytecode = hashedBytecode | bytes32(lengthInWords << 224);
   }
@@ -213,7 +212,7 @@ library Utils {
 
     // Setting the version of the hash
     hashedEVMBytecode =
-    (hashedEVMBytecode | bytes32(uint256(EVM_BYTECODE_FLAG) << 248));
+      (hashedEVMBytecode | bytes32(uint256(EVM_BYTECODE_FLAG) << 248));
     hashedEVMBytecode = hashedEVMBytecode | bytes32(_evmBytecodeLen << 224);
   }
 

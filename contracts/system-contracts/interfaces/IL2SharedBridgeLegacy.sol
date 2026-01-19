@@ -2,9 +2,8 @@
 
 pragma solidity ^0.8.0;
 
-import {
-  UpgradeableBeacon
-} from "@openzeppelin/contracts/proxy/beacon/UpgradeableBeacon.sol";
+import { UpgradeableBeacon } from
+  "@openzeppelin/contracts/proxy/beacon/UpgradeableBeacon.sol";
 
 /// @author Matter Labs
 /// @custom:security-contact security@matterlabs.dev

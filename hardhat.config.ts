@@ -1,4 +1,5 @@
 import '@matterlabs/hardhat-zksync';
+import 'hardhat-preprocessor';
 import { HardhatUserConfig } from 'hardhat/config';
 
 import * as dotenv from 'dotenv';
@@ -8,14 +9,28 @@ const isZKsync = process.env.USE_ZKSYNC === 'true';
 
 const config: HardhatUserConfig = {
   solidity: {
-    version: '0.8.24',
-    settings: {
-      evmVersion: 'cancun',
-      optimizer: {
-        enabled: true,
-        runs: 9_999_999,
+    compilers: [
+      {
+        version: '0.8.24',
+        settings: {
+          evmVersion: 'cancun',
+          optimizer: {
+            enabled: true,
+            runs: 9_999_999,
+          },
+        },
       },
-    },
+      {
+        version: '0.8.28',
+        settings: {
+          evmVersion: 'cancun',
+          optimizer: {
+            enabled: true,
+            runs: 9_999_999,
+          },
+        },
+      },
+    ],
   },
   paths: {
     sources: process.env.HARDHAT_CONTRACTS_PATH || 'contracts',
@@ -33,6 +48,17 @@ const config: HardhatUserConfig = {
       codegen: 'yul',
       suppressedWarnings: ['txorigin'],
     },
+  },
+  preprocess: {
+    eachLine: () => ({
+      transform: (line: string, { absolutePath }: { absolutePath: string }) => {
+        // Skip Foundry script and test files
+        if (absolutePath.endsWith('.s.sol') || absolutePath.endsWith('.t.sol')) {
+          return '';
+        }
+        return line;
+      },
+    }),
   },
 };
 

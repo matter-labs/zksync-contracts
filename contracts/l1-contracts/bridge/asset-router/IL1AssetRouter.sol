@@ -2,9 +2,8 @@
 // We use a floating point pragma here so it can be used within other projects that interact with the ZKsync ecosystem without using our exact pragma version.
 pragma solidity ^0.8.0;
 
-import {
-  L2TransactionRequestTwoBridgesInner
-} from "../../bridgehub/IBridgehub.sol";
+import { L2TransactionRequestTwoBridgesInner } from
+  "../../bridgehub/IBridgehub.sol";
 
 import { IL1ERC20Bridge } from "../interfaces/IL1ERC20Bridge.sol";
 import { IL1Nullifier } from "../interfaces/IL1Nullifier.sol";

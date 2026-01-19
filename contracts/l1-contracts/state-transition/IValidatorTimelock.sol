@@ -106,7 +106,8 @@ interface IValidatorTimelock is IExecutor {
   /// @notice Convenience wrapper to grant all validator roles for a given validator on the target chain.
   /// @param _chainId The chain Id of the ZK chain.
   /// @param _validator The address of the validator to add.
-  function addValidatorForChainId(uint256 _chainId, address _validator) external;
+  function addValidatorForChainId(uint256 _chainId, address _validator)
+    external;
   /// @notice Convenience wrapper to retrieve whether a certain address has a role for a chain.
   /// @param _chainId The chain Id of the ZK chain.
   /// @param _role The bytes32 ID of the role.

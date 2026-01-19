@@ -3,12 +3,10 @@
 pragma solidity ^0.8.0;
 
 import { IAssetRouterBase } from "../bridge/asset-router/IAssetRouterBase.sol";
+import { IL1AssetDeploymentTracker } from
+  "../bridge/interfaces/IL1AssetDeploymentTracker.sol";
 import {
-  IL1AssetDeploymentTracker
-} from "../bridge/interfaces/IL1AssetDeploymentTracker.sol";
-import {
-  IBridgehub,
-  L2TransactionRequestTwoBridgesInner
+  IBridgehub, L2TransactionRequestTwoBridgesInner
 } from "./IBridgehub.sol";
 
 /// @author Matter Labs

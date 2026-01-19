@@ -154,8 +154,9 @@ interface IChainTypeManager {
   function setValidatorTimelockPostV29(address _validatorTimelockPostV29)
     external;
 
-  function setChainCreationParams(ChainCreationParams calldata _chainCreationParams)
-    external;
+  function setChainCreationParams(
+    ChainCreationParams calldata _chainCreationParams
+  ) external;
 
   function getChainAdmin(uint256 _chainId) external view returns (address);
 

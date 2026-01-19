@@ -38,7 +38,10 @@ interface IGovernance {
 
   function isOperationDone(bytes32 _id) external view returns (bool);
 
-  function getOperationState(bytes32 _id) external view returns (OperationState);
+  function getOperationState(bytes32 _id)
+    external
+    view
+    returns (OperationState);
 
   function scheduleTransparent(Operation calldata _operation, uint256 _delay)
     external;

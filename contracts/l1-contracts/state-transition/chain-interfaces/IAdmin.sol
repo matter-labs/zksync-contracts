@@ -5,10 +5,7 @@ pragma solidity ^0.8.0;
 import { IZKChainBase } from "../chain-interfaces/IZKChainBase.sol";
 
 import { ZKChainCommitment } from "../../common/Config.sol";
-import {
-  FeeParams,
-  PubdataPricingMode
-} from "../chain-deps/ZKChainStorage.sol";
+import { FeeParams, PubdataPricingMode } from "../chain-deps/ZKChainStorage.sol";
 import { Diamond } from "../libraries/Diamond.sol";
 
 /// @title The interface of the Admin Contract that controls access rights for contract management.
@@ -41,7 +38,8 @@ interface IAdmin is IZKChainBase {
   function changeFeeParams(FeeParams calldata _newFeeParams) external;
 
   /// @notice Change the token multiplier for L1->L2 transactions
-  function setTokenMultiplier(uint128 _nominator, uint128 _denominator) external;
+  function setTokenMultiplier(uint128 _nominator, uint128 _denominator)
+    external;
 
   /// @notice Change the pubdata pricing mode before the first batch is processed
   /// @param _pricingMode The new pubdata pricing mode

@@ -3,10 +3,7 @@
 pragma solidity ^0.8.0;
 
 import { EfficientCall } from "../system-contracts/libraries/EfficientCall.sol";
-import {
-  BytecodeError,
-  MalformedBytecode
-} from "./errors/L2ContractErrors.sol";
+import { BytecodeError, MalformedBytecode } from "./errors/L2ContractErrors.sol";
 
 /**
  * @author Matter Labs

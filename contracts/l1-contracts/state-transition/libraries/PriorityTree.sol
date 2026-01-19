@@ -3,9 +3,8 @@
 pragma solidity ^0.8.0;
 
 import { PriorityTreeCommitment } from "../../common/Config.sol";
-import {
-  DynamicIncrementalMerkle
-} from "../../common/libraries/DynamicIncrementalMerkle.sol";
+import { DynamicIncrementalMerkle } from
+  "../../common/libraries/DynamicIncrementalMerkle.sol";
 import { Merkle } from "../../common/libraries/Merkle.sol";
 import {
   InvalidCommitment,

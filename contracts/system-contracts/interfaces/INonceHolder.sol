@@ -72,7 +72,9 @@ interface INonceHolder {
   /// @notice Increments the deployment nonce for the account and returns the previous one.
   /// @param _address The address of the account which to return the deploy nonce for.
   /// @return prevDeploymentNonce The deployment nonce at the time this function is called.
-  function incrementDeploymentNonce(address _address) external returns (uint256);
+  function incrementDeploymentNonce(address _address)
+    external
+    returns (uint256);
 
   /// @notice Checks and reverts based on whether the nonce is used (or not used).
   /// @param _address The address the nonce of which is being checked.
