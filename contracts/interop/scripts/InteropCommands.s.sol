@@ -5,24 +5,25 @@ pragma solidity ^0.8.24;
 
 import {Script, console2 as console} from "forge-std/Script.sol";
 
-import {InteropLibrary} from "../../InteropLibrary.sol";
-import {ZKSProvider} from "../../provider/ZKSProvider.s.sol";
-import {InteropBundle, InteropCallStarter, L2Message} from "../../../l1-contracts/common/Messaging.sol";
-import {IInteropCenter} from "../../../l1-contracts/interop/IInteropCenter.sol";
-import {IInteropHandler, BundleStatus, CallStatus} from "../../../l1-contracts/interop/IInteropHandler.sol";
-import {InteroperableAddress} from "../../../l1-contracts/vendor/draft-InteroperableAddress.sol";
-import {L2ToL1LogProof, TransactionReceipt} from "../../provider/ReceipTypes.sol";
+import {InteropLibrary} from "../InteropLibrary.sol";
+import {ZKSProvider} from "../provider/ZKSProvider.s.sol";
+import {InteropBundle, InteropCallStarter, L2Message} from "../../l1-contracts/common/Messaging.sol";
+import {IInteropCenter} from "../../l1-contracts/interop/IInteropCenter.sol";
+import {IInteropHandler, BundleStatus, CallStatus} from "../../l1-contracts/interop/IInteropHandler.sol";
+import {InteroperableAddress} from "../../l1-contracts/vendor/draft-InteroperableAddress.sol";
+import {L2ToL1LogProof, TransactionReceipt} from "../provider/ReceipTypes.sol";
 import {
     L2_BASE_TOKEN_SYSTEM_CONTRACT_ADDR,
     L2_TO_L1_MESSENGER_SYSTEM_CONTRACT_ADDR,
     L2_NATIVE_TOKEN_VAULT_ADDR,
     L2_ASSET_ROUTER_ADDR
-} from "../../../l1-contracts/common/l2-helpers/L2ContractAddresses.sol";
-import {IL2ToL1Messenger} from "../../../l1-contracts/common/l2-helpers/IL2ToL1Messenger.sol";
-import {IBaseToken} from "../../../l1-contracts/common/l2-helpers/IBaseToken.sol";
-import {IL2NativeTokenVault} from "../../../l1-contracts/bridge/ntv/IL2NativeTokenVault.sol";
-import {INativeTokenVault} from "../../../l1-contracts/bridge/ntv/INativeTokenVault.sol";
+} from "../../l1-contracts/common/l2-helpers/L2ContractAddresses.sol";
+import {IL2ToL1Messenger} from "../../l1-contracts/common/l2-helpers/IL2ToL1Messenger.sol";
+import {IBaseToken} from "../../l1-contracts/common/l2-helpers/IBaseToken.sol";
+import {IL2NativeTokenVault} from "../../l1-contracts/bridge/ntv/IL2NativeTokenVault.sol";
+import {INativeTokenVault} from "../../l1-contracts/bridge/ntv/INativeTokenVault.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC7786GatewaySource} from "../../l1-contracts/interop/IERC7786GatewaySource.sol";
 
 contract InteropDemo is Script, ZKSProvider {
     /*//////////////////////////////////////////////////////////////
@@ -49,16 +50,23 @@ contract InteropDemo is Script, ZKSProvider {
     ///      using proveL2MessageInclusionShared after interop root propagates.
     /// @param l2RpcUrl The RPC URL for the source L2 chain
     /// @param message The message bytes to send
+    /// @return txHash The transaction hash of the sendToL1 call
     function sendMessage(
         string memory l2RpcUrl,
         bytes memory message
-    ) public returns (bytes32 messageHash) {
-        vm.createSelectFork(l2RpcUrl);
-        vm.startBroadcast();
-        messageHash = IL2ToL1Messenger(L2_TO_L1_MESSENGER_SYSTEM_CONTRACT_ADDR).sendToL1(message);
-        vm.stopBroadcast();
+    ) public returns (bytes32 txHash) {
+        string memory privateKey = vm.envString("PRIVATE_KEY");
+
+        // Build calldata for sendToL1(bytes)
+        bytes memory callData = abi.encodeWithSelector(
+            IL2ToL1Messenger.sendToL1.selector,
+            message
+        );
+
+        txHash = _castSendRaw(l2RpcUrl, privateKey, L2_TO_L1_MESSENGER_SYSTEM_CONTRACT_ADDR, callData);
         console.log("L2->L2 message sent (verify on destination with proveL2MessageInclusionShared)");
-        console.logBytes32(messageHash);
+        console.log("Transaction hash:");
+        console.logBytes32(txHash);
     }
 
     /// @notice Send a string message from one L2 to another L2.
@@ -80,17 +88,25 @@ contract InteropDemo is Script, ZKSProvider {
     /// @param l2RpcUrl The RPC URL for the L2 chain
     /// @param l1Receiver The address to receive tokens on L1
     /// @param amount The amount of tokens to withdraw
+    /// @return txHash The transaction hash of the withdrawal
     function withdrawToL1(
         string memory l2RpcUrl,
         address l1Receiver,
         uint256 amount
-    ) public {
-        vm.createSelectFork(l2RpcUrl);
-        vm.startBroadcast();
-        IBaseToken(L2_BASE_TOKEN_SYSTEM_CONTRACT_ADDR).withdraw{value: amount}(l1Receiver);
-        vm.stopBroadcast();
+    ) public returns (bytes32 txHash) {
+        string memory privateKey = vm.envString("PRIVATE_KEY");
+
+        // Build calldata for withdraw(address)
+        bytes memory callData = abi.encodeWithSelector(
+            IBaseToken.withdraw.selector,
+            l1Receiver
+        );
+
+        txHash = _castSendRawWithValue(l2RpcUrl, privateKey, L2_BASE_TOKEN_SYSTEM_CONTRACT_ADDR, callData, amount);
         console.log("Withdrawal initiated to L1 receiver:", l1Receiver);
         console.log("Amount:", amount);
+        console.log("Transaction hash:");
+        console.logBytes32(txHash);
     }
 
     /// @notice Withdraw base token from L2 to L1 with additional message data.
@@ -98,18 +114,27 @@ contract InteropDemo is Script, ZKSProvider {
     /// @param l1Receiver The address to receive tokens on L1
     /// @param amount The amount of tokens to withdraw
     /// @param additionalData Additional data to send with the withdrawal
+    /// @return txHash The transaction hash of the withdrawal
     function withdrawToL1WithMessage(
         string memory l2RpcUrl,
         address l1Receiver,
         uint256 amount,
         bytes memory additionalData
-    ) public {
-        vm.createSelectFork(l2RpcUrl);
-        vm.startBroadcast();
-        IBaseToken(L2_BASE_TOKEN_SYSTEM_CONTRACT_ADDR).withdrawWithMessage{value: amount}(l1Receiver, additionalData);
-        vm.stopBroadcast();
+    ) public returns (bytes32 txHash) {
+        string memory privateKey = vm.envString("PRIVATE_KEY");
+
+        // Build calldata for withdrawWithMessage(address,bytes)
+        bytes memory callData = abi.encodeWithSelector(
+            IBaseToken.withdrawWithMessage.selector,
+            l1Receiver,
+            additionalData
+        );
+
+        txHash = _castSendRawWithValue(l2RpcUrl, privateKey, L2_BASE_TOKEN_SYSTEM_CONTRACT_ADDR, callData, amount);
         console.log("Withdrawal with message initiated to L1 receiver:", l1Receiver);
         console.log("Amount:", amount);
+        console.log("Transaction hash:");
+        console.logBytes32(txHash);
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -123,29 +148,100 @@ contract InteropDemo is Script, ZKSProvider {
     /// @param unbundlerAddress The address authorized to unbundle on the destination chain
     /// @param amount The amount of tokens to send
     /// @param destinationL2ChainId The chain ID of the destination L2
+    /// @return txHash The transaction hash of the sendBundle call
     function sendNativeToL2(
         string memory l2RpcUrl,
         address l2Receiver,
         address unbundlerAddress,
         uint256 amount,
         uint256 destinationL2ChainId
-    ) public returns (bytes32 bundleHash) {
+    ) public returns (bytes32 txHash) {
         vm.createSelectFork(l2RpcUrl);
-        vm.startBroadcast();
+        string memory privateKey = vm.envString("PRIVATE_KEY");
+
         InteropCallStarter[] memory calls = new InteropCallStarter[](1);
         calls[0] = InteropLibrary.buildSendDestinationChainBaseTokenCall(destinationL2ChainId, l2Receiver, amount);
         bytes[] memory bundleAttributes = InteropLibrary.buildBundleAttributes(unbundlerAddress);
-        bundleHash = IInteropCenter(INTEROP_CENTER).sendBundle{value: amount}(
+
+        bytes memory callData = abi.encodeWithSelector(
+            IInteropCenter.sendBundle.selector,
             InteroperableAddress.formatEvmV1(destinationL2ChainId),
             calls,
             bundleAttributes
         );
-        vm.stopBroadcast();
-        console.logBytes32(bundleHash);
+
+        txHash = _castSendRawWithValue(l2RpcUrl, privateKey, INTEROP_CENTER, callData, amount);
+        console.log("Native token bundle sent to chain:", destinationL2ChainId);
+        console.log("Amount:", amount);
+        console.log("Transaction hash:");
+        console.logBytes32(txHash);
+    }
+
+    /// @notice Send a bundle with multiple calls to another L2.
+    /// @dev Generic function to send arbitrary interop bundles with multiple calls.
+    ///      Each call is a direct call (no indirectCall attribute).
+    /// @param l2RpcUrl The RPC URL for the source L2 chain
+    /// @param destinationChainId The chain ID of the destination L2
+    /// @param targets Array of target contract addresses on destination chain
+    /// @param calldatas Array of calldata for each target
+    /// @param executionAddress Optional execution address (use address(0) for permissionless)
+    /// @param unbundlerAddress The address authorized to unbundle on the destination chain
+    /// @return txHash The transaction hash of the sendBundle call
+    function sendBundle(
+        string memory l2RpcUrl,
+        uint256 destinationChainId,
+        address[] memory targets,
+        bytes[] memory calldatas,
+        address executionAddress,
+        address unbundlerAddress
+    ) public returns (bytes32 txHash) {
+        require(targets.length == calldatas.length, "Arrays length mismatch");
+        require(targets.length > 0, "Empty calls array");
+
+        string memory privateKey = vm.envString("PRIVATE_KEY");
+
+        // Build the calls array - direct calls without indirectCall attribute
+        InteropCallStarter[] memory calls = new InteropCallStarter[](targets.length);
+        for (uint256 i = 0; i < targets.length; i++) {
+            require(targets[i] != address(0), "Zero target address");
+            calls[i] = _buildDirectCall(targets[i], calldatas[i]);
+        }
+
+        // Build bundle attributes
+        bytes[] memory bundleAttributes = InteropLibrary.buildBundleAttributes(executionAddress, unbundlerAddress);
+
+        // Encode the sendBundle call
+        bytes memory callData = abi.encodeWithSelector(
+            IInteropCenter.sendBundle.selector,
+            InteroperableAddress.formatEvmV1(destinationChainId),
+            calls,
+            bundleAttributes
+        );
+
+        txHash = _castSendRaw(l2RpcUrl, privateKey, INTEROP_CENTER, callData);
+        console.log("Bundle sent with", targets.length, "calls to chain:", destinationChainId);
+        console.log("Transaction hash:");
+        console.logBytes32(txHash);
+    }
+
+    /// @dev Build a direct call InteropCallStarter (no indirectCall attribute)
+    function _buildDirectCall(
+        address target,
+        bytes memory data
+    ) internal pure returns (InteropCallStarter memory) {
+        // Empty call attributes for direct calls
+        bytes[] memory callAttributes = new bytes[](0);
+
+        // Use address-only format (no chain ID) since chain is specified at bundle level
+        return InteropCallStarter({
+            to: InteroperableAddress.formatEvmV1(target),
+            data: data,
+            callAttributes: callAttributes
+        });
     }
 
     /// @notice Send ERC20 tokens from one L2 to another L2 using interop.
-    /// @dev Similar to token-interop.js - registers token, approves, and sends via InteropCenter.
+    /// @dev Uses cast send via FFI for all transactions to avoid nonce conflicts with vm.broadcast.
     /// @param l2RpcUrl The RPC URL for the source L2 chain
     /// @param tokenAddress The address of the ERC20 token to send
     /// @param recipient The address to receive tokens on the destination L2
@@ -159,36 +255,173 @@ contract InteropDemo is Script, ZKSProvider {
         uint256 destinationL2ChainId
     ) public returns (bytes32 bundleHash) {
         vm.createSelectFork(l2RpcUrl);
-        vm.startBroadcast();
+        string memory privateKey = vm.envString("PRIVATE_KEY");
 
-        // Step 1: Ensure token is registered in NTV
+        // Step 1: Check if token is registered in NTV, register if needed
         IL2NativeTokenVault ntv = IL2NativeTokenVault(L2_NATIVE_TOKEN_VAULT_ADDR);
         bytes32 assetId = ntv.assetId(tokenAddress);
+
         if (assetId == bytes32(0)) {
-            assetId = ntv.ensureTokenIsRegistered(tokenAddress);
-            console.log("Token registered with assetId:");
-            console.logBytes32(assetId);
+            console.log("Token not registered in NTV, registering...");
+            _castSendRegisterToken(l2RpcUrl, privateKey, tokenAddress);
+            // Re-fetch assetId after registration
+            vm.createSelectFork(l2RpcUrl);
+            assetId = ntv.assetId(tokenAddress);
+            require(assetId != bytes32(0), "Token registration failed");
+            console.log("Token registered successfully");
         }
 
+        console.log("Token assetId:");
+        console.logBytes32(assetId);
+
         // Step 2: Approve NTV to spend tokens
-        IERC20(tokenAddress).approve(L2_NATIVE_TOKEN_VAULT_ADDR, amount);
+        console.log("Approving NTV to spend tokens...");
+        _castSendApprove(l2RpcUrl, privateKey, tokenAddress, L2_NATIVE_TOKEN_VAULT_ADDR, amount);
         console.log("Approved NTV to spend tokens");
 
-        // Step 3: Build the interop bundle
-        bundleHash = InteropLibrary.sendToken(
-            destinationL2ChainId,
-            tokenAddress,
-            amount,
-            recipient,
-            recipient // unbundler = recipient
+        // Step 3: Build and send the bundle
+        console.log("Building and sending token bundle...");
+        bytes memory sendBundleData = _buildSendBundleData(assetId, amount, recipient, destinationL2ChainId);
+
+        bytes32 txHash = _castSendRaw(l2RpcUrl, privateKey, INTEROP_CENTER, sendBundleData);
+        console.log("Transaction sent:");
+        console.logBytes32(txHash);
+
+        // Return txHash - use this with executeInteropBundle to complete the transfer
+        bundleHash = txHash;
+        console.log("Use this tx hash with executeInteropBundle to complete the transfer on destination chain");
+    }
+
+    /// @dev Build the sendBundle calldata
+    function _buildSendBundleData(
+        bytes32 assetId,
+        uint256 amount,
+        address recipient,
+        uint256 destinationL2ChainId
+    ) internal pure returns (bytes memory) {
+        bytes memory secondBridgeCalldata = InteropLibrary.buildSecondBridgeCalldata(
+            assetId, amount, recipient, address(0)
         );
 
-        vm.stopBroadcast();
-        console.log("Token transfer bundle sent:");
-        console.logBytes32(bundleHash);
+        InteropCallStarter[] memory calls = new InteropCallStarter[](1);
+        calls[0] = InteropLibrary.buildSecondBridgeCall(secondBridgeCalldata, L2_ASSET_ROUTER_ADDR);
+
+        bytes[] memory bundleAttrs = InteropLibrary.buildBundleAttributes(recipient);
+
+        return abi.encodeWithSelector(
+            IInteropCenter.sendBundle.selector,
+            InteroperableAddress.formatEvmV1(destinationL2ChainId),
+            calls,
+            bundleAttrs
+        );
+    }
+
+    /// @dev Get bundle hash from transaction
+    function _getBundleHashFromTx(string memory l2RpcUrl, bytes32 txHash) internal returns (bytes32) {
+        TransactionReceipt memory receipt = getTransactionReceipt(l2RpcUrl, txHash);
+        InteropBundle memory bundle = _getInteropBundle(receipt);
+        return keccak256(abi.encode(bundle));
+    }
+
+    /// @dev Execute cast send to register token in NTV
+    function _castSendRegisterToken(
+        string memory rpcUrl,
+        string memory privateKey,
+        address tokenAddress
+    ) internal {
+        string[] memory cmd = new string[](10);
+        cmd[0] = "cast";
+        cmd[1] = "send";
+        cmd[2] = "--legacy";
+        cmd[3] = "--rpc-url";
+        cmd[4] = rpcUrl;
+        cmd[5] = "--private-key";
+        cmd[6] = privateKey;
+        cmd[7] = vm.toString(L2_NATIVE_TOKEN_VAULT_ADDR);
+        cmd[8] = "registerToken(address)";
+        cmd[9] = vm.toString(tokenAddress);
+
+        vm.ffi(cmd);
+    }
+
+    /// @dev Execute cast send for approve
+    function _castSendApprove(
+        string memory rpcUrl,
+        string memory privateKey,
+        address tokenAddress,
+        address spender,
+        uint256 amount
+    ) internal {
+        string[] memory cmd = new string[](11);
+        cmd[0] = "cast";
+        cmd[1] = "send";
+        cmd[2] = "--legacy";
+        cmd[3] = "--rpc-url";
+        cmd[4] = rpcUrl;
+        cmd[5] = "--private-key";
+        cmd[6] = privateKey;
+        cmd[7] = vm.toString(tokenAddress);
+        cmd[8] = "approve(address,uint256)";
+        cmd[9] = vm.toString(spender);
+        cmd[10] = vm.toString(amount);
+
+        vm.ffi(cmd);
+    }
+
+    /// @dev Execute cast send with raw calldata and return tx hash
+    function _castSendRaw(
+        string memory rpcUrl,
+        string memory privateKey,
+        address target,
+        bytes memory data
+    ) internal returns (bytes32 txHash) {
+        // Use --json flag to get structured output (must be after --private-key)
+        string[] memory cmd = new string[](10);
+        cmd[0] = "cast";
+        cmd[1] = "send";
+        cmd[2] = "--legacy";
+        cmd[3] = "--rpc-url";
+        cmd[4] = rpcUrl;
+        cmd[5] = "--private-key";
+        cmd[6] = privateKey;
+        cmd[7] = "--json";
+        cmd[8] = vm.toString(target);
+        cmd[9] = vm.toString(data);
+
+        bytes memory result = vm.ffi(cmd);
+        // Parse JSON to get transactionHash - vm.parseJson returns bytes32 for 0x-prefixed 64-char hex
+        txHash = abi.decode(vm.parseJson(string(result), ".transactionHash"), (bytes32));
+    }
+
+    /// @dev Execute cast send with raw calldata and value, return tx hash
+    function _castSendRawWithValue(
+        string memory rpcUrl,
+        string memory privateKey,
+        address target,
+        bytes memory data,
+        uint256 value
+    ) internal returns (bytes32 txHash) {
+        string[] memory cmd = new string[](12);
+        cmd[0] = "cast";
+        cmd[1] = "send";
+        cmd[2] = "--legacy";
+        cmd[3] = "--rpc-url";
+        cmd[4] = rpcUrl;
+        cmd[5] = "--private-key";
+        cmd[6] = privateKey;
+        cmd[7] = "--json";
+        cmd[8] = "--value";
+        cmd[9] = vm.toString(value);
+        cmd[10] = vm.toString(target);
+        cmd[11] = vm.toString(data);
+
+        bytes memory result = vm.ffi(cmd);
+        txHash = abi.decode(vm.parseJson(string(result), ".transactionHash"), (bytes32));
     }
 
     /// @notice Send an L2 -> L2 interop call using the InteropLibrary helpers.
+    /// @dev Uses cast send via FFI to avoid issues with zkSync system contracts.
+    /// @return txHash The transaction hash of the sendMessage call
     function sendL2ToL2Call(
         string memory l2RpcUrl,
         uint256 destinationChainId,
@@ -196,18 +429,57 @@ contract InteropDemo is Script, ZKSProvider {
         bytes memory data,
         address executionAddress,
         address unbundlerAddress
-    ) public returns (bytes32 bundleHash) {
-        vm.createSelectFork(l2RpcUrl);
-        vm.startBroadcast();
-        bundleHash = InteropLibrary.sendDirectCall(
+    ) public returns (bytes32 txHash) {
+        string memory privateKey = vm.envString("PRIVATE_KEY");
+
+        // Build the sendMessage calldata using InteropLibrary helpers
+        bytes memory callData = _buildSendDirectCallData(
             destinationChainId,
             target,
             data,
             executionAddress,
             unbundlerAddress
         );
-        vm.stopBroadcast();
-        console.logBytes32(bundleHash);
+
+        txHash = _castSendRaw(l2RpcUrl, privateKey, INTEROP_CENTER, callData);
+        console.log("L2->L2 call sent via InteropCenter.sendMessage");
+        console.log("Transaction hash:");
+        console.logBytes32(txHash);
+    }
+
+    /// @dev Build the sendMessage calldata for sendL2ToL2Call
+    function _buildSendDirectCallData(
+        uint256 destinationChainId,
+        address target,
+        bytes memory data,
+        address executionAddress,
+        address unbundlerAddress
+    ) internal pure returns (bytes memory) {
+        // Build call and bundle attributes using InteropLibrary
+        (InteropCallStarter memory call, bytes[] memory bundleAttributes) = InteropLibrary.buildCall({
+            destinationChainId: destinationChainId,
+            target: target,
+            executionAddress: executionAddress,
+            unbundlerAddress: unbundlerAddress,
+            data: data
+        });
+
+        // Merge call attributes with bundle attributes
+        bytes[] memory mergedAttributes = new bytes[](call.callAttributes.length + bundleAttributes.length);
+        for (uint256 i = 0; i < call.callAttributes.length; i++) {
+            mergedAttributes[i] = call.callAttributes[i];
+        }
+        for (uint256 i = 0; i < bundleAttributes.length; i++) {
+            mergedAttributes[call.callAttributes.length + i] = bundleAttributes[i];
+        }
+
+        // Encode the sendMessage call
+        return abi.encodeWithSelector(
+            IERC7786GatewaySource.sendMessage.selector,
+            call.to,
+            call.data,
+            mergedAttributes
+        );
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -341,16 +613,48 @@ contract InteropDemo is Script, ZKSProvider {
         });
 
         vm.createSelectFork(destL2RpcUrl);
-        vm.startBroadcast();
         IInteropHandler(interopHandlerAddress).verifyBundle(encodedBundle, proof);
-        vm.stopBroadcast();
 
         console.log("Bundle verified successfully!");
     }
 
     /*//////////////////////////////////////////////////////////////
-                            BUNDLE STATUS
+                            BUNDLE HASH & STATUS
     //////////////////////////////////////////////////////////////*/
+
+    /// @notice Get the bundle hash from a sendToken/sendBundle transaction hash.
+    /// @dev The bundle hash is in the event data (not indexed) of InteropBundleSent event.
+    ///      Event: InteropBundleSent(bytes32 l2l1MsgHash, bytes32 interopBundleHash, InteropBundle interopBundle)
+    /// @param l2RpcUrl The RPC URL for the source L2 chain where the tx was sent
+    /// @param txHash The transaction hash from sendToken or sendBundle
+    /// @return bundleHash The bundle hash to use with getBundleStatus or executeInteropBundle
+    function getBundleHash(
+        string memory l2RpcUrl,
+        bytes32 txHash
+    ) public returns (bytes32 bundleHash) {
+        TransactionReceipt memory receipt = getTransactionReceipt(l2RpcUrl, txHash);
+
+        // Find the InteropBundleSent event from INTEROP_CENTER
+        // Event: InteropBundleSent(bytes32 l2l1MsgHash, bytes32 interopBundleHash, InteropBundle bundle)
+        // None of the params are indexed, so topics[0] is the event sig, data contains all params
+        for (uint256 i = 0; i < receipt.logs.length; i++) {
+            if (receipt.logs[i].addr == INTEROP_CENTER &&
+                receipt.logs[i].topics.length > 0 &&
+                receipt.logs[i].topics[0] == INTEROP_BUNDLE_SENT_EVENT) {
+                // Data is ABI-encoded bytes, first decode to get raw event data
+                bytes memory rawData = abi.decode(receipt.logs[i].data, (bytes));
+                // The interopBundleHash is the second bytes32 (after l2l1MsgHash)
+                // Skip first 32 bytes (l2l1MsgHash), read next 32 bytes (interopBundleHash)
+                assembly {
+                    bundleHash := mload(add(rawData, 64))
+                }
+                console.log("Bundle hash:");
+                console.logBytes32(bundleHash);
+                return bundleHash;
+            }
+        }
+        revert("InteropBundleSent event not found in transaction");
+    }
 
     /// @notice Check the status of a bundle on the destination chain.
     /// @param l2RpcUrl The RPC URL for the L2 chain to check
@@ -496,6 +800,134 @@ contract InteropDemo is Script, ZKSProvider {
         vm.stopBroadcast();
         console.log("Message sent with ID:");
         console.logBytes32(sendId);
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                            MESSAGE VERIFICATION (L2 -> L2 via shared interop)
+    //////////////////////////////////////////////////////////////*/
+
+    /// @notice Verify a message was delivered from source chain to destination chain.
+    /// @dev This verifies using proveL2MessageInclusionShared on the destination chain.
+    ///      Similar to the JavaScript sendInteropMessage flow.
+    /// @param sourceRpcUrl The RPC URL for the source L2 chain
+    /// @param destRpcUrl The RPC URL for the destination L2 chain
+    /// @param txHash The transaction hash of the sendMessage call on source chain
+    /// @return verified True if the message was successfully verified on destination
+    function verifyMessageDelivery(
+        string memory sourceRpcUrl,
+        string memory destRpcUrl,
+        bytes32 txHash
+    ) public returns (bool verified) {
+        // Step 1: Get transaction receipt from source chain
+        console.log("Verifying message delivery...");
+        TransactionReceipt memory receipt = getTransactionReceipt(sourceRpcUrl, txHash);
+        console.log("Receipt block:", receipt.blockNumber);
+
+        // Step 2: Get L2ToL1 log proof from source chain
+        L2ToL1LogProof memory logProof = getL2ToL1LogProof(sourceRpcUrl, txHash, 0);
+        console.log("Proof batch:", logProof.batchNumber);
+        console.log("Proof index:", logProof.id);
+
+        // Step 3: Get message data from receipt
+        bytes memory messageData = getL2ToL1MessageData(receipt, 0);
+
+        // Step 4: Get source chain ID
+        vm.createSelectFork(sourceRpcUrl);
+        uint256 sourceChainId = block.chainid;
+        address senderAddress = vm.addr(vm.envUint("PRIVATE_KEY"));
+        console.log("Source chain ID:", sourceChainId);
+        console.log("Sender:", senderAddress);
+
+        // Step 5: Wait for interop root on destination chain
+        waitForInteropRoot(destRpcUrl, sourceChainId, logProof.batchNumber, bytes32(0), 120);
+
+        // Step 6: Verify on destination chain using proveL2MessageInclusionShared
+        vm.createSelectFork(destRpcUrl);
+        address MESSAGE_VERIFICATION = 0x0000000000000000000000000000000000010009;
+
+        verified = _proveL2MessageInclusionShared(
+            MESSAGE_VERIFICATION,
+            sourceChainId,
+            logProof.batchNumber,
+            logProof.id,
+            uint16(receipt.transactionIndex),
+            senderAddress,
+            messageData,
+            logProof.proof
+        );
+
+        if (verified) {
+            console.log("Message verified on destination chain!");
+        } else {
+            console.log("Message verification FAILED");
+        }
+    }
+
+    /// @dev Call proveL2MessageInclusionShared via FFI to avoid fork caching issues
+    function _proveL2MessageInclusionShared(
+        address messageVerification,
+        uint256 chainId,
+        uint256 batchNumber,
+        uint256 index,
+        uint16 txNumberInBatch,
+        address sender,
+        bytes memory data,
+        bytes32[] memory proof
+    ) internal returns (bool) {
+        // Build proof array string for cast call
+        string memory proofStr = "[";
+        for (uint256 i = 0; i < proof.length; i++) {
+            if (i > 0) proofStr = string.concat(proofStr, ",");
+            proofStr = string.concat(proofStr, vm.toString(proof[i]));
+        }
+        proofStr = string.concat(proofStr, "]");
+
+        // Build the tuple argument for the message struct
+        string memory messageStruct = string.concat(
+            "(",
+            vm.toString(uint256(txNumberInBatch)), ",",
+            vm.toString(sender), ",",
+            vm.toString(data),
+            ")"
+        );
+
+        string[] memory args = new string[](8);
+        args[0] = "cast";
+        args[1] = "call";
+        args[2] = vm.toString(messageVerification);
+        args[3] = "proveL2MessageInclusionShared(uint256,uint256,uint256,(uint16,address,bytes),bytes32[])(bool)";
+        args[4] = vm.toString(chainId);
+        args[5] = vm.toString(batchNumber);
+        args[6] = vm.toString(index);
+        // For cast call with tuple, we need to concatenate remaining args
+        // This is complex, so let's use a simpler approach
+
+        // Simpler approach: use raw calldata
+        bytes memory callData = abi.encodeWithSignature(
+            "proveL2MessageInclusionShared(uint256,uint256,uint256,(uint16,address,bytes),bytes32[])",
+            chainId,
+            batchNumber,
+            index,
+            L2Message({
+                txNumberInBatch: txNumberInBatch,
+                sender: sender,
+                data: data
+            }),
+            proof
+        );
+
+        string[] memory cmd = new string[](5);
+        cmd[0] = "cast";
+        cmd[1] = "call";
+        cmd[2] = vm.toString(messageVerification);
+        cmd[3] = vm.toString(callData);
+        cmd[4] = "--json";
+
+        bytes memory result = vm.ffi(cmd);
+        // Result is JSON with "result" field containing hex-encoded boolean
+        // Parse as boolean (0x01 = true, 0x00 = false)
+        bytes memory decoded = abi.decode(vm.parseJson(string(result), "$[0]"), (bytes));
+        return decoded.length > 0 && decoded[decoded.length - 1] == 0x01;
     }
 
     /*//////////////////////////////////////////////////////////////

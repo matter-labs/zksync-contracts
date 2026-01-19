@@ -229,23 +229,23 @@ contract ZKSProvider is Script {
         string memory l2RpcUrl,
         bytes32 txHash
     ) internal returns (TransactionReceipt memory receipt) {
-        string[] memory args = new string[](9);
+        string[] memory args = new string[](10);
         args[0] = "curl";
-        args[1] = "--request";
-        args[2] = "POST";
-        args[3] = "--url";
-        args[4] = l2RpcUrl;
-        args[5] = "--header";
-        args[6] = "Content-Type: application/json";
-        args[7] = "--data";
-        args[8] = string.concat(
+        args[1] = "-s";
+        args[2] = "--request";
+        args[3] = "POST";
+        args[4] = "--url";
+        args[5] = l2RpcUrl;
+        args[6] = "--header";
+        args[7] = "Content-Type: application/json";
+        args[8] = "--data";
+        args[9] = string.concat(
             '{"jsonrpc":"2.0","method":"eth_getTransactionReceipt","params":["',
             vm.toString(txHash),
             '"],"id":1}'
         );
 
         bytes memory result = vm.ffi(args);
-
         receipt = parseTransactionReceipt(result);
     }
 
@@ -254,16 +254,17 @@ contract ZKSProvider is Script {
         bytes32 txHash,
         uint64 logIndex
     ) internal returns (L2ToL1LogProof memory proof) {
-        string[] memory args = new string[](9);
+        string[] memory args = new string[](10);
         args[0] = "curl";
-        args[1] = "--request";
-        args[2] = "POST";
-        args[3] = "--url";
-        args[4] = l2RpcUrl;
-        args[5] = "--header";
-        args[6] = "Content-Type: application/json";
-        args[7] = "--data";
-        args[8] = string.concat(
+        args[1] = "-s";
+        args[2] = "--request";
+        args[3] = "POST";
+        args[4] = "--url";
+        args[5] = l2RpcUrl;
+        args[6] = "--header";
+        args[7] = "Content-Type: application/json";
+        args[8] = "--data";
+        args[9] = string.concat(
             '{"jsonrpc":"2.0","id":1,"method":"zks_getL2ToL1LogProof","params":["',
             vm.toString(txHash),
             '",',
@@ -294,14 +295,11 @@ contract ZKSProvider is Script {
     }
 
     function parseTransactionReceipt(bytes memory jsonResponse) internal returns (TransactionReceipt memory receipt) {
-        // Parse the JSON response using stdJson
-        // This is a simplified implementation - you may need to enhance the parsing
         string memory responseStr = string(jsonResponse);
 
         string memory modifiedJson = callParseAltLog(responseStr, "parse-transaction-receipt.sh");
         string memory altTransactionReceiptJson = callParseAltLog(responseStr, "parse-alt-transaction-receipt.sh");
-        // console.log(responseStr);
-        // console.log(altTransactionReceiptJson);
+
         bytes memory resultBytes = vm.parseJson(altTransactionReceiptJson, "$.result");
         AltTransactionReceipt memory result = abi.decode(resultBytes, (AltTransactionReceipt));
 
@@ -324,8 +322,6 @@ contract ZKSProvider is Script {
         AltLog[] memory altLogs;
         {
             string memory altLogsJson = callParseAltLog(responseStr, "parse-alt-logs.sh");
-            // console.log(altLogsJson);
-
             bytes memory logBytes = vm.parseJson(altLogsJson, "$.logs");
             altLogs = abi.decode(logBytes, (AltLog[]));
             // console.log("altLogs");
@@ -347,12 +343,13 @@ contract ZKSProvider is Script {
             for (uint256 i = 0; i < altLogs.length; i++) {
                 string memory altLogsDataJson = callParseAltLog(responseStr, "parse-alt-logs-data.sh", i);
                 string memory altLogsTopicsJson = callParseAltLog(responseStr, "parse-alt-logs-topics.sh", i);
-                // console.log(altLogsDataJson);
-                // console.log(altLogsTopicsJson);
+
+                // vm.parseJson returns ABI-encoded bytes for hex string values
                 bytes memory altLogsDataBytes = vm.parseJson(altLogsDataJson, "$.data");
-                // console.logBytes(altLogsDataBytes);
+                altLogsData[i] = altLogsDataBytes;
+
+                // For topics array, vm.parseJson returns ABI-encoded bytes32[]
                 bytes memory altLogsTopicsBytes = vm.parseJson(altLogsTopicsJson, "$.topics");
-                altLogsData[i] = abi.decode(altLogsDataBytes, (bytes));
                 altLogsTopics[i] = abi.decode(altLogsTopicsBytes, (bytes32[]));
             }
         }
@@ -483,9 +480,13 @@ contract ZKSProvider is Script {
                 receipt.logs[i].topics.length > 0 &&
                 receipt.logs[i].topics[0] == L1_MESSAGE_SENT_TOPIC) {
                 if (messageCount == index) {
-                    // The log data is ABI-encoded: offset (32) + length (32) + message
-                    // We need to decode the dynamic bytes
-                    messageData = abi.decode(receipt.logs[i].data, (bytes));
+                    // The log data stored by vm.parseJson is ABI-encoded bytes.
+                    // First decode gets us the raw event data from RPC.
+                    bytes memory rawEventData = abi.decode(receipt.logs[i].data, (bytes));
+
+                    // The raw event data itself contains ABI-encoded bytes (the message).
+                    // Second decode extracts the actual message.
+                    messageData = abi.decode(rawEventData, (bytes));
                     return messageData;
                 }
                 messageCount++;

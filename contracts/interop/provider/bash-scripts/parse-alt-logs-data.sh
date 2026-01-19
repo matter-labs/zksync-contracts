@@ -7,7 +7,7 @@ modify_json_address() {
     
     # Use jq to extract logs array, then use sed to replace "address" with "addr" and "type" with "txType"
     # Extract logs array and apply the field replacements
-    echo "$json_string" | jq '.result.logs | map(.data)' | jq ".[$index]" | sed -e 's/"address":/"addr":/g' -e 's/"type":/"txType":/g' | jq 'walk(if type == "string" and test("^0x[0-9a-fA-F]+$") then if (length < 66) then "0x" + ("0" * (64 - (length - 2))) + .[2:] else . end else . end) | {data: .}'
+    echo "$json_string" | jq '.result.logs | map(.data)' | jq ".[$index]" | sed -e 's/"address":/"addr":/g' -e 's/"type":/"txType":/g' | jq 'walk(if type == "string" and test("^0x[0-9a-fA-F]*$") then if . == "0x" then "0x0000000000000000000000000000000000000000000000000000000000000000" elif (length < 66) then "0x" + ("0" * (64 - (length - 2))) + .[2:] else . end else . end) | {data: .}'
 }
 
 # Check if JSON string is provided as argument
