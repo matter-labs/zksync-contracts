@@ -4,28 +4,28 @@ End-to-end tests for L2-to-L2 interoperability functionality.
 
 ## Prerequisites
 
-### 1. Two Local L2 Nodes Running
+### For Era Setup
+
+Run the interop setup script:
+
+```bash
+infrastructure/scripts/interop.sh
+```
+
+### For ZKsync OS Setup
 
 Start two local ZKsync nodes with interop enabled:
 
-- **L2A (Chain ID: 6565)**: `http://localhost:3050`
-- **L2B (Chain ID: 6566)**: `http://localhost:3051`
-
-### 2. Interop Watcher
+- **L2A**: Source chain
+- **L2B**: Destination chain
 
 The interop watcher service must be running to propagate interop roots between chains.
 
-### 3. Test Token (for token bridging tests)
+### Test Token (for token bridging tests)
 
-For `test_sendToken_executedOnDestination`, a test ERC20 token must be deployed on L2A (chain 6565). The test uses a hardcoded token address:
+For `test_sendToken_executedOnDestination`, a test ERC20 token must be deployed on L2A. The test uses a hardcoded token address - update `TEST_TOKEN` in `InteropIntegration.t.sol` if using a different token.
 
-```solidity
-address constant TEST_TOKEN = 0xe441CF0795aF14DdB9f7984Da85CD36DB1B8790d;
-```
-
-Update this address in `InteropIntegration.t.sol` if using a different token.
-
-### 4. Funded Test Account
+### Funded Test Account
 
 The test account must have ETH on both L2A and L2B for gas fees.
 
@@ -35,6 +35,28 @@ Default rich wallet private key:
 0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110
 ```
 
+### TestReceiver for Native Token Tests
+
+The `test_sendNativeToken_executedOnDestination` test requires a pre-deployed `TestReceiver` contract on L2B. Deploy it with the correct InteropHandler address for your mode:
+
+```bash
+# For Era mode (InteropHandler = 0x1000E):
+forge create --zksync --rpc-url $L2B_RPC_URL \
+  --private-key $PRIVATE_KEY --broadcast --zk-gas-per-pubdata 800 \
+  contracts/interop/test-contracts/TestReceiver.sol:TestReceiver \
+  --constructor-args 0x000000000000000000000000000000000001000E
+
+# For ZKsync OS mode (InteropHandler = 0x1000d):
+forge create --zksync --rpc-url $L2B_RPC_URL \
+  --private-key $PRIVATE_KEY --broadcast --zk-gas-per-pubdata 800 \
+  contracts/interop/test-contracts/TestReceiver.sol:TestReceiver \
+  --constructor-args 0x000000000000000000000000000000000001000d
+```
+
+Update `TEST_RECEIVER_L2B` in `InteropIntegration.t.sol` with the deployed address.
+
+**Note**: Other tests (`test_sendBundle_*`, `test_sendL2ToL2Call_*`) deploy TestReceiver dynamically during the test.
+
 ## Running Tests
 
 Run tests individually to avoid nonce conflicts:
@@ -43,7 +65,10 @@ Run tests individually to avoid nonce conflicts:
 # Set the private key
 export PRIVATE_KEY=0x7726827caac94a7f9e1b160f7ea819f172f7b6f9d2a97f992c38edeab82d4110
 
-# Test token bridging
+# Test native ETH bridging (requires pre-deployed TestReceiver on L2B)
+forge test --match-test test_sendNativeToken_executedOnDestination -vvv --ffi
+
+# Test ERC20 token bridging
 forge test --match-test test_sendToken_executedOnDestination -vvv --ffi
 
 # Test bundle execution with contract call
@@ -60,21 +85,33 @@ forge test --match-test test_sendL2ToL2Call_executedOnDestination -vvv --ffi
 
 ## Test Descriptions
 
-| Test                                        | Description                                                                                                                                      |
-| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `test_sendToken_executedOnDestination`      | Sends ERC20 tokens from L2A to L2B via NativeTokenVault, verifies the bundle, executes it, and checks that the bundle status is `FullyExecuted` |
-| `test_sendBundle_executedOnDestination`     | Deploys a TestReceiver contract on L2B, sends a bundle with a contract call from L2A, executes it, and verifies the receiver got the message    |
-| `test_sendMessage_verifiedOnDestination`    | Sends a message from L2A and verifies inclusion proof on L2B using `proveL2MessageInclusionShared`                                               |
-| `test_sendL2ToL2Call_executedOnDestination` | Sends an L2-to-L2 call via InteropCenter to a TestReceiver contract and verifies the receiver received the message                               |
+| Test                                          | Description                                                                                                                                      |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `test_sendNativeToken_executedOnDestination`  | Sends native ETH from L2A to L2B via interopCallValue, verifies and executes the bundle. Requires pre-deployed TestReceiver on L2B              |
+| `test_sendToken_executedOnDestination`        | Sends ERC20 tokens from L2A to L2B via NativeTokenVault, verifies the bundle, executes it, and checks that the bundle status is `FullyExecuted` |
+| `test_sendBundle_executedOnDestination`       | Deploys a TestReceiver contract on L2B, sends a bundle with a contract call from L2A, executes it, and verifies the receiver got the message    |
+| `test_sendMessage_verifiedOnDestination`      | Sends a message from L2A and verifies inclusion proof on L2B using `proveL2MessageInclusionShared`                                               |
+| `test_sendL2ToL2Call_executedOnDestination`   | Sends an L2-to-L2 call via InteropCenter to a TestReceiver contract and verifies the receiver received the message                               |
 
 ## Architecture
 
 The tests use:
 
-- **InteropCenter** (`0x10010`): System contract for sending interop messages
-- **InteropHandler** (`0x1000d`): System contract that delivers messages to recipients and tracks bundle status
+- **InteropCenter**: System contract for sending interop messages
+- **InteropHandler**: System contract that delivers messages to recipients and tracks bundle status
 - **TestReceiver**: A contract implementing `IERC7786Recipient` for receiving test messages
 - **InteropScripts**: Foundry script library providing helper functions for sending/verifying/executing interop operations
+
+### System Contract Addresses
+
+The system contract addresses differ between Era and ZKsync OS modes:
+
+| Contract       | Era Mode   | ZKsync OS Mode |
+| -------------- | ---------- | -------------- |
+| InteropCenter  | `0x1000d`  | `0x10010`      |
+| InteropHandler | `0x1000E`  | `0x1000d`      |
+
+Set `USE_ERA_MODE` in `InteropIntegration.t.sol` based on your environment.
 
 ## Test Flow
 

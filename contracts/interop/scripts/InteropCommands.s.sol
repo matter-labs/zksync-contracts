@@ -30,6 +30,9 @@ import {
 } from "../../l1-contracts/common/l2-helpers/L2ContractAddresses.sol";
 
 import {
+  IERC7786Attributes
+} from "../../l1-contracts/interop/IERC7786Attributes.sol";
+import {
   IERC7786GatewaySource
 } from "../../l1-contracts/interop/IERC7786GatewaySource.sol";
 import { IInteropCenter } from "../../l1-contracts/interop/IInteropCenter.sol";
@@ -55,15 +58,54 @@ contract InteropScripts is Script, ZKSProvider {
                             CONFIGURATION
     //////////////////////////////////////////////////////////////*/
 
-  // System contract addresses (these are fixed across all zkSync chains)
-  address public constant INTEROP_CENTER =
-    0x0000000000000000000000000000000000010010;
-  address public constant INTEROP_HANDLER =
+  // Mode flag: true = zksync-era (draft-v31), false = zksync-os
+  // This affects system contract addresses and proof handling
+  bool public useEraMode = true;
+
+  // zksync-era (draft-v31) addresses
+  address public constant ERA_INTEROP_CENTER =
     0x000000000000000000000000000000000001000d;
+  address public constant ERA_INTEROP_HANDLER =
+    0x000000000000000000000000000000000001000E;
+
+  // zksync-os addresses (from L2ContractAddresses.sol)
+  address public constant OS_INTEROP_CENTER =
+    0x0000000000000000000000000000000000010010;
+  address public constant OS_INTEROP_HANDLER =
+    0x000000000000000000000000000000000001000d;
+
+  // Common addresses (same in both modes)
   address public constant INTEROP_ROOT_STORAGE =
     0x0000000000000000000000000000000000010008;
 
+  // Gateway chain ID for interop root queries (used in era mode)
+  uint256 public constant GATEWAY_CHAIN_ID = 506;
+
+  // Gateway RPC URL (used in era mode for waiting on batch execution)
+  string public gatewayRpcUrl = "http://localhost:3150";
+
   bytes1 private constant BUNDLE_IDENTIFIER = 0x01;
+
+  /// @notice Set the Gateway RPC URL
+  function setGatewayRpcUrl(string memory _gatewayRpcUrl) public {
+    gatewayRpcUrl = _gatewayRpcUrl;
+  }
+
+  /// @notice Set the mode for system contract addresses
+  /// @param _useEraMode true for zksync-era, false for zksync-os
+  function setMode(bool _useEraMode) public {
+    useEraMode = _useEraMode;
+  }
+
+  /// @notice Get the InteropCenter address based on current mode
+  function getInteropCenter() public view returns (address) {
+    return useEraMode ? ERA_INTEROP_CENTER : OS_INTEROP_CENTER;
+  }
+
+  /// @notice Get the InteropHandler address based on current mode
+  function getInteropHandler() public view returns (address) {
+    return useEraMode ? ERA_INTEROP_HANDLER : OS_INTEROP_HANDLER;
+  }
 
   bytes32 private constant INTEROP_BUNDLE_SENT_EVENT = keccak256(
     "InteropBundleSent(bytes32,bytes32,(bytes1,uint256,uint256,bytes32,(bytes1,bool,address,address,uint256,bytes)[],(bytes,bytes)))"
@@ -172,9 +214,11 @@ contract InteropScripts is Script, ZKSProvider {
     //////////////////////////////////////////////////////////////*/
 
   /// @notice Send base token from one L2 to another L2 using interop.
-  /// @dev This uses InteropCenter.sendBundle() which only works for L2-to-L2 transfers.
+  /// @dev This uses InteropCenter.sendBundle() with interopCallValue attribute.
+  ///      The recipient MUST be a contract implementing IERC7786Recipient interface.
+  ///      The InteropHandler will mint ETH and call receiveMessage on the recipient.
   /// @param l2RpcUrl The RPC URL for the source L2 chain
-  /// @param l2Receiver The address to receive tokens on the destination L2
+  /// @param l2Receiver The address to receive tokens on the destination L2 (must be IERC7786Recipient contract)
   /// @param unbundlerAddress The address authorized to unbundle on the destination chain
   /// @param amount The amount of tokens to send
   /// @param destinationL2ChainId The chain ID of the destination L2
@@ -186,15 +230,26 @@ contract InteropScripts is Script, ZKSProvider {
     uint256 amount,
     uint256 destinationL2ChainId
   ) public returns (bytes32 txHash) {
-    vm.createSelectFork(l2RpcUrl);
     string memory privateKey = vm.envString("PRIVATE_KEY");
+    address sender = vm.addr(vm.envUint("PRIVATE_KEY"));
 
+    // Build the InteropCallStarter for native token transfer
+    // Uses interopCallValue attribute - recipient must implement IERC7786Recipient
     InteropCallStarter[] memory calls = new InteropCallStarter[](1);
-    calls[0] = InteropLibrary.buildSendDestinationChainBaseTokenCall(
-      destinationL2ChainId, l2Receiver, amount
+    bytes[] memory callAttributes = new bytes[](1);
+    callAttributes[0] = abi.encodeCall(
+      IERC7786Attributes.interopCallValue, (amount)
     );
+    calls[0] = InteropCallStarter({
+      to: InteroperableAddress.formatEvmV1(l2Receiver),
+      data: hex"",
+      callAttributes: callAttributes
+    });
+
+    // Build bundle attributes with execution address and unbundler
+    // executionAddress is REQUIRED for bundles with interopCallValue to be executed
     bytes[] memory bundleAttributes =
-      InteropLibrary.buildBundleAttributes(unbundlerAddress);
+      InteropLibrary.buildBundleAttributes(sender, unbundlerAddress);
 
     bytes memory callData = abi.encodeWithSelector(
       IInteropCenter.sendBundle.selector,
@@ -204,7 +259,7 @@ contract InteropScripts is Script, ZKSProvider {
     );
 
     txHash = _castSendRawWithValue(
-      l2RpcUrl, privateKey, INTEROP_CENTER, callData, amount
+      l2RpcUrl, privateKey, getInteropCenter(), callData, amount
     );
     console.log("Native token bundle sent to chain:", destinationL2ChainId);
     console.log("Amount:", amount);
@@ -254,7 +309,7 @@ contract InteropScripts is Script, ZKSProvider {
       bundleAttributes
     );
 
-    txHash = _castSendRaw(l2RpcUrl, privateKey, INTEROP_CENTER, callData);
+    txHash = _castSendRaw(l2RpcUrl, privateKey, getInteropCenter(), callData);
     console.log(
       "Bundle sent with", targets.length, "calls to chain:", destinationChainId
     );
@@ -293,19 +348,17 @@ contract InteropScripts is Script, ZKSProvider {
     uint256 amount,
     uint256 destinationL2ChainId
   ) public returns (bytes32 bundleHash) {
-    vm.createSelectFork(l2RpcUrl);
     string memory privateKey = vm.envString("PRIVATE_KEY");
 
-    // Step 1: Check if token is registered in NTV, register if needed
-    IL2NativeTokenVault ntv = IL2NativeTokenVault(L2_NATIVE_TOKEN_VAULT_ADDR);
-    bytes32 assetId = ntv.assetId(tokenAddress);
+    // Step 1: Check if token is registered in NTV via FFI, register if needed
+    // We use FFI because zkSync system contracts have EraVM bytecode that can't be called in forge fork
+    bytes32 assetId = _getAssetIdFFI(l2RpcUrl, tokenAddress);
 
     if (assetId == bytes32(0)) {
       console.log("Token not registered in NTV, registering...");
       _castSendRegisterToken(l2RpcUrl, privateKey, tokenAddress);
       // Re-fetch assetId after registration
-      vm.createSelectFork(l2RpcUrl);
-      assetId = ntv.assetId(tokenAddress);
+      assetId = _getAssetIdFFI(l2RpcUrl, tokenAddress);
       require(assetId != bytes32(0), "Token registration failed");
       console.log("Token registered successfully");
     }
@@ -326,7 +379,7 @@ contract InteropScripts is Script, ZKSProvider {
       _buildSendBundleData(assetId, amount, recipient, destinationL2ChainId);
 
     bytes32 txHash =
-      _castSendRaw(l2RpcUrl, privateKey, INTEROP_CENTER, sendBundleData);
+      _castSendRaw(l2RpcUrl, privateKey, getInteropCenter(), sendBundleData);
     console.log("Transaction sent:");
     console.logBytes32(txHash);
 
@@ -372,6 +425,29 @@ contract InteropScripts is Script, ZKSProvider {
     TransactionReceipt memory receipt = getTransactionReceipt(l2RpcUrl, txHash);
     InteropBundle memory bundle = _getInteropBundle(receipt);
     return keccak256(abi.encode(bundle));
+  }
+
+  /// @dev Get assetId from NTV via FFI (cast call) - avoids issues with zkSync system contracts
+  function _getAssetIdFFI(string memory rpcUrl, address tokenAddress)
+    internal
+    returns (bytes32 assetId)
+  {
+    string[] memory cmd = new string[](7);
+    cmd[0] = "cast";
+    cmd[1] = "call";
+    cmd[2] = "--rpc-url";
+    cmd[3] = rpcUrl;
+    cmd[4] = vm.toString(L2_NATIVE_TOKEN_VAULT_ADDR);
+    cmd[5] = "assetId(address)(bytes32)";
+    cmd[6] = vm.toString(tokenAddress);
+
+    bytes memory result = vm.ffi(cmd);
+    // Result is raw bytes (32 bytes for bytes32), read directly
+    if (result.length >= 32) {
+      assembly {
+        assetId := mload(add(result, 32))
+      }
+    }
   }
 
   /// @dev Execute cast send to register token in NTV
@@ -427,7 +503,8 @@ contract InteropScripts is Script, ZKSProvider {
     bytes memory data
   ) internal returns (bytes32 txHash) {
     // Use --json flag to get structured output (must be after --private-key)
-    string[] memory cmd = new string[](10);
+    // Add high gas limit for interop calls which can be expensive
+    string[] memory cmd = new string[](12);
     cmd[0] = "cast";
     cmd[1] = "send";
     cmd[2] = "--legacy";
@@ -436,8 +513,10 @@ contract InteropScripts is Script, ZKSProvider {
     cmd[5] = "--private-key";
     cmd[6] = privateKey;
     cmd[7] = "--json";
-    cmd[8] = vm.toString(target);
-    cmd[9] = vm.toString(data);
+    cmd[8] = "--gas-limit";
+    cmd[9] = "30000000";
+    cmd[10] = vm.toString(target);
+    cmd[11] = vm.toString(data);
 
     bytes memory result = vm.ffi(cmd);
     // Parse JSON to get transactionHash - vm.parseJson returns bytes32 for 0x-prefixed 64-char hex
@@ -490,7 +569,7 @@ contract InteropScripts is Script, ZKSProvider {
       destinationChainId, target, data, executionAddress, unbundlerAddress
     );
 
-    txHash = _castSendRaw(l2RpcUrl, privateKey, INTEROP_CENTER, callData);
+    txHash = _castSendRaw(l2RpcUrl, privateKey, getInteropCenter(), callData);
     console.log("L2->L2 call sent via InteropCenter.sendMessage");
     console.log("Transaction hash:");
     console.logBytes32(txHash);
@@ -591,22 +670,48 @@ contract InteropScripts is Script, ZKSProvider {
     console.log("Source chain ID:", sourceChainId);
 
     // Step 6: Wait for interop root to propagate to destination chain
+    // In era mode: first wait for batch execution on Gateway, then wait for interop root
+    // In os mode: use source chain ID and batch number directly
     console.log("Step 4: Waiting for interop root on destination chain...");
-    waitForInteropRoot(
-      destL2RpcUrl, sourceChainId, logProof.batchNumber, bytes32(0), 300
-    );
+    if (useEraMode) {
+      // First, wait for the batch to be executed on Gateway
+      console.log("Waiting for batch to be executed on Gateway...");
+      waitUntilBlockExecutedOnGateway(
+        sourceL2RpcUrl,
+        gatewayRpcUrl,
+        sourceChainId,
+        receipt.blockNumber,
+        300
+      );
+
+      // Then wait for the interop root
+      uint256 gwBlockNumber = getGWBlockNumber(logProof.proof);
+      console.log("Gateway block number:", gwBlockNumber);
+      waitForInteropRoot(
+        destL2RpcUrl, GATEWAY_CHAIN_ID, gwBlockNumber, bytes32(0), 300
+      );
+    } else {
+      waitForInteropRoot(
+        destL2RpcUrl, sourceChainId, logProof.batchNumber, bytes32(0), 300
+      );
+    }
 
     // Step 7: Build the InteropMessageProof struct
+    // NOTE: In era mode, message.data should be the encoded bundle (without 0x01 prefix)
+    // In os mode, it should be the original L2ToL1 message (with 0x01 prefix)
+    // IMPORTANT: txNumberInBatch must be from l2ToL1Logs, NOT from receipt.transactionIndex
     console.log("Step 5: Building proof struct...");
+    uint16 txNumberInBatch = _getTxNumberInBatch(receipt, 0);
+    console.log("txNumberInBatch:", txNumberInBatch);
     IInteropHandler.InteropMessageProof memory proof =
       IInteropHandler.InteropMessageProof({
         chainId: sourceChainId,
         l1BatchNumber: logProof.batchNumber,
         l2MessageIndex: logProof.id,
         message: L2Message({
-          txNumberInBatch: uint16(receipt.transactionIndex),
-          sender: INTEROP_CENTER,
-          data: l2ToL1Message
+          txNumberInBatch: txNumberInBatch,
+          sender: getInteropCenter(),
+          data: useEraMode ? encodedBundle : l2ToL1Message
         }),
         proof: logProof.proof
       });
@@ -623,8 +728,22 @@ contract InteropScripts is Script, ZKSProvider {
     bytes32 executeTxHash = _castSendRaw(
       destL2RpcUrl, privateKey, interopHandlerAddress, executeBundleCalldata
     );
-    console.log("Bundle executed successfully! Tx hash:");
+    console.log("Execute transaction hash:");
     console.logBytes32(executeTxHash);
+
+    // Verify the transaction succeeded by checking receipt status
+    vm.sleep(2000); // Wait for tx to be processed
+    TransactionReceipt memory execReceipt =
+      getTransactionReceipt(destL2RpcUrl, executeTxHash);
+    require(execReceipt.status, "Execute transaction failed!");
+
+    // Log the bundle hash that was used
+    bytes32 bundleHashUsed = keccak256(
+      abi.encode(sourceChainId, encodedBundle)
+    );
+    console.log("Bundle hash used for execution:");
+    console.logBytes32(bundleHashUsed);
+    console.log("Bundle executed successfully!");
   }
 
   /*//////////////////////////////////////////////////////////////
@@ -663,25 +782,67 @@ contract InteropScripts is Script, ZKSProvider {
       sourceChainId := mload(add(encodedBundle, 96))
     }
 
-    waitForInteropRoot(
-      destL2RpcUrl, sourceChainId, logProof.batchNumber, bytes32(0), 300
-    );
+    // In era mode: first wait for batch execution on Gateway, then wait for interop root
+    // In os mode: use source chain ID and batch number directly
+    if (useEraMode) {
+      // First, wait for the batch to be executed on Gateway
+      console.log("Waiting for batch to be executed on Gateway...");
+      waitUntilBlockExecutedOnGateway(
+        sourceL2RpcUrl,
+        gatewayRpcUrl,
+        sourceChainId,
+        receipt.blockNumber,
+        300
+      );
 
+      // Then wait for the interop root
+      uint256 gwBlockNumber = getGWBlockNumber(logProof.proof);
+      console.log("Gateway block number:", gwBlockNumber);
+      waitForInteropRoot(
+        destL2RpcUrl, GATEWAY_CHAIN_ID, gwBlockNumber, bytes32(0), 300
+      );
+    } else {
+      waitForInteropRoot(
+        destL2RpcUrl, sourceChainId, logProof.batchNumber, bytes32(0), 300
+      );
+    }
+
+    // NOTE: In era mode, message.data should be the encoded bundle (without 0x01 prefix)
+    // In os mode, it should be the original L2ToL1 message (with 0x01 prefix)
+    // IMPORTANT: txNumberInBatch must be from l2ToL1Logs, NOT from receipt.transactionIndex
+    uint16 txNumberInBatch = _getTxNumberInBatch(receipt, 0);
     IInteropHandler.InteropMessageProof memory proof =
       IInteropHandler.InteropMessageProof({
         chainId: sourceChainId,
         l1BatchNumber: logProof.batchNumber,
         l2MessageIndex: logProof.id,
         message: L2Message({
-          txNumberInBatch: uint16(receipt.transactionIndex),
-          sender: INTEROP_CENTER,
-          data: l2ToL1Message
+          txNumberInBatch: txNumberInBatch,
+          sender: getInteropCenter(),
+          data: useEraMode ? encodedBundle : l2ToL1Message
         }),
         proof: logProof.proof
       });
 
-    vm.createSelectFork(destL2RpcUrl);
-    IInteropHandler(interopHandlerAddress).verifyBundle(encodedBundle, proof);
+    // Use FFI to send the verifyBundle transaction to the real chain
+    string memory privateKey = vm.envString("PRIVATE_KEY");
+
+    // Build the verifyBundle calldata
+    bytes memory verifyBundleCalldata = abi.encodeWithSelector(
+      IInteropHandler.verifyBundle.selector, encodedBundle, proof
+    );
+
+    bytes32 verifyTxHash = _castSendRaw(
+      destL2RpcUrl, privateKey, interopHandlerAddress, verifyBundleCalldata
+    );
+    console.log("Verify transaction hash:");
+    console.logBytes32(verifyTxHash);
+
+    // Verify the transaction succeeded by checking receipt status
+    vm.sleep(2000); // Wait for tx to be processed
+    TransactionReceipt memory verifyReceipt =
+      getTransactionReceipt(destL2RpcUrl, verifyTxHash);
+    require(verifyReceipt.status, "Verify transaction failed!");
 
     console.log("Bundle verified successfully!");
   }
@@ -702,12 +863,13 @@ contract InteropScripts is Script, ZKSProvider {
   {
     TransactionReceipt memory receipt = getTransactionReceipt(l2RpcUrl, txHash);
 
-    // Find the InteropBundleSent event from INTEROP_CENTER
+    // Find the InteropBundleSent event from InteropCenter
     // Event: InteropBundleSent(bytes32 l2l1MsgHash, bytes32 interopBundleHash, InteropBundle bundle)
     // None of the params are indexed, so topics[0] is the event sig, data contains all params
+    address interopCenter = getInteropCenter();
     for (uint256 i = 0; i < receipt.logs.length; i++) {
       if (
-        receipt.logs[i].addr == INTEROP_CENTER
+        receipt.logs[i].addr == interopCenter
           && receipt.logs[i].topics.length > 0
           && receipt.logs[i].topics[0] == INTEROP_BUNDLE_SENT_EVENT
       ) {
@@ -735,7 +897,7 @@ contract InteropScripts is Script, ZKSProvider {
     returns (BundleStatus status)
   {
     vm.createSelectFork(l2RpcUrl);
-    status = IInteropHandler(INTEROP_HANDLER).bundleStatus(bundleHash);
+    status = IInteropHandler(getInteropHandler()).bundleStatus(bundleHash);
 
     string memory statusStr;
     if (status == BundleStatus.Unreceived) statusStr = "Unreceived";
@@ -757,7 +919,7 @@ contract InteropScripts is Script, ZKSProvider {
     uint256 callIndex
   ) public returns (CallStatus status) {
     vm.createSelectFork(l2RpcUrl);
-    status = IInteropHandler(INTEROP_HANDLER).callStatus(bundleHash, callIndex);
+    status = IInteropHandler(getInteropHandler()).callStatus(bundleHash, callIndex);
 
     string memory statusStr;
     if (status == CallStatus.Unprocessed) statusStr = "Unprocessed";
@@ -1038,9 +1200,10 @@ contract InteropScripts is Script, ZKSProvider {
     view
     returns (InteropBundle memory bundle)
   {
+    address interopCenter = getInteropCenter();
     uint256 logsLen = receipt.logs.length;
     for (uint256 i = 0; i < logsLen; ++i) {
-      if (receipt.logs[i].addr != INTEROP_CENTER) {
+      if (receipt.logs[i].addr != interopCenter) {
         continue;
       }
       if (
@@ -1054,5 +1217,18 @@ contract InteropScripts is Script, ZKSProvider {
       return bundle;
     }
     revert("Interop bundle event not found");
+  }
+
+  /// @dev Get txNumberInBatch from L2ToL1 logs
+  /// @param receipt The transaction receipt containing l2ToL1Logs
+  /// @param index The index of the L2ToL1 log to use
+  /// @return txNumberInBatch The transaction number within the batch
+  function _getTxNumberInBatch(TransactionReceipt memory receipt, uint256 index)
+    internal
+    pure
+    returns (uint16 txNumberInBatch)
+  {
+    require(receipt.l2ToL1Logs.length > index, "L2ToL1 log index out of bounds");
+    txNumberInBatch = uint16(receipt.l2ToL1Logs[index].txIndexInL1Batch);
   }
 }

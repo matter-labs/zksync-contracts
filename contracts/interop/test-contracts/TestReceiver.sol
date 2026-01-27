@@ -8,11 +8,21 @@ pragma solidity ^0.8.24;
  *      Must be deployed separately on the destination chain.
  */
 contract TestReceiver {
-  address constant INTEROP_HANDLER = 0x000000000000000000000000000000000001000d;
+  // InteropHandler addresses differ between Era and OS modes:
+  // - Era mode: 0x1000E
+  // - OS mode:  0x1000d
+  address public immutable interopHandler;
 
   bytes public lastPayload;
   bytes public lastSender;
   uint256 public messageCount;
+
+  /// @param _interopHandler The InteropHandler address for this chain
+  ///        Era mode: 0x000000000000000000000000000000000001000E
+  ///        OS mode:  0x000000000000000000000000000000000001000d
+  constructor(address _interopHandler) {
+    interopHandler = _interopHandler;
+  }
 
   /// @notice ERC-7786 receiveMessage function
   /// @param sender The ERC-7930 interoperable address of the sender
@@ -24,7 +34,7 @@ contract TestReceiver {
     bytes calldata payload
   ) external payable returns (bytes4) {
     // Only accept messages from interop handler
-    require(msg.sender == INTEROP_HANDLER, "must come from interop handler");
+    require(msg.sender == interopHandler, "must come from interop handler");
 
     lastPayload = payload;
     lastSender = sender;

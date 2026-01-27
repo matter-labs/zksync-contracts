@@ -35,24 +35,95 @@ contract InteropIntegrationTest is Test {
   InteropScripts public interop;
 
   // Chain configuration
-  string constant L2A_RPC = "http://localhost:3050";
-  string constant L2B_RPC = "http://localhost:3051";
-  uint256 constant L2A_CHAIN_ID = 6565;
-  uint256 constant L2B_CHAIN_ID = 6566;
+  // Era (source) -> Gateway (settlement) -> Validium (destination)
+  string constant L2A_RPC = "http://localhost:3050"; // Era (source chain)
+  string constant GATEWAY_RPC = "http://localhost:3150"; // Gateway (settlement layer)
+  string constant L2B_RPC = "http://localhost:3250"; // Validium (destination chain)
+  uint256 constant L2A_CHAIN_ID = 271; // Era chain ID
+  uint256 constant GATEWAY_CHAIN_ID = 506; // Gateway chain ID
+  uint256 constant L2B_CHAIN_ID = 260; // Validium chain ID
 
   // Test token on L2A
-  address constant TEST_TOKEN = 0xe441CF0795aF14DdB9f7984Da85CD36DB1B8790d;
+  address constant TEST_TOKEN = 0xb006D023F4cCaEAa2813f0DbBbFf9c8e511F1f55;
 
   // Test account (rich account from local setup)
   address constant TEST_ACCOUNT = 0x36615Cf349d7F6344891B1e7CA7C72883F5dc049;
 
-  // System contracts
-  address constant INTEROP_HANDLER = 0x000000000000000000000000000000000001000d;
+  // Pre-deployed TestReceiver on L2B for native token tests (Era mode)
+  // Must implement IERC7786Recipient to receive ETH via InteropHandler
+  // Deployed with constructor arg: ERA_INTEROP_HANDLER (0x1000E)
+  // For OS mode, deploy with OS_INTEROP_HANDLER (0x1000d) and update this address
+  address constant TEST_RECEIVER_L2B = 0x4B5DF730c2e6b28E17013A1485E5d9BC41Efe021;
+
+  // Use era mode by default (for local testing with zksync-era draft-v31)
+  // Set to false for zksync-os mode
+  bool constant USE_ERA_MODE = true;
 
   function setUp() public {
     interop = new InteropScripts();
+    // Set the mode (era vs zksync-os) - affects contract addresses and proof handling
+    interop.setMode(USE_ERA_MODE);
+    // Set the Gateway RPC URL for era mode
+    interop.setGatewayRpcUrl(GATEWAY_RPC);
     // Make the interop contract persistent across fork switches
     vm.makePersistent(address(interop));
+  }
+
+  /// @notice Get the InteropHandler address based on current mode
+  function getInteropHandler() internal view returns (address) {
+    return interop.getInteropHandler();
+  }
+
+  /*//////////////////////////////////////////////////////////////
+                            SEND NATIVE TOKEN TEST
+    //////////////////////////////////////////////////////////////*/
+
+  /// @notice Test sending native token (ETH) from L2A to L2B
+  /// @dev Flow: send -> get bundle hash -> verify (waits for interop root) -> execute -> check balance
+  ///      The recipient must implement IERC7786Recipient because InteropHandler calls receiveMessage()
+  function test_sendNativeToken_executedOnDestination() public {
+    uint256 amount = 0.001 ether;
+
+    // Step 1: Send native tokens from L2A (Era) to L2B
+    // Note: recipient must implement IERC7786Recipient - InteropHandler calls receiveMessage{value: amount}()
+    console.log("Step 1: Sending native tokens from L2A to L2B...");
+    bytes32 txHash = interop.sendNativeToL2(
+      L2A_RPC,
+      TEST_RECEIVER_L2B, // recipient - must be contract implementing IERC7786Recipient
+      TEST_ACCOUNT, // unbundler
+      amount,
+      L2B_CHAIN_ID
+    );
+    console.log("sendNativeToL2 tx hash:");
+    console.logBytes32(txHash);
+    assertTrue(txHash != bytes32(0), "Transaction hash should not be zero");
+
+    // Step 2: Get bundle hash from the transaction
+    console.log("Step 2: Getting bundle hash...");
+    bytes32 bundleHash = interop.getBundleHash(L2A_RPC, txHash);
+    console.log("Bundle hash:");
+    console.logBytes32(bundleHash);
+    assertTrue(bundleHash != bytes32(0), "Bundle hash should not be zero");
+
+    // Step 3: Verify bundle (this waits for interop root to be available)
+    console.log("Step 3: Verifying bundle (waiting for interop root)...");
+    interop.verifyInteropBundle(L2B_RPC, L2A_RPC, txHash, getInteropHandler());
+    console.log("Bundle verified!");
+
+    // Step 4: Execute the bundle on destination chain
+    console.log("Step 4: Executing bundle on destination...");
+    interop.executeInteropBundle(L2B_RPC, L2A_RPC, txHash, getInteropHandler());
+
+    // Step 5: Check bundle status via FFI (to get fresh state from chain)
+    console.log("Step 5: Checking bundle status...");
+    vm.sleep(2000); // Wait for transaction to be processed
+    BundleStatus status = _getBundleStatusFFI(L2B_RPC, bundleHash);
+    console.log("Bundle status:", uint8(status));
+    assertEq(
+      uint8(status),
+      uint8(BundleStatus.FullyExecuted),
+      "Bundle should be fully executed"
+    );
   }
 
   /*//////////////////////////////////////////////////////////////
@@ -82,12 +153,12 @@ contract InteropIntegrationTest is Test {
 
     // Step 3: Verify bundle (this waits for interop root to be available)
     console.log("Step 3: Verifying bundle (waiting for interop root)...");
-    interop.verifyInteropBundle(L2B_RPC, L2A_RPC, txHash, INTEROP_HANDLER);
+    interop.verifyInteropBundle(L2B_RPC, L2A_RPC, txHash, getInteropHandler());
     console.log("Bundle verified!");
 
     // Step 4: Execute the bundle on destination chain
     console.log("Step 4: Executing bundle on destination...");
-    interop.executeInteropBundle(L2B_RPC, L2A_RPC, txHash, INTEROP_HANDLER);
+    interop.executeInteropBundle(L2B_RPC, L2A_RPC, txHash, getInteropHandler());
 
     // Step 5: Check bundle status via FFI (to get fresh state from chain)
     console.log("Step 5: Checking bundle status...");
@@ -174,12 +245,12 @@ contract InteropIntegrationTest is Test {
 
     // Step 3: Verify bundle (waits for interop root)
     console.log("Step 3: Verifying bundle...");
-    interop.verifyInteropBundle(L2B_RPC, L2A_RPC, txHash, INTEROP_HANDLER);
+    interop.verifyInteropBundle(L2B_RPC, L2A_RPC, txHash, getInteropHandler());
     console.log("Bundle verified!");
 
     // Step 4: Execute bundle on destination
     console.log("Step 4: Executing bundle...");
-    interop.executeInteropBundle(L2B_RPC, L2A_RPC, txHash, INTEROP_HANDLER);
+    interop.executeInteropBundle(L2B_RPC, L2A_RPC, txHash, getInteropHandler());
 
     // Step 5: Verify bundle was executed via FFI
     console.log("Step 5: Checking bundle status...");
@@ -242,12 +313,12 @@ contract InteropIntegrationTest is Test {
 
     // Step 3: Verify bundle (waits for interop root)
     console.log("Step 3: Verifying bundle...");
-    interop.verifyInteropBundle(L2B_RPC, L2A_RPC, txHash, INTEROP_HANDLER);
+    interop.verifyInteropBundle(L2B_RPC, L2A_RPC, txHash, getInteropHandler());
     console.log("Bundle verified!");
 
     // Step 4: Execute bundle on destination
     console.log("Step 4: Executing bundle...");
-    interop.executeInteropBundle(L2B_RPC, L2A_RPC, txHash, INTEROP_HANDLER);
+    interop.executeInteropBundle(L2B_RPC, L2A_RPC, txHash, getInteropHandler());
 
     // Step 5: Verify bundle was executed via FFI
     console.log("Step 5: Checking bundle status...");
@@ -281,7 +352,7 @@ contract InteropIntegrationTest is Test {
     string[] memory cmd = new string[](7);
     cmd[0] = "cast";
     cmd[1] = "call";
-    cmd[2] = vm.toString(INTEROP_HANDLER);
+    cmd[2] = vm.toString(getInteropHandler());
     cmd[3] = "bundleStatus(bytes32)(uint8)";
     cmd[4] = vm.toString(bundleHash);
     cmd[5] = "--rpc-url";
@@ -302,14 +373,17 @@ contract InteropIntegrationTest is Test {
   }
 
   /// @dev Deploy TestReceiver contract on destination chain via FFI
+  /// @param rpcUrl RPC URL of the destination chain
+  /// @return deployedAddr Address of the deployed TestReceiver contract
   function _deployTestReceiverFFI(string memory rpcUrl)
     internal
     returns (address)
   {
     string memory privateKey = vm.envString("PRIVATE_KEY");
 
-    // Use forge create to deploy the contract
-    string[] memory cmd = new string[](9);
+    // Use forge create to deploy the contract with constructor args
+    // TestReceiver(address _interopHandler) - pass the correct InteropHandler address
+    string[] memory cmd = new string[](11);
     cmd[0] = "forge";
     cmd[1] = "create";
     cmd[2] = "contracts/interop/test-contracts/TestReceiver.sol:TestReceiver";
@@ -319,6 +393,8 @@ contract InteropIntegrationTest is Test {
     cmd[6] = privateKey;
     cmd[7] = "--json";
     cmd[8] = "--broadcast";
+    cmd[9] = "--constructor-args";
+    cmd[10] = vm.toString(getInteropHandler()); // Pass InteropHandler address based on mode
 
     bytes memory result = vm.ffi(cmd);
     string memory resultStr = string(result);

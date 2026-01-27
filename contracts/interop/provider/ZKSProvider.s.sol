@@ -294,6 +294,16 @@ contract ZKSProvider is Script {
     bytes32 txHash,
     uint64 logIndex
   ) internal returns (L2ToL1LogProof memory proof) {
+    // Use "proof_based_gw" for interop proofs that go through Gateway
+    return _getL2ToL1LogProofWithMode(l2RpcUrl, txHash, logIndex, "proof_based_gw");
+  }
+
+  function _getL2ToL1LogProofWithMode(
+    string memory l2RpcUrl,
+    bytes32 txHash,
+    uint64 logIndex,
+    string memory mode
+  ) internal returns (L2ToL1LogProof memory proof) {
     string[] memory args = new string[](10);
     args[0] = "curl";
     args[1] = "-s";
@@ -309,8 +319,10 @@ contract ZKSProvider is Script {
       vm.toString(txHash),
       '",',
       vm.toString(logIndex),
-      "]}"
-    ); // todo later: add ,"proof_based_gw" for interop
+      ',"',
+      mode,
+      '"]}'
+    );
     // Execute RPC call
 
     bytes memory nullProofBytes =
@@ -559,15 +571,214 @@ contract ZKSProvider is Script {
     revert("L2ToL1 message not found at specified index");
   }
 
+  /// @notice Wait until the batch containing the block is executed on the Gateway
+  /// @dev This is required because interop roots are only available after Gateway execution
+  /// @param sourceRpcUrl RPC URL for the source chain
+  /// @param gatewayRpcUrl RPC URL for the Gateway chain
+  /// @param sourceChainId Chain ID of the source chain (to look up ZKChain on Gateway)
+  /// @param blockNumber Block number on source chain to wait for
+  /// @param maxWaitSeconds Maximum seconds to wait
+  function waitUntilBlockExecutedOnGateway(
+    string memory sourceRpcUrl,
+    string memory gatewayRpcUrl,
+    uint256 sourceChainId,
+    uint256 blockNumber,
+    uint256 maxWaitSeconds
+  ) internal {
+    // First get the L1 batch number for this block from source chain
+    uint256 batchNumber = _getL1BatchNumberForBlock(sourceRpcUrl, blockNumber);
+    console.log("Block", blockNumber, "is in batch", batchNumber);
+
+    // Get the ZKChain address on Gateway for this source chain
+    address zkChainAddr =
+      _getZKChainAddress(gatewayRpcUrl, sourceChainId);
+    console.log("ZKChain address on Gateway:", zkChainAddr);
+
+    // Wait until the batch is executed on Gateway
+    uint256 waited = 0;
+    uint256 interval = 5;
+
+    while (waited < maxWaitSeconds) {
+      uint256 executedBatches =
+        _getTotalBatchesExecuted(gatewayRpcUrl, zkChainAddr);
+      console.log(
+        "Executed batches on Gateway:",
+        executedBatches,
+        "/ waiting for:",
+        batchNumber
+      );
+
+      if (executedBatches >= batchNumber) {
+        console.log("Batch executed on Gateway!");
+        return;
+      }
+
+      vm.sleep(interval * 1000);
+      waited += interval;
+    }
+    revert("Timeout waiting for batch execution on Gateway");
+  }
+
+  /// @dev Get the L1 batch number for a given block using zks_getBlockDetails
+  function _getL1BatchNumberForBlock(
+    string memory rpcUrl,
+    uint256 blockNumber
+  ) internal returns (uint256) {
+    string[] memory args = new string[](10);
+    args[0] = "curl";
+    args[1] = "-s";
+    args[2] = "--request";
+    args[3] = "POST";
+    args[4] = "--url";
+    args[5] = rpcUrl;
+    args[6] = "--header";
+    args[7] = "Content-Type: application/json";
+    args[8] = "--data";
+    args[9] = string.concat(
+      '{"jsonrpc":"2.0","method":"zks_getBlockDetails","params":[',
+      vm.toString(blockNumber),
+      '],"id":1}'
+    );
+
+    bytes memory result = vm.ffi(args);
+    string memory json = string(result);
+
+    bytes memory batchBytes = vm.parseJson(json, "$.result.l1BatchNumber");
+    return abi.decode(batchBytes, (uint256));
+  }
+
+  /// @dev Get the ZKChain address for a given chain ID from the Gateway's Bridgehub
+  function _getZKChainAddress(
+    string memory gatewayRpcUrl,
+    uint256 chainId
+  ) internal returns (address) {
+    address L2_BRIDGEHUB = 0x0000000000000000000000000000000000010002;
+
+    // Build the calldata: selector(getZKChain) + chainId
+    // selector = 0xe680c4c1
+    bytes memory callData = abi.encodeWithSelector(0xe680c4c1, chainId);
+
+    string[] memory args = new string[](10);
+    args[0] = "curl";
+    args[1] = "-s";
+    args[2] = "--request";
+    args[3] = "POST";
+    args[4] = "--url";
+    args[5] = gatewayRpcUrl;
+    args[6] = "--header";
+    args[7] = "Content-Type: application/json";
+    args[8] = "--data";
+    args[9] = string.concat(
+      '{"jsonrpc":"2.0","method":"eth_call","params":[{"to":"',
+      vm.toString(L2_BRIDGEHUB),
+      '","data":"',
+      vm.toString(callData),
+      '"},"latest"],"id":1}'
+    );
+
+    bytes memory result = vm.ffi(args);
+    string memory json = string(result);
+
+    // Parse the result from JSON response
+    bytes memory resultBytes = vm.parseJson(json, "$.result");
+    bytes32 resultData = abi.decode(resultBytes, (bytes32));
+    return address(uint160(uint256(resultData)));
+  }
+
+  /// @dev Trim trailing newline from bytes
+  function _trimNewline(bytes memory input) internal pure returns (string memory) {
+    uint256 len = input.length;
+    while (len > 0 && (input[len - 1] == 0x0a || input[len - 1] == 0x0d)) {
+      len--;
+    }
+    bytes memory trimmed = new bytes(len);
+    for (uint256 i = 0; i < len; i++) {
+      trimmed[i] = input[i];
+    }
+    return string(trimmed);
+  }
+
+  /// @dev Get total batches executed from ZKChain contract (GettersFacet)
+  function _getTotalBatchesExecuted(
+    string memory rpcUrl,
+    address zkChainAddr
+  ) internal returns (uint256) {
+    // Build the calldata: selector(getTotalBatchesExecuted)
+    // selector = 0xb8c2f66f
+    bytes memory callData = abi.encodeWithSelector(0xb8c2f66f);
+
+    string[] memory args = new string[](10);
+    args[0] = "curl";
+    args[1] = "-s";
+    args[2] = "--request";
+    args[3] = "POST";
+    args[4] = "--url";
+    args[5] = rpcUrl;
+    args[6] = "--header";
+    args[7] = "Content-Type: application/json";
+    args[8] = "--data";
+    args[9] = string.concat(
+      '{"jsonrpc":"2.0","method":"eth_call","params":[{"to":"',
+      vm.toString(zkChainAddr),
+      '","data":"',
+      vm.toString(callData),
+      '"},"latest"],"id":1}'
+    );
+
+    bytes memory result = vm.ffi(args);
+    string memory json = string(result);
+
+    // Parse the result from JSON response
+    bytes memory resultBytes = vm.parseJson(json, "$.result");
+    bytes32 resultData = abi.decode(resultBytes, (bytes32));
+    return uint256(resultData);
+  }
+
+  /// @notice Extract Gateway block number from the proof array
+  /// @dev See hashProof in MessageHashing.sol for this logic.
+  ///      The proof encodes indices in the first element:
+  ///      - proof[0] format: 0x[byte0][byte1][byte2][byte3]...
+  ///      - TypeScript: proof[0].slice(4,6) = hex chars 4-6 = byte1, proof[0].slice(6,8) = byte2
+  ///      - gwProofIndex = 1 + byte1 + 1 + byte2
+  ///      The Gateway block number is at proof[gwProofIndex].slice(2,34) = first 16 bytes as uint128
+  /// @param proof The proof array from L2ToL1LogProof
+  /// @return gwBlockNumber The Gateway block number
+  function getGWBlockNumber(bytes32[] memory proof)
+    internal
+    pure
+    returns (uint256 gwBlockNumber)
+  {
+    if (proof.length == 0) return 0;
+
+    // Parse the indices from proof[0]
+    // proof[0] format: 0x010f0800... where byte1=0x0f (15), byte2=0x08 (8)
+    // gwProofIndex = 1 + byte1 + 1 + byte2 = 1 + 15 + 1 + 8 = 25
+    bytes32 first = proof[0];
+    // Shift by 8 bits to get byte1 in the highest position, then cast to uint8
+    uint8 offset1 = uint8(uint256(first) >> 240); // byte1: shift right by 30 bytes (240 bits)
+    uint8 offset2 = uint8(uint256(first) >> 232); // byte2: shift right by 29 bytes (232 bits)
+    uint256 gwProofIndex = 1 + uint256(offset1) + 1 + uint256(offset2);
+
+    if (gwProofIndex >= proof.length) return 0;
+
+    // The Gateway block number is in the first 16 bytes of proof[gwProofIndex]
+    // TypeScript: proof[gwProofIndex].slice(2, 34) = first 16 bytes interpreted as number
+    bytes32 gwProofElement = proof[gwProofIndex];
+    // Shift right by 128 bits to get the upper 16 bytes as the value
+    gwBlockNumber = uint256(gwProofElement) >> 128;
+  }
+
   /// @notice Wait for interop root to become available on destination chain.
+  /// @dev For zksync-era mode, uses GATEWAY_CHAIN_ID and Gateway block number.
+  ///      For zksync-os mode, uses source chain ID and batch number directly.
   /// @param destRpcUrl The RPC URL for the destination chain
-  /// @param sourceChainId The chain ID of the source chain
-  /// @param batchNumber The L1 batch number to check
+  /// @param chainIdForQuery The chain ID to query (Gateway chain ID for era, source chain for os)
+  /// @param batchNumber The batch/block number to check
   /// @param expectedRoot The expected interop root (optional, pass bytes32(0) to skip verification)
   /// @param maxWaitSeconds Maximum seconds to wait (default 300)
   function waitForInteropRoot(
     string memory destRpcUrl,
-    uint256 sourceChainId,
+    uint256 chainIdForQuery,
     uint256 batchNumber,
     bytes32 expectedRoot,
     uint256 maxWaitSeconds
@@ -575,26 +786,30 @@ contract ZKSProvider is Script {
     address INTEROP_ROOT_STORAGE = 0x0000000000000000000000000000000000010008;
     uint256 waited = 0;
     uint256 interval = 5;
+    string memory privateKey = vm.envString("PRIVATE_KEY");
+
+    console.log("Waiting for interop root for chain", chainIdForQuery, "block", batchNumber);
 
     while (waited < maxWaitSeconds) {
-      // Call interopRoots(chainId, batchNumber) via FFI
-      string[] memory args = new string[](7);
-      args[0] = "cast";
-      args[1] = "call";
-      args[2] = vm.toString(INTEROP_ROOT_STORAGE);
-      args[3] = "interopRoots(uint256,uint256)(bytes32)";
-      args[4] = vm.toString(sourceChainId);
-      args[5] = vm.toString(batchNumber);
-      args[6] = string.concat("--rpc-url=", destRpcUrl);
+      // Send a dummy self-transfer transaction to force the L2 to update interop root storage
+      // This is required because the interop root is lazily updated during transaction processing
+      console.log("Sending dummy transaction to trigger interop root update...");
+      _sendDummyTransaction(destRpcUrl, privateKey);
 
-      bytes memory result = vm.ffi(args);
-      root = bytes32(result);
+      // Query the exact block number
+      root = _queryInteropRoot(destRpcUrl, INTEROP_ROOT_STORAGE, chainIdForQuery, batchNumber);
 
       if (root != bytes32(0)) {
         if (expectedRoot == bytes32(0) || root == expectedRoot) {
-          console.log("Interop root available for batch", batchNumber);
+          console.log("Interop root available for block", batchNumber);
           return root;
         }
+      }
+
+      // On first iteration, print available roots around the requested block for debugging
+      if (waited == 0) {
+        console.log("Checking nearby blocks for available interop roots...");
+        _printNearbyInteropRoots(destRpcUrl, INTEROP_ROOT_STORAGE, chainIdForQuery, batchNumber);
       }
 
       console.log("Waiting for interop root... (", waited, "s)");
@@ -602,6 +817,67 @@ contract ZKSProvider is Script {
       waited += interval;
     }
     revert("Timeout waiting for interop root");
+  }
+
+  /// @dev Query interop root for a specific chain and block
+  function _queryInteropRoot(
+    string memory rpcUrl,
+    address storage_,
+    uint256 chainId,
+    uint256 blockNum
+  ) internal returns (bytes32) {
+    string[] memory args = new string[](7);
+    args[0] = "cast";
+    args[1] = "call";
+    args[2] = vm.toString(storage_);
+    args[3] = "interopRoots(uint256,uint256)(bytes32)";
+    args[4] = vm.toString(chainId);
+    args[5] = vm.toString(blockNum);
+    args[6] = string.concat("--rpc-url=", rpcUrl);
+
+    bytes memory result = vm.ffi(args);
+    return bytes32(result);
+  }
+
+  /// @dev Print nearby interop roots for debugging
+  function _printNearbyInteropRoots(
+    string memory rpcUrl,
+    address storage_,
+    uint256 chainId,
+    uint256 targetBlock
+  ) internal {
+    // Check blocks around the target block (target-5 to target+10)
+    uint256 start = targetBlock > 5 ? targetBlock - 5 : 0;
+    uint256 end = targetBlock + 10;
+
+    for (uint256 i = start; i <= end; i++) {
+      bytes32 r = _queryInteropRoot(rpcUrl, storage_, chainId, i);
+      if (r != bytes32(0)) {
+        console.log("  Block", i, "has interop root");
+      }
+    }
+  }
+
+  /// @dev Send a dummy self-transfer to trigger interop root update on the chain
+  function _sendDummyTransaction(
+    string memory rpcUrl,
+    string memory privateKey
+  ) internal {
+    // Get the sender address from private key
+    address sender = vm.addr(vm.parseUint(privateKey));
+
+    // Send 1 wei to self using cast send
+    string[] memory args = new string[](8);
+    args[0] = "cast";
+    args[1] = "send";
+    args[2] = "--rpc-url";
+    args[3] = rpcUrl;
+    args[4] = "--private-key";
+    args[5] = privateKey;
+    args[6] = vm.toString(sender);
+    args[7] = "--value=1wei";
+
+    vm.ffi(args);
   }
 
   function parseL2ToL1LogProof(bytes memory jsonResponse)
@@ -613,8 +889,8 @@ contract ZKSProvider is Script {
     bytes memory proofIdBytes = vm.parseJson(json, "$.result.id");
     proof.id = abi.decode(proofIdBytes, (uint64));
 
-    // Parse batchNumber from the proof json (with key "batch_number")
-    bytes memory batchNumberBytes = vm.parseJson(json, "$.result.batch_number");
+    // Parse batchNumber from the proof json (camelCase in JSON response)
+    bytes memory batchNumberBytes = vm.parseJson(json, "$.result.batchNumber");
     proof.batchNumber = abi.decode(batchNumberBytes, (uint256));
 
     string memory proofJson = callParseAltLog(json, "parse-proof.sh");
