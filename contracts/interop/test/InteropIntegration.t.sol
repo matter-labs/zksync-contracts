@@ -53,7 +53,8 @@ contract InteropIntegrationTest is Test {
   // Must implement IERC7786Recipient to receive ETH via InteropHandler
   // Deployed with constructor arg: ERA_INTEROP_HANDLER (0x1000E)
   // For OS mode, deploy with OS_INTEROP_HANDLER (0x1000d) and update this address
-  address constant TEST_RECEIVER_L2B = 0x4B5DF730c2e6b28E17013A1485E5d9BC41Efe021;
+  address constant TEST_RECEIVER_L2B =
+    0x4B5DF730c2e6b28E17013A1485E5d9BC41Efe021;
 
   // Use era mode by default (for local testing with zksync-era draft-v31)
   // Set to false for zksync-os mode

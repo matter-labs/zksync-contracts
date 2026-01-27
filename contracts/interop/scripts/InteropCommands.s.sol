@@ -237,9 +237,8 @@ contract InteropScripts is Script, ZKSProvider {
     // Uses interopCallValue attribute - recipient must implement IERC7786Recipient
     InteropCallStarter[] memory calls = new InteropCallStarter[](1);
     bytes[] memory callAttributes = new bytes[](1);
-    callAttributes[0] = abi.encodeCall(
-      IERC7786Attributes.interopCallValue, (amount)
-    );
+    callAttributes[0] =
+      abi.encodeCall(IERC7786Attributes.interopCallValue, (amount));
     calls[0] = InteropCallStarter({
       to: InteroperableAddress.formatEvmV1(l2Receiver),
       data: hex"",
@@ -677,11 +676,7 @@ contract InteropScripts is Script, ZKSProvider {
       // First, wait for the batch to be executed on Gateway
       console.log("Waiting for batch to be executed on Gateway...");
       waitUntilBlockExecutedOnGateway(
-        sourceL2RpcUrl,
-        gatewayRpcUrl,
-        sourceChainId,
-        receipt.blockNumber,
-        300
+        sourceL2RpcUrl, gatewayRpcUrl, sourceChainId, receipt.blockNumber, 300
       );
 
       // Then wait for the interop root
@@ -738,9 +733,7 @@ contract InteropScripts is Script, ZKSProvider {
     require(execReceipt.status, "Execute transaction failed!");
 
     // Log the bundle hash that was used
-    bytes32 bundleHashUsed = keccak256(
-      abi.encode(sourceChainId, encodedBundle)
-    );
+    bytes32 bundleHashUsed = keccak256(abi.encode(sourceChainId, encodedBundle));
     console.log("Bundle hash used for execution:");
     console.logBytes32(bundleHashUsed);
     console.log("Bundle executed successfully!");
@@ -788,11 +781,7 @@ contract InteropScripts is Script, ZKSProvider {
       // First, wait for the batch to be executed on Gateway
       console.log("Waiting for batch to be executed on Gateway...");
       waitUntilBlockExecutedOnGateway(
-        sourceL2RpcUrl,
-        gatewayRpcUrl,
-        sourceChainId,
-        receipt.blockNumber,
-        300
+        sourceL2RpcUrl, gatewayRpcUrl, sourceChainId, receipt.blockNumber, 300
       );
 
       // Then wait for the interop root
@@ -919,7 +908,8 @@ contract InteropScripts is Script, ZKSProvider {
     uint256 callIndex
   ) public returns (CallStatus status) {
     vm.createSelectFork(l2RpcUrl);
-    status = IInteropHandler(getInteropHandler()).callStatus(bundleHash, callIndex);
+    status =
+      IInteropHandler(getInteropHandler()).callStatus(bundleHash, callIndex);
 
     string memory statusStr;
     if (status == CallStatus.Unprocessed) statusStr = "Unprocessed";

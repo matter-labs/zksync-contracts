@@ -295,7 +295,8 @@ contract ZKSProvider is Script {
     uint64 logIndex
   ) internal returns (L2ToL1LogProof memory proof) {
     // Use "proof_based_gw" for interop proofs that go through Gateway
-    return _getL2ToL1LogProofWithMode(l2RpcUrl, txHash, logIndex, "proof_based_gw");
+    return
+      _getL2ToL1LogProofWithMode(l2RpcUrl, txHash, logIndex, "proof_based_gw");
   }
 
   function _getL2ToL1LogProofWithMode(
@@ -590,8 +591,7 @@ contract ZKSProvider is Script {
     console.log("Block", blockNumber, "is in batch", batchNumber);
 
     // Get the ZKChain address on Gateway for this source chain
-    address zkChainAddr =
-      _getZKChainAddress(gatewayRpcUrl, sourceChainId);
+    address zkChainAddr = _getZKChainAddress(gatewayRpcUrl, sourceChainId);
     console.log("ZKChain address on Gateway:", zkChainAddr);
 
     // Wait until the batch is executed on Gateway
@@ -620,10 +620,10 @@ contract ZKSProvider is Script {
   }
 
   /// @dev Get the L1 batch number for a given block using zks_getBlockDetails
-  function _getL1BatchNumberForBlock(
-    string memory rpcUrl,
-    uint256 blockNumber
-  ) internal returns (uint256) {
+  function _getL1BatchNumberForBlock(string memory rpcUrl, uint256 blockNumber)
+    internal
+    returns (uint256)
+  {
     string[] memory args = new string[](10);
     args[0] = "curl";
     args[1] = "-s";
@@ -648,10 +648,10 @@ contract ZKSProvider is Script {
   }
 
   /// @dev Get the ZKChain address for a given chain ID from the Gateway's Bridgehub
-  function _getZKChainAddress(
-    string memory gatewayRpcUrl,
-    uint256 chainId
-  ) internal returns (address) {
+  function _getZKChainAddress(string memory gatewayRpcUrl, uint256 chainId)
+    internal
+    returns (address)
+  {
     address L2_BRIDGEHUB = 0x0000000000000000000000000000000000010002;
 
     // Build the calldata: selector(getZKChain) + chainId
@@ -686,7 +686,11 @@ contract ZKSProvider is Script {
   }
 
   /// @dev Trim trailing newline from bytes
-  function _trimNewline(bytes memory input) internal pure returns (string memory) {
+  function _trimNewline(bytes memory input)
+    internal
+    pure
+    returns (string memory)
+  {
     uint256 len = input.length;
     while (len > 0 && (input[len - 1] == 0x0a || input[len - 1] == 0x0d)) {
       len--;
@@ -699,10 +703,10 @@ contract ZKSProvider is Script {
   }
 
   /// @dev Get total batches executed from ZKChain contract (GettersFacet)
-  function _getTotalBatchesExecuted(
-    string memory rpcUrl,
-    address zkChainAddr
-  ) internal returns (uint256) {
+  function _getTotalBatchesExecuted(string memory rpcUrl, address zkChainAddr)
+    internal
+    returns (uint256)
+  {
     // Build the calldata: selector(getTotalBatchesExecuted)
     // selector = 0xb8c2f66f
     bytes memory callData = abi.encodeWithSelector(0xb8c2f66f);
@@ -788,7 +792,12 @@ contract ZKSProvider is Script {
     uint256 interval = 5;
     string memory privateKey = vm.envString("PRIVATE_KEY");
 
-    console.log("Waiting for interop root for chain", chainIdForQuery, "block", batchNumber);
+    console.log(
+      "Waiting for interop root for chain",
+      chainIdForQuery,
+      "block",
+      batchNumber
+    );
 
     while (waited < maxWaitSeconds) {
       // Send a dummy self-transfer transaction to force the L2 to update interop root storage
@@ -797,7 +806,9 @@ contract ZKSProvider is Script {
       _sendDummyTransaction(destRpcUrl, privateKey);
 
       // Query the exact block number
-      root = _queryInteropRoot(destRpcUrl, INTEROP_ROOT_STORAGE, chainIdForQuery, batchNumber);
+      root = _queryInteropRoot(
+        destRpcUrl, INTEROP_ROOT_STORAGE, chainIdForQuery, batchNumber
+      );
 
       if (root != bytes32(0)) {
         if (expectedRoot == bytes32(0) || root == expectedRoot) {
@@ -809,7 +820,9 @@ contract ZKSProvider is Script {
       // On first iteration, print available roots around the requested block for debugging
       if (waited == 0) {
         console.log("Checking nearby blocks for available interop roots...");
-        _printNearbyInteropRoots(destRpcUrl, INTEROP_ROOT_STORAGE, chainIdForQuery, batchNumber);
+        _printNearbyInteropRoots(
+          destRpcUrl, INTEROP_ROOT_STORAGE, chainIdForQuery, batchNumber
+        );
       }
 
       console.log("Waiting for interop root... (", waited, "s)");
@@ -859,10 +872,9 @@ contract ZKSProvider is Script {
   }
 
   /// @dev Send a dummy self-transfer to trigger interop root update on the chain
-  function _sendDummyTransaction(
-    string memory rpcUrl,
-    string memory privateKey
-  ) internal {
+  function _sendDummyTransaction(string memory rpcUrl, string memory privateKey)
+    internal
+  {
     // Get the sender address from private key
     address sender = vm.addr(vm.parseUint(privateKey));
 
