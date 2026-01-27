@@ -2,6 +2,7 @@
 
 pragma solidity ^0.8.0;
 
+import { ProofData } from "../common/Messaging.sol";
 import { IBridgehub } from "./IBridgehub.sol";
 
 /**
@@ -21,4 +22,13 @@ interface IMessageRoot {
   ) external;
 
   function historicalRoot(uint256 _blockNumber) external view returns (bytes32);
+
+  /// @dev Used to parse the merkle proof data.
+  function getProofData(
+    uint256 _chainId,
+    uint256 _batchNumber,
+    uint256 _leafProofMask,
+    bytes32 _leaf,
+    bytes32[] calldata _proof
+  ) external pure returns (ProofData memory);
 }

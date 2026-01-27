@@ -2,6 +2,11 @@
 // We use a floating point pragma here so it can be used within other projects that interact with the ZKsync ecosystem without using our exact pragma version.
 pragma solidity ^0.8.0;
 
+import { IL2AssetRouter } from "../../bridge/asset-router/IL2AssetRouter.sol";
+import { IL2NativeTokenVault } from "../../bridge/ntv/IL2NativeTokenVault.sol";
+import { IL2Bridgehub } from "../../bridgehub/IL2Bridgehub.sol";
+
+import { IInteropCenter } from "../../interop/IInteropCenter.sol";
 import {
   IMessageVerification
 } from "../../state-transition/chain-interfaces/IMessageVerification.sol";
@@ -106,3 +111,18 @@ IMessageVerification constant L2_MESSAGE_VERIFICATION =
 /// @dev The address of the L2 chain handler system contract
 address constant L2_CHAIN_ASSET_HANDLER_ADDR =
   address(USER_CONTRACTS_OFFSET + 0x0a);
+
+/// @dev the address of the L2 interop center
+address constant L2_INTEROP_CENTER_ADDR = address(USER_CONTRACTS_OFFSET + 0x10);
+IInteropCenter constant L2_INTEROP_CENTER =
+  IInteropCenter(L2_INTEROP_CENTER_ADDR);
+
+/// @dev Typed constant for L2 Bridgehub
+IL2Bridgehub constant L2_BRIDGEHUB = IL2Bridgehub(L2_BRIDGEHUB_ADDR);
+
+/// @dev Typed constant for L2 Native Token Vault
+IL2NativeTokenVault constant L2_NATIVE_TOKEN_VAULT =
+  IL2NativeTokenVault(L2_NATIVE_TOKEN_VAULT_ADDR);
+
+/// @dev Typed constant for L2 Asset Router
+IL2AssetRouter constant L2_ASSET_ROUTER = IL2AssetRouter(L2_ASSET_ROUTER_ADDR);

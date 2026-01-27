@@ -148,3 +148,124 @@ struct InteropRoot {
   // Second overloading: if the length is 1, we are importing a chainBatchRoot/messageRoot instead of sides.
   bytes32[] sides;
 }
+
+/// @param chainId The chain ID of the transaction to check.
+/// @param l2BatchNumber The L2 batch number where the withdrawal was processed.
+/// @param l2MessageIndex The position in the L2 logs Merkle tree of the l2Log that was sent with the message.
+/// @param l2Sender The address of the message sender on L2 (base token system contract address or asset handler)
+/// @param l2TxNumberInBatch The L2 transaction number in the batch, in which the log was sent.
+/// @param message The L2 withdraw data, stored in an L2 -> L1 message.
+/// @param merkleProof The Merkle proof of the inclusion L2 -> L1 message about withdrawal initialization.
+struct FinalizeL1DepositParams {
+  uint256 chainId;
+  uint256 l2BatchNumber;
+  uint256 l2MessageIndex;
+  address l2Sender;
+  uint16 l2TxNumberInBatch;
+  bytes message;
+  bytes32[] merkleProof;
+}
+
+struct ProofData {
+  uint256 settlementLayerChainId;
+  uint256 settlementLayerBatchNumber;
+  uint256 settlementLayerBatchRootMask;
+  uint256 batchLeafProofLen;
+  bytes32 batchSettlementRoot;
+  bytes32 chainIdLeaf;
+  uint256 ptr;
+  bool finalProofNode;
+}
+
+/// @dev Struct used to define parameters for adding a single call in an interop bundle.
+/// @param to ERC-7930 address to call on the destination chain.
+/// @param data Calldata payload to send to `to` address on the destination chain.
+/// @param callAttributes EIP-7786 Attributes.
+struct InteropCallStarter {
+  bytes to;
+  bytes data;
+  bytes[] callAttributes;
+}
+
+/// @dev Internal representation of an InteropCallStarter after parsing its parameters.
+/// @param to Address to call on the destination chain.
+/// @param data Calldata payload to send.
+/// @param callAttributes EIP-7786 Attributes.
+struct InteropCallStarterInternal {
+  address to;
+  bytes data;
+  CallAttributes callAttributes;
+}
+
+/// @param interopCallValue Base token value on destination chain to send for interop call.
+/// @param indirectCall An indirect call first calls a contract as specified by the call starter which returns an actual call starter that will be used to form an interop call.
+/// @param indirectCallMessageValue Base token value on sending chain to send for indirect call.
+struct CallAttributes {
+  uint256 interopCallValue;
+  bool indirectCall;
+  uint256 indirectCallMessageValue;
+}
+
+/// @param executionAddress ERC-7930 Address allowed to execute the bundle on the destination chain.
+/// @param unbundlerAddress ERC-7930 Address allowed to unbundle the bundle on the destination chain.
+struct BundleAttributes {
+  bytes executionAddress;
+  bytes unbundlerAddress;
+}
+
+/// @dev A single call.
+/// @param version Version of the InteropCall.
+/// @param shadowAccount If true, execute via a shadow account, otherwise normal.
+/// @param to Destination contract address on the target chain.
+/// @param from Original sender address that initiated the call.
+/// @param value Amount of base token to send with the call.
+/// @param data Calldata payload for the call.
+struct InteropCall {
+  bytes1 version;
+  bool shadowAccount;
+  address to;
+  address from;
+  uint256 value;
+  bytes data;
+}
+
+/// @dev Execution status of an individual call within a bundle.
+enum CallStatus {
+  Unprocessed,
+  Executed,
+  Cancelled
+}
+
+/// @dev A set of `InteropCall`s to send to another chain.
+/// @param version Version of the InteropBundle.
+/// @param sourceChainId ChainId of the source chain.
+/// @param destinationChainId ChainId of the target chain.
+/// @param interopBundleSalt Salt of the interopBundle.
+/// @param calls Array of InteropCall structs to execute.
+/// @param bundleAttributes Bundle execution and unbundling attributes.
+struct InteropBundle {
+  bytes1 version;
+  uint256 sourceChainId;
+  uint256 destinationChainId;
+  bytes32 interopBundleSalt;
+  InteropCall[] calls;
+  BundleAttributes bundleAttributes;
+}
+
+/// @dev Processing status of an `InteropBundle`.
+enum BundleStatus {
+  Unreceived,
+  Verified,
+  FullyExecuted,
+  Unbundled
+}
+
+struct BalanceChange {
+  bytes1 version;
+  address originToken;
+  bytes32 baseTokenAssetId;
+  uint256 baseTokenAmount;
+  bytes32 assetId;
+  uint256 amount;
+  uint256 tokenOriginChainId;
+}
