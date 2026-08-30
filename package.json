@@ -20,7 +20,15 @@
     "hh:compile-zksync": "USE_ZKSYNC=true bunx hardhat compile",
     "foundry:compile-zksync": "forge build --zksync",
     "foundry:compile": "forge build",
-    "docs:serve": "mdbook serve docs"
+    "docs:serve": "mdbook serve docs",
+    "interop:parse:logs": "bunx ts-node contracts/interop/provider/ts-scripts/parse-alt-logs.ts",
+    "interop:parse:l2-to-l1-logs": "bunx ts-node contracts/interop/provider/ts-scripts/parse-alt-l2-to-l1-logs.ts",
+    "interop:parse:logs-data": "bunx ts-node contracts/interop/provider/ts-scripts/parse-alt-logs-data.ts",
+    "interop:parse:logs-topics": "bunx ts-node contracts/interop/provider/ts-scripts/parse-alt-logs-topics.ts",
+    "interop:parse:receipt": "bunx ts-node contracts/interop/provider/ts-scripts/parse-alt-transaction-receipt.ts",
+    "interop:parse:receipt-simple": "bunx ts-node contracts/interop/provider/ts-scripts/parse-transaction-receipt.ts",
+    "interop:parse:proof": "bunx ts-node contracts/interop/provider/ts-scripts/parse-proof.ts",
+    "interop:parse:broadcast": "bunx ts-node contracts/interop/provider/ts-scripts/parse-broadcast.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",
@@ -35,6 +43,7 @@
     "eslint-plugin-prettier": "^5.5.1",
     "globals": "^16.2.0",
     "hardhat": "^2.25.0",
+    "hardhat-preprocessor": "^0.1.5",
     "prettier": "^3.6.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"

@@ -10,7 +10,20 @@ libs = ["lib"]
 remappings = [
     "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
     "@openzeppelin/contracts-v4=lib/openzeppelin-contracts-v4/contracts/",
+    "forge-std/=lib/forge-std/src/",
 ]
+ffi = true
+fs_permissions = [
+    { access = "read", path = "./contracts/interop/provider/bash-scripts" },
+]
+
+# zkSync system contract addresses to persist during fork
+# 0x8008 = MSG_VALUE_SYSTEM_CONTRACT (required for sendToken)
+# 0x800a = L2_BASE_TOKEN_SYSTEM_CONTRACT
+# 0x10003 = L2_ASSET_ROUTER
+# 0x10004 = L2_NATIVE_TOKEN_VAULT
+# 0x10010 = L2_INTEROP_CENTER
+persistent = ["0x0000000000000000000000000000000000008008", "0x0000000000000000000000000000000000008009", "0x000000000000000000000000000000000000800a", "0x0000000000000000000000000000000000010002", "0x0000000000000000000000000000000000010003", "0x0000000000000000000000000000000000010004", "0x0000000000000000000000000000000000010010"]
 
 [fmt]
 line_length = 80
